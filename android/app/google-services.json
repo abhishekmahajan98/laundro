@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "966286181475",
+    "firebase_url": "https://laundro-8fa77.firebaseio.com",
+    "project_id": "laundro-8fa77",
+    "storage_bucket": "laundro-8fa77.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966286181475:android:8dc74d64c854e0bdfb6456",
+        "android_client_info": {
+          "package_name": "com.abhishek.laundro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966286181475-mbmoctud6bgjkdim2134s1bm5m20kbmc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.abhishek.laundro",
+            "certificate_hash": "48432bf5da4ad6114217fb3fd159a03f79544933"
+          }
+        },
+        {
+          "client_id": "966286181475-2rhappcot9opaf18ocq5hclsi2k3v85i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgLXCe1bPxPbzHs3u6UR40AnEVOIkoofU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966286181475-2rhappcot9opaf18ocq5hclsi2k3v85i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
