@@ -3,18 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:laundro/components/rounded_button.dart';
 
-
 class WelcomeScreen extends StatefulWidget {
-
-  
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen>{
-  final _auth=FirebaseAuth.instance;
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  final _auth = FirebaseAuth.instance;
 
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: [
+    'email',
+    'https://www.googleapis.com/auth/contacts.readonly',
+  ]);
+
+  initLogin() {
+    _googleSignIn.onCurrentUserChanged
+        .listen((GoogleSignInAccount account) async {
+      if (account != null) {
+        print("hey");
+      } else {
+        print("nay");
+      }
+    });
+    _googleSignIn.signInSilently().whenComplete(() => print("done"));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +48,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>{
                   ),
                 ),
                 Text(
-                    'Laundro',
+                  'Laundro',
                   style: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
@@ -57,22 +69,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>{
             RoundedButton(
               title: 'Google',
               color: Colors.lightBlueAccent,
-              onPressed: () async{
-                try{
-                  GoogleSignInAccount account = await _googleSignIn.signIn();
-                  AuthResult res = await _auth.signInWithCredential(GoogleAuthProvider.getCredential(
-                  idToken: (await account.authentication).idToken,
-                  accessToken: (await account.authentication).accessToken,
-                  ));
-                  if(res!=null){
-                    Navigator.pushNamed(context, "/home");
-                  }
-                  else{
-                    print("error logging in with google");
-                    account.clearAuthCache();
-                  }
-                }
-                catch(e){
+              onPressed: () async {
+                try {
+                  await _googleSignIn.signIn();
+                } catch (e) {
                   print(e);
                 }
               },
@@ -83,4 +83,3 @@ class _WelcomeScreenState extends State<WelcomeScreen>{
     );
   }
 }
-
