@@ -2,13 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:laundro/components/rounded_button.dart';
-//import 'package:laundro/pages/registration_page.dart';
-import 'home_page.dart';
-import 'login_page.dart';
 
 
 class WelcomeScreen extends StatefulWidget {
-  static const String id = 'welcome_screen';
+
   
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
@@ -54,7 +51,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>{
               title: 'Login',
               color: Colors.lightBlueAccent,
               onPressed: () {
-                Navigator.pushNamed(context, LoginScreen.id);
+                Navigator.pushNamed(context, "/login");
               },
             ),
             RoundedButton(
@@ -68,7 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>{
                   accessToken: (await account.authentication).accessToken,
                   ));
                   if(res!=null){
-                    Navigator.pushNamed(context, HomePage.id);
+                    Navigator.pushNamed(context, "/home");
                   }
                   else{
                     print("error logging in with google");

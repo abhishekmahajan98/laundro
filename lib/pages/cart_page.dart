@@ -22,25 +22,29 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> _getData() async {
     _prefs = await SharedPreferences.getInstance();
-    var iron = await _prefs.getString("iron");
-    var wash = await _prefs.getString("wash");
-    var dryClean = await _prefs.getString("dry-clean");
+    var iron = _prefs.getString("iron")==null?[]:json.decode(_prefs.getString("iron"));
+    var wash = _prefs.getString("wash")==null?[]:json.decode(_prefs.getString("wash"));
+    var dryClean = _prefs.getString("dry-clean")==null?[]:json.decode(_prefs.getString("dry-clean"));
 
     this.setState(() {
       items = [
-        ...json.decode(iron),
-        ...json.decode(wash),
-        ...json.decode(dryClean)
+        ...wash,
+        ...iron,
+        ...dryClean
       ];
     });
   }
 
   get getTotal {
     int total = 0;
-    if (items.length > 0) {
-      for (var i = 0; i < items.length; i++) {
-        total += items[i]["qty"] * items[i]["price"];
+    try{
+      if (items.length > 0) {
+        for (var i = 0; i < items.length; i++) {
+          total += items[i]["qty"] * items[i]["price"];
+        }
       }
+    }catch(e){
+      print(e);
     }
     return total;
   }
@@ -70,7 +74,7 @@ class _CartPageState extends State<CartPage> {
                 RaisedButton(
                     child: Text("Proceed To Payment"), onPressed: () {})
               ]))
-            ]),
+            ])
     )));
   }
 }

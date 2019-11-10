@@ -5,10 +5,9 @@ import 'package:laundro/components/rounded_button.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import '../constants.dart';
-import 'home_page.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  static const String id = 'registration_screen';
+
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
@@ -75,7 +74,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           await _auth.createUserWithEmailAndPassword(
                               email: email, password: password);
                       if (newUser != null) {
-                        Navigator.pushNamed(context, HomePage.id);
+                        Navigator.pushNamed(context, "/home");
                       }
                     } catch (e) {
                       print(e);

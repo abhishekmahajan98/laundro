@@ -1,18 +1,17 @@
 import 'package:carousel_pro/carousel_pro.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:laundro/pages/welcome.dart';
+
+import '../components/side_drawer.dart';
+
 
 class HomePage extends StatefulWidget {
-  static const String id = "home_page";
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final _auth = FirebaseAuth.instance;
-  GoogleSignIn googleSignIn = GoogleSignIn();
   @override
   void initState() {
     super.initState();
@@ -41,6 +40,8 @@ class _HomePageState extends State<HomePage> {
         dotBgColor: Colors.transparent,
       ),
     );
+
+    
     return Scaffold(
       appBar: AppBar(
         elevation: 0.1,
@@ -53,114 +54,14 @@ class _HomePageState extends State<HomePage> {
               Icons.shopping_cart,
               color: Colors.black,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, "/cart");
+            },
           ),
         ],
       ),
       //app drawer
-      drawer: new Drawer(
-        child: new ListView(
-          children: <Widget>[
-            //header
-            new UserAccountsDrawerHeader(
-              accountName: Text('Abhishek Mahajan'),
-              accountEmail: Text('abhishekmah98@gmail.com'),
-              currentAccountPicture: GestureDetector(
-                child: new CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  child: Icon(
-                    Icons.person,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-              ),
-              decoration: new BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-            //body
-            InkWell(
-              onTap: () => Navigator.pushNamed(context, '/'),
-              child: ListTile(
-                title: Text('Home'),
-                leading: Icon(
-                  Icons.home,
-                  color: Colors.pinkAccent,
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () => Navigator.pushNamed(context, '/myaccount'),
-              child: ListTile(
-                title: Text('My Account'),
-                leading: Icon(
-                  Icons.person,
-                  color: Colors.pinkAccent,
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {},
-              child: ListTile(
-                title: Text('Previous Orders'),
-                leading: Icon(
-                  Icons.shopping_basket,
-                  color: Colors.pinkAccent,
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {},
-              child: ListTile(
-                title: Text('Shopping Cart'),
-                leading: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.pinkAccent,
-                ),
-              ),
-            ),
-
-            Divider(
-              color: Colors.teal,
-              height: 5,
-            ),
-            InkWell(
-              onTap: () => Navigator.pushNamed(context, '/about'),
-              child: ListTile(
-                title: Text('About us'),
-                leading: Icon(
-                  Icons.help,
-                  color: Colors.pinkAccent,
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {},
-              child: ListTile(
-                title: Text('Contact us'),
-                leading: Icon(
-                  Icons.contact_phone,
-                  color: Colors.pinkAccent,
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                _auth.signOut();
-                googleSignIn.signOut();
-                Navigator.pushNamed(context, WelcomeScreen.id);
-              },
-              child: ListTile(
-                title: Text('Logout'),
-                leading: Icon(
-                  Icons.exit_to_app,
-                  color: Colors.pinkAccent,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      drawer: SideDrawer(),
       body: new ListView(
         children: <Widget>[
           image_carousel,
