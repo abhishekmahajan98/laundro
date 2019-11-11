@@ -3,7 +3,6 @@ import 'package:laundro/pages/password_reset_page.dart';
 
 import './pages/home_page.dart';
 import './pages/login_page.dart';
-import './pages/welcome.dart';
 import './pages/registration_page.dart';
 import './pages/ironing_menu_page.dart';
 import './pages/washing_menu_page.dart';

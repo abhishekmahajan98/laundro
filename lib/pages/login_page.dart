@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
 import '../constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,6 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   GoogleSignIn _googleSignIn = GoogleSignIn();
   String email, password;
   bool showSpinner = false;
+  bool circularSpinner = false;
 
   Widget _buildEmailTF() {
     return Column(
@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
         elevation: 5.0,
         onPressed: () async {
           setState(() {
-            showSpinner = true;
+            circularSpinner = true;
           });
           try {
             final user = await _auth.signInWithEmailAndPassword(
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
             print(e);
           }
           setState(() {
-            showSpinner = false;
+            circularSpinner = false;
           });
         },
         padding: EdgeInsets.all(15.0),
@@ -135,15 +135,20 @@ class _LoginScreenState extends State<LoginScreen> {
           borderRadius: BorderRadius.circular(30.0),
         ),
         color: Colors.white,
-        child: Text(
-          'LOGIN',
-          style: TextStyle(
-            color: Color(0xFF527DAA),
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        child: circularSpinner
+            ? ListTile(
+                leading: CircularProgressIndicator(),
+                title: Text('Logging In'),
+              )
+            : Text(
+                'LOGIN',
+                style: TextStyle(
+                  color: Color(0xFF527DAA),
+                  letterSpacing: 1.5,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
       ),
     );
   }
