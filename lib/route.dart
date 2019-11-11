@@ -8,6 +8,7 @@ import './pages/ironing_menu_page.dart';
 import './pages/washing_menu_page.dart';
 import './pages/dry_cleaning_menu_page.dart';
 import './pages/cart_page.dart';
+import './pages/order_conform_page.dart';
 
 Map<String, WidgetBuilder> routes(BuildContext context) {
   return <String, WidgetBuilder>{
@@ -19,5 +20,6 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     "/wash": (context) => WashingMenuPage(),
     "/dry-clean": (context) => DryCleaningMenuPage(),
     "/cart": (context) => CartPage(),
+    "/order-confirm-page": (context) => OrderConfirmPage()
   };
 }
