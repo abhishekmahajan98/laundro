@@ -6,6 +6,8 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../components/cart_list.dart';
 import '../components/payment_info_modal.dart';
 
+final _WALLETS = ["paytm", "citrus", "amazonpay", "payzapp", "freecharge"];
+
 class CartPage extends StatefulWidget {
   @override
   _CartPageState createState() => _CartPageState();
@@ -27,34 +29,42 @@ class _CartPageState extends State<CartPage> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    // ORDER SAVE CODE HERE
-    Navigator.pop(context);
-    Navigator.pushReplacementNamed(context, "/order-confirm-page");
+    if (response.paymentId != null) {
+      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, "/order-confirm-page");
+    }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    print("error");
-    print(response.message);
-    print(response.code.toString());
+    showDialogBox(response.code.toString() + ": " + response.message);
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    print("wallet");
-    print(response.walletName);
+    if (_WALLETS.contains(response.walletName)) {
+      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, "/order-confirm-page");
+    }
   }
 
   void startPayment() {
-    var options = {
-      'key': 'rzp_test_UR3ON1Z6tddkOu',
-      'amount': (getTotal + deliveryTotal) * 100,
-      'name': 'lAUNDRO',
-      'description': 'laundry service',
-      'prefill': {'contact': '9123456789', 'email': 'gaurav.kumar@example.com'},
-      'external': {
-        "wallets": ["paytm", "citrus", "amazonpay", "payzapp", "freecharge"],
-      }
-    };
-    _razorpay.open(options);
+    try {
+      var options = {
+        'key': 'rzp_test_UR3ON1Z6tddkOu',
+        'amount': (getTotal + deliveryTotal) * 100,
+        'name': 'lAUNDRO',
+        'description': 'laundry service',
+        'prefill': {
+          'contact': '9123456789',
+          'email': 'gaurav.kumar@example.com'
+        },
+        'external': {
+          "wallets": _WALLETS,
+        }
+      };
+      _razorpay.open(options);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   Future<void> _getData() async {
