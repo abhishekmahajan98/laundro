@@ -134,7 +134,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomPadding: false,
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
         child: AnnotatedRegion<SystemUiOverlayStyle>(

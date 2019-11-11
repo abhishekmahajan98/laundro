@@ -273,7 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomPadding: false,
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
