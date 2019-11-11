@@ -21,11 +21,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
+        /*Text(
           'Email',
           style: kLabelStyle,
         ),
-        SizedBox(height: 10.0),
+        SizedBox(height: 10.0),*/
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
@@ -66,7 +66,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               context: context,
               title: 'Reset password E-mail sent.',
               desc:
-                  'Click on the link in the e-mail senr and it will redirect you to the page to reset the password.',
+                  'Click on the link in the e-mail sent and it will redirect you to the page to reset the password.',
               buttons: [
                 DialogButton(
                   child: Text('Okay'),

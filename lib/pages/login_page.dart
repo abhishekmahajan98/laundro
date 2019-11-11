@@ -21,11 +21,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
+        /*Text(
           'Email',
           style: kLabelStyle,
         ),
-        SizedBox(height: 10.0),
+        SizedBox(height: 10.0),*/
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
@@ -58,11 +58,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
+        /*Text(
           'Password',
           style: kLabelStyle,
         ),
-        SizedBox(height: 10.0),
+        SizedBox(height: 10.0),*/
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLoginBtn() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
+      padding: EdgeInsets.only(top: 2,bottom: 20),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
             final user = await _auth.signInWithEmailAndPassword(
                 email: email, password: password);
             if (user != null) {
-              Navigator.pushNamed(context, "/home");
+              Navigator.pushReplacementNamed(context, "/home");
             }
           } catch (e) {
             print(e);
@@ -163,11 +163,11 @@ class _LoginScreenState extends State<LoginScreen> {
             fontWeight: FontWeight.w400,
           ),
         ),
-        SizedBox(height: 20.0),
+        /*SizedBox(height: 20.0),
         Text(
           'Sign in with',
           style: kLabelStyle,
-        ),
+        ),*/
       ],
     );
   }
@@ -200,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 30.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _buildSocialBtn(
             () => print('Login with Facebook'),
@@ -208,6 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
               'images/facebook.jpg',
             ),
           ),
+          SizedBox(width: 40,),
           _buildSocialBtn(
             () async {
               setState(() {
@@ -221,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   accessToken: (await account.authentication).accessToken,
                 ));
                 if (res != null) {
-                  Navigator.pushNamed(context, '/home');
+                  Navigator.pushReplacementNamed(context, '/home');
                 } else {
                   print("error logging in with google");
                   account.clearAuthCache();
@@ -252,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
               text: 'Don\'t have an Account? ',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18.0,
+                //fontSize: 18.0,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -260,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
               text: 'Sign Up',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18.0,
+                //fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -302,7 +303,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   height: double.infinity,
                   child: Container(
-                    margin: EdgeInsets.all(25),
+                    margin: EdgeInsets.all(40),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -310,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           'Sign In',
                           style: TextStyle(
                             color: Colors.white,
-                            fontFamily: 'OpenSans',
+                            //fontFamily: 'OpenSans',
                             fontSize: 30.0,
                             fontWeight: FontWeight.bold,
                           ),
