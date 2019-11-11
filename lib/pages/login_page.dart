@@ -273,6 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: true,
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -300,12 +301,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Container(
                   height: double.infinity,
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 40.0,
-                      vertical: 120.0,
-                    ),
+                  child: Container(
+                    margin: EdgeInsets.all(25),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
