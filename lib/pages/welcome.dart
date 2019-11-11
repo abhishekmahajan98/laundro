@@ -10,27 +10,11 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final _auth = FirebaseAuth.instance;
-
-  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: [
-    'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
-  ]);
-
-  initLogin() {
-    _googleSignIn.onCurrentUserChanged
-        .listen((GoogleSignInAccount account) async {
-      if (account != null) {
-        print("hey");
-      } else {
-        print("nay");
-      }
-    });
-    _googleSignIn.signInSilently().whenComplete(() => print("done"));
-  }
-
+  GoogleSignIn _googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -63,7 +47,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               title: 'Login',
               color: Colors.lightBlueAccent,
               onPressed: () {
-                Navigator.pushNamed(context, "/login");
+                Navigator.pushNamed(context, '/login');
               },
             ),
             RoundedButton(
@@ -71,7 +55,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               color: Colors.lightBlueAccent,
               onPressed: () async {
                 try {
-                  await _googleSignIn.signIn();
+                  GoogleSignInAccount account = await _googleSignIn.signIn();
+                  AuthResult res = await _auth
+                      .signInWithCredential(GoogleAuthProvider.getCredential(
+                    idToken: (await account.authentication).idToken,
+                    accessToken: (await account.authentication).accessToken,
+                  ));
+                  if (res != null) {
+                    Navigator.pushNamed(context, '/home');
+                  } else {
+                    print("error logging in with google");
+                    account.clearAuthCache();
+                  }
                 } catch (e) {
                   print(e);
                 }

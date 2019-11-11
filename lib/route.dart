@@ -10,7 +10,7 @@ import './pages/dry_cleaning_menu_page.dart';
 import './pages/cart_page.dart';
 
 Map<String, WidgetBuilder> routes(BuildContext context) {
-    return <String, WidgetBuilder>{
+  return <String, WidgetBuilder>{
     "/": (context) => WelcomeScreen(),
     "/login": (context) => LoginScreen(),
     "/register": (context) => RegistrationScreen(),
@@ -18,6 +18,6 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     "/iron": (context) => IroningMenuPage(),
     "/wash": (context) => WashingMenuPage(),
     "/dry-clean": (context) => DryCleaningMenuPage(),
-    "/cart": (context) => CartPage()
+    "/cart": (context) => CartPage(),
   };
- }
+}

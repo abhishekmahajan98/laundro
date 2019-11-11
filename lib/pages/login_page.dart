@@ -5,9 +5,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import '../constants.dart';
 
-
 class LoginScreen extends StatefulWidget {
-
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -19,8 +17,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.white,
-      resizeToAvoidBottomPadding: false,
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
         child: Padding(
@@ -88,7 +86,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   Navigator.pushNamed(context, "/register");
                 },
-                child: Text('New user? Register.',style:TextStyle(decoration: TextDecoration.underline),),
+                child: Text(
+                  'New user? Register.',
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
               )
             ],
           ),
