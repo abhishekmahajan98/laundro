@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../constants.dart';
 
-class RegistrationScreen extends StatefulWidget {
+class ResetPasswordScreen extends StatefulWidget {
   @override
-  _RegistrationScreenState createState() => _RegistrationScreenState();
+  _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _auth = FirebaseAuth.instance;
+
   String email, password;
   bool showSpinner = false;
 
@@ -54,43 +56,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  Widget _buildPasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Password',
-          style: kLabelStyle,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            obscureText: true,
-            onChanged: (value) {
-              password = value;
-            },
-            style: TextStyle(
-              color: Colors.white,
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.lock,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildRegisterBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -98,21 +63,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          setState(() {
-            showSpinner = true;
-          });
-          try {
-            final newUser = await _auth.createUserWithEmailAndPassword(
-                email: email, password: password);
-            if (newUser != null) {
-              Navigator.pushNamed(context, "/home");
-            }
-          } catch (e) {
-            print(e);
-          }
-          setState(() {
-            showSpinner = false;
-          });
+          _auth.sendPasswordResetEmail(email: email);
+          Alert(
+              context: context,
+              title: 'Reset password E-mail sent.',
+              desc:
+                  'Click on the link in the e-mail senr and it will redirect you to the page to reset the password.',
+              buttons: [
+                DialogButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
+                ),
+              ]).show();
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -120,7 +84,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
         color: Colors.white,
         child: Text(
-          'LOGIN',
+          'Reset',
           style: TextStyle(
             color: Color(0xFF527DAA),
             letterSpacing: 1.5,
@@ -172,7 +136,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Register',
+                          'Account Password Recovery',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 30.0,
@@ -184,7 +148,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         SizedBox(
                           height: 30.0,
                         ),
-                        _buildPasswordTF(),
                         _buildRegisterBtn(),
                       ],
                     ),
