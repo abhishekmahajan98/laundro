@@ -62,7 +62,110 @@ class _HomePageState extends State<HomePage> {
       ),
       //app drawer
       drawer: SideDrawer(),
-      body: new ListView(
+      body:
+      Container(
+        child:
+        Column(
+          children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: image_carousel,
+
+            ),
+            Expanded(child:Column(
+              children: <Widget>[
+
+                Expanded(
+                  flex: 1,
+
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex:1,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, '/iron'),
+                      child:Container(
+
+                          height: double.infinity,
+                        child: Image.asset('images/products/Design.png'),
+                          decoration: BoxDecoration(
+                              color: Colors.red
+                          ),
+                        ),),
+                      ),
+                      Expanded(
+                        flex:1,
+
+                        child: GestureDetector(
+                          onTap: () => Navigator.pushNamed(context, '/wash'),
+                          child: Container(
+                          height: double.infinity,
+                          child: Text("hii"),
+
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: ExactAssetImage(
+                                      'images/products/wash.png')),
+                              color: Colors.blue
+                          ),
+                        ),),
+                      ),
+                    ],
+
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex:1,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, '/dry-clean'),
+                      child:  Container(
+
+                          height: double.infinity,
+
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: ExactAssetImage(
+                                      'images/products/Dry.png')),
+                              color: Colors.green
+                          ),
+                        ),),
+                      ),
+                      Expanded(
+                        flex:1,
+
+                        child: GestureDetector(
+                          onTap: () => Navigator.pushNamed(context, '/iron'),
+                          child:  Container(
+                          height: double.infinity,
+                          child: Center(child: Text("hii")),
+
+                          decoration: BoxDecoration(
+                              color: Colors.yellow
+                          ),
+                        ),),
+                      ),
+                    ],
+
+                  ),
+                )
+              ],
+            ),
+                flex:3),
+          ],
+        ),
+      ),
+
+
+    );
+  }
+}
+
+
+/*new ListView(
         children: <Widget>[
           image_carousel,
           Container(
@@ -143,4 +246,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
+}*/
