@@ -25,6 +25,7 @@ dependencies:
   firebase_auth: ^0.14.0+8
   google_sign_in: ^4.0.11
   shared_preferences: ^0.5.4+3
+  rflutter_alert: ^1.0.3
 
 
 
