@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class SideDrawer extends StatelessWidget {
   final _auth = FirebaseAuth.instance;
-  GoogleSignIn googleSignIn = GoogleSignIn();
+  final GoogleSignIn googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -97,7 +97,7 @@ class SideDrawer extends StatelessWidget {
             onTap: () {
               _auth.signOut();
               googleSignIn.signOut();
-              Navigator.pushNamed(context, "/");
+              Navigator.of(context).pushNamedAndRemoveUntil("/",(Route<dynamic> route) => false);
             },
             child: ListTile(
               title: Text('Logout'),
