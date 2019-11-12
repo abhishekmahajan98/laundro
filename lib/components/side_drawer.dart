@@ -2,21 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class SideDrawer extends StatelessWidget{
+class SideDrawer extends StatelessWidget {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
-
-    return new Drawer(
-      child: new ListView(
+    return Drawer(
+      child: ListView(
         children: <Widget>[
           //header
-          new UserAccountsDrawerHeader(
+          UserAccountsDrawerHeader(
             accountName: Text('Abhishek Mahajan'),
             accountEmail: Text('abhishekmah98@gmail.com'),
             currentAccountPicture: GestureDetector(
-              child: new CircleAvatar(
+              child: CircleAvatar(
                 backgroundColor: Colors.grey,
                 child: Icon(
                   Icons.person,
@@ -24,7 +23,7 @@ class SideDrawer extends StatelessWidget{
                 ),
               ),
             ),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
             ),
           ),
