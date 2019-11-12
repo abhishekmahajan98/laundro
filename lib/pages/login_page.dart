@@ -131,16 +131,11 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         },
         padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
+        shape:RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
         color: Colors.white,
-        child: circularSpinner
-            ? ListTile(
-                leading: CircularProgressIndicator(),
-                title: Text('Logging In'),
-              )
-            : Text(
+        child: circularSpinner?CircularProgressIndicator():Text(
                 'LOGIN',
                 style: TextStyle(
                   color: Color(0xFF527DAA),
