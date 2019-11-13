@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,9 +14,29 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
+  FirebaseUser loggedInUser;
   String email, password;
   bool showSpinner = false;
   bool circularSpinner = false;
+  SharedPreferences prefs; 
+  
+  @override
+  void initState(){
+    super.initState();
+    instantiateSP();
+    
+  }
+  void instantiateSP() async{
+    prefs = await SharedPreferences.getInstance();
+    checkLoggedInStatus();
+  }
+
+  Future<void> checkLoggedInStatus() async{
+    if(await prefs.containsKey('loggedInUserEmail')){
+      print(prefs.getString('loggedInUserEmail'));
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+  }
 
   Widget _buildEmailTF() {
     return Column(
@@ -121,7 +142,10 @@ class _LoginScreenState extends State<LoginScreen> {
             final user = await _auth.signInWithEmailAndPassword(
                 email: email, password: password);
             if (user != null) {
-              Navigator.pushReplacementNamed(context, "/home");
+              final user=await _auth.currentUser();
+              loggedInUser=user;
+              prefs.setString('loggedInUserEmail', loggedInUser.email);
+              Navigator.pushReplacementNamed(context, '/home');
             }
           } catch (e) {
             print(e);
@@ -217,6 +241,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   accessToken: (await account.authentication).accessToken,
                 ));
                 if (res != null) {
+                  final user=await _auth.currentUser();
+                  loggedInUser=user;
+                  prefs.setString('loggedInUserEmail', loggedInUser.email);
                   Navigator.pushReplacementNamed(context, '/home');
                 } else {
                   print("error logging in with google");

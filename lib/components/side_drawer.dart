@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SideDrawer extends StatelessWidget {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  SharedPreferences prefs;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -94,7 +97,9 @@ class SideDrawer extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {
+            onTap: () async{
+              prefs = await SharedPreferences.getInstance();
+              prefs.remove('loggedInUserEmail');
               _auth.signOut();
               googleSignIn.signOut();
               Navigator.of(context).pushNamedAndRemoveUntil("/",(Route<dynamic> route) => false);
