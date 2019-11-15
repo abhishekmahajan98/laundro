@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
 
@@ -15,6 +16,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
   String email, password;
   bool showSpinner = false;
+  SharedPreferences prefs; 
+  FirebaseUser loggedInUser;
 
   Widget _buildEmailTF() {
     return Column(
@@ -105,6 +108,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 email: email, password: password);
             if (newUser != null) {
               Navigator.pushReplacementNamed(context, "/home");
+              final user=await _auth.currentUser();
+              loggedInUser=user;
+              prefs.setString('loggedInUserEmail', loggedInUser.email);
+              //prefs.setString('loggedInUserDisplayName', loggedInUser.displayName);
             }
           } catch (e) {
             print(e);

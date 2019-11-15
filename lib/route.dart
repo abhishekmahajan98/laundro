@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:laundro/pages/my_account.dart';
 import 'package:laundro/pages/password_reset_page.dart';
-
 import './pages/home_page.dart';
 import './pages/login_page.dart';
 import './pages/registration_page.dart';
@@ -20,7 +20,8 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     "/wash": (context) => WashingMenuPage(),
     "/dry-clean": (context) => DryCleaningMenuPage(),
     "/cart": (context) => CartPage(),
-    '/reset_password': (context) => ResetPasswordScreen(),
-    "/order-confirm-page": (context) => OrderConfirmPage()
+    "/reset_password": (context) => ResetPasswordScreen(),
+    "/order-confirm-page": (context) => OrderConfirmPage(),
+    "/my_account":(context)=> MyAccount(),
   };
 }

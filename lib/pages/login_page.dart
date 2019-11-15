@@ -24,7 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState(){
     super.initState();
     instantiateSP();
-    
   }
   void instantiateSP() async{
     prefs = await SharedPreferences.getInstance();
@@ -33,7 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> checkLoggedInStatus() async{
     if(await prefs.containsKey('loggedInUserEmail')){
-      print(prefs.getString('loggedInUserEmail'));
+      //print(prefs.getString('loggedInUserEmail'));
+
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
@@ -145,6 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
               final user=await _auth.currentUser();
               loggedInUser=user;
               prefs.setString('loggedInUserEmail', loggedInUser.email);
+              prefs.setString('loggedInUserDisplayName', loggedInUser.displayName);
               Navigator.pushReplacementNamed(context, '/home');
             }
           } catch (e) {
@@ -244,6 +245,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   final user=await _auth.currentUser();
                   loggedInUser=user;
                   prefs.setString('loggedInUserEmail', loggedInUser.email);
+                  prefs.setString('loggedInUserDisplayName', loggedInUser.displayName);
+                  //prefs.setString('loggedInUserPhotoUrl', loggedInUser.photoUrl);
                   Navigator.pushReplacementNamed(context, '/home');
                 } else {
                   print("error logging in with google");

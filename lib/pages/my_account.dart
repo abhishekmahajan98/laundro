@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class MyAccount extends StatefulWidget {
   @override
   _MyAccountState createState() => _MyAccountState();
@@ -7,62 +8,106 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Account Details'),
-        backgroundColor: Colors.blue,
-      ),
-      body:
-      Column(
-        children: <Widget>[
-
-          new UserAccountsDrawerHeader(
-
-            accountName: Text('Sourabh pisipati'),
-            accountEmail:Text('sourabhpisipati0@gmail.com'),
-            currentAccountPicture: GestureDetector(
-              child: new CircleAvatar(
-                backgroundColor: Colors.grey,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("My Account"),
+          centerTitle: true,
+          backgroundColor: Color(0xFF73AEF5),
+        ),
+        body: Stack(
+          children: <Widget>[
+            Container(
+              height: double.infinity,
+              width: double.infinity,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      color: Colors.white,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.white,
+                          Colors.white,
+                          Colors.white,
+                          Colors.white,
+                          ],
+                        stops: [0.3, 0.4, 0.7, 0.9],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-
-          Container(
-            margin: EdgeInsets.all(10.0),
-            padding: EdgeInsets.all(10.0),
-            height: 70.0,
-            width: 600.0,
-            child: Center(child: Text("Phone Number :   9999999999",style: TextStyle(color:Colors.white,fontSize: 20.0),)),
-            decoration: BoxDecoration(
-              color: Colors.redAccent,
-              borderRadius: BorderRadius.circular(10.0),
+            
+            Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 60,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 50,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    //color: Colors.red,
+                    margin: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                     color: Color(0xFF73AEF5),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    //color: Colors.red,
+                    margin: EdgeInsets.only(left: 10,right: 10,top: 5,bottom: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Color(0xFF73AEF5),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    //color: Colors.red,
+                    margin: EdgeInsets.only(left: 10,right: 10,top: 5,bottom: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                     color: Color(0xFF73AEF5),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-          Container(
-            margin: EdgeInsets.all(10.0),
-            padding: EdgeInsets.all(10.0),
-            height: 90.0,
-            width: 600.0,
-            child: Center(child: Text(
-              '''Address :Z-405 Abode valley
-                Potheri,603203''',
-              style: TextStyle(
-                  color:Colors.white,
-                  fontSize: 20.0),
-            )
-            ),
-            decoration: BoxDecoration(
-              color: Colors.redAccent,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-          ),
-
-        ],
+          ],
+        ),
       ),
-
     );
   }
 }
