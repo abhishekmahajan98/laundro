@@ -8,6 +8,5 @@ class User {
   int pincode;
   String gender;
   DateTime dob;
-  List<String> couponList;
   List<Map<dynamic, dynamic>> orderHistory;
 }
