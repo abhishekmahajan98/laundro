@@ -21,7 +21,7 @@ class Order {
   Map<dynamic, bool> orderStatus = {
     "hasAccepted ": false,
     "hasPickedUp ": false,
-    "hasProcessed": false,
+    // "hasProcessed": false,
     "hasDelivered": false,
   };
   Map<dynamic, dynamic> paymentDetail = {
