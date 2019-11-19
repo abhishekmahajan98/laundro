@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    Widget image_carousel = new Container(
+    Widget imageCarousel = new Container(
       margin: EdgeInsets.only(top:10),
       height: 200.0,
       width: 400,
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Expanded(
                 flex: 2,
-                child: image_carousel,
+                child: imageCarousel,
               ),
               Expanded(
                 flex: 3,

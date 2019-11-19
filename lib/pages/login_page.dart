@@ -30,8 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
     checkLoggedInStatus();
   }
 
-  Future<void> checkLoggedInStatus() async{
-    if(await prefs.containsKey('loggedInUserEmail')){
+  void checkLoggedInStatus(){
+    if(prefs.containsKey('loggedInUserEmail')){
       //print(prefs.getString('loggedInUserEmail'));
 
       Navigator.pushReplacementNamed(context, '/home');
