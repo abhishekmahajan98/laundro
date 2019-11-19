@@ -30,6 +30,7 @@ dependencies:
   carousel_pro: ^1.0.0
   cupertino_icons: ^0.1.2
   webview_flutter: ^0.3.15+1
+  uuid: ^2.0.4
 
 dev_dependencies:
   flutter_test:
