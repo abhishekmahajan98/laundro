@@ -1,11 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:laundro/model/user_model.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -15,10 +16,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   FirebaseUser loggedInUser;
+  final _firestore=Firestore.instance;
   String email, password;
   bool showSpinner = false;
   bool circularSpinner = false;
-  SharedPreferences prefs; 
+  SharedPreferences prefs;
+  User user=new User();
   
   @override
   void initState(){
@@ -32,8 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void checkLoggedInStatus(){
     if(prefs.containsKey('loggedInUserEmail')){
-      //print(prefs.getString('loggedInUserEmail'));
-
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
@@ -236,21 +237,37 @@ class _LoginScreenState extends State<LoginScreen> {
               });
               try {
                 GoogleSignInAccount account = await _googleSignIn.signIn();
+                
                 AuthResult res = await _auth
                     .signInWithCredential(GoogleAuthProvider.getCredential(
                   idToken: (await account.authentication).idToken,
                   accessToken: (await account.authentication).accessToken,
                 ));
                 if (res != null) {
-                  final user=await _auth.currentUser();
-                  loggedInUser=user;
-                  prefs.setString('loggedInUserEmail', loggedInUser.email);
-                  prefs.setString('loggedInUserDisplayName', loggedInUser.displayName);
-                  //prefs.setString('loggedInUserPhotoUrl', loggedInUser.photoUrl);
+                  final firebaseUser=await _auth.currentUser();
+                  loggedInUser=firebaseUser;
+                  user.email=loggedInUser.email;
+                  user.uid=loggedInUser.uid;
+                  user.displayName=loggedInUser.displayName;
+                  prefs.setString('loggedInUserEmail', user.uid);
+                  prefs.setString('loggedInUserDisplayName', user.displayName);
+                  prefs.setString('loggedInUserUid',user.uid );
+                  final userCheck=await _firestore.collection('users').where('email',isEqualTo: prefs.getString('loggedInUserEmail')).limit(1).getDocuments();
+                  final userCheckList=userCheck.documents;
+                  if(userCheckList.length==1){
+                    print('already exists');
+                  }
+                  else{
+                    print('new user!!');
+                    _firestore.document('users/'+prefs.getString('loggedInUserUid')).setData({
+                      'email':prefs.getString('loggedInUserEmail'),
+                    });
+                    }
                   Navigator.pushReplacementNamed(context, '/home');
                 } else {
                   print("error logging in with google");
                   account.clearAuthCache();
+                  prefs.clear();
                 }
               } catch (e) {
                 print(e);

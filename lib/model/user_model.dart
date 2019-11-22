@@ -1,7 +1,9 @@
+
 enum Gender { male, female }
 
 class User {
   String email;
+  String displayName;
   String uid;
   String phone;
   String address;

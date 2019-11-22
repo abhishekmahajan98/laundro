@@ -13,24 +13,22 @@ class _SideDrawerState extends State<SideDrawer> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   SharedPreferences prefs;
   FirebaseUser loggedInUser;
-  String email='null', displayName='null';/*photourl='null'*/
+  String email = 'null', displayName = 'null'; /*photourl='null'*/
   @override
-    void initState(){
-      super.initState();
-      instantiateSP();
-      
-    }
-  void instantiateSP() async{
+  void initState() {
+    super.initState();
+    instantiateSP();
+  }
+
+  void instantiateSP() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      email=prefs.getString('loggedInUserEmail');
-      displayName=prefs.getString('loggedInUserDisplayName');
+      email = prefs.getString('loggedInUserEmail');
+      displayName = prefs.getString('loggedInUserDisplayName');
       //photourl=prefs.getString('loggedInUserPhotoUrl');
       //print(photourl);
     });
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +38,14 @@ class _SideDrawerState extends State<SideDrawer> {
           //header
           UserAccountsDrawerHeader(
             accountName: Text(email),
-            accountEmail: displayName==null?Text(''):Text(displayName),
+            accountEmail: displayName == null ? Text('') : Text(displayName),
             currentAccountPicture: GestureDetector(
               child: CircleAvatar(
-                backgroundColor: Colors.white,
-                child:Icon(
-                  Icons.person,
-                  color: Color(0xFF73AEF5),
-                )
-              ),
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.person,
+                    color: Color(0xFF73AEF5),
+                  )),
             ),
             decoration: BoxDecoration(
               color: Color(0xFF73AEF5),
@@ -111,7 +108,9 @@ class _SideDrawerState extends State<SideDrawer> {
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/test_page');
+            },
             child: ListTile(
               title: Text('Contact us'),
               leading: Icon(
@@ -121,12 +120,13 @@ class _SideDrawerState extends State<SideDrawer> {
             ),
           ),
           InkWell(
-            onTap: () async{
+            onTap: () async {
               prefs = await SharedPreferences.getInstance();
-              prefs.remove('loggedInUserEmail');
+              prefs.clear();
               _auth.signOut();
               googleSignIn.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil("/",(Route<dynamic> route) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  "/", (Route<dynamic> route) => false);
             },
             child: ListTile(
               title: Text('Logout'),

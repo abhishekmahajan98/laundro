@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
 
@@ -9,9 +10,28 @@ class MyAccount extends StatefulWidget {
 }
 
 class _MyAccountState extends State<MyAccount> {
+  SharedPreferences prefs;
   bool editPhoneNumber=false;
   bool editPrimaryAddress=false;
   bool editSecondaryAddress=false;
+  String displayName='null',email='null';
+  
+  @override
+  void initState() {
+    super.initState();
+    instantiateSP();
+  }
+  void instantiateSP() async{
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      email=prefs.getString('loggedInUserEmail');
+      displayName=prefs.getString('loggedInUserDisplayName');
+      //photourl=prefs.getString('loggedInUserPhotoUrl');
+      //print(photourl);
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -94,7 +114,7 @@ class _MyAccountState extends State<MyAccount> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Abhishek Mahajan',
+                            displayName==null?'':displayName,
                             style: TextStyle(
                               fontSize: 30,
                               color: Colors.white,
@@ -106,7 +126,6 @@ class _MyAccountState extends State<MyAccount> {
                         height: 20,
                       ),
                       ListTile(
-                        //leading: Icon(Icons.phone,color: Colors.white,),
                         title: TextFormField(
                           enabled: editPhoneNumber,
                           keyboardType: TextInputType.phone,
