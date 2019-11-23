@@ -343,40 +343,44 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Container(
                   height: double.infinity,
-                  child: Container(
-                    margin: EdgeInsets.all(40),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        /*Text(
-                          'Laundro',
-                          style: TextStyle(
-                            color: Colors.white,
-                            //fontFamily: 'OpenSans',
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),*/
-                        Hero(
-                          tag: 'logo',
-                          child: Icon(
-                            Icons.local_laundry_service,
-                            size: 150,
-                          ),
+                  child: ListView(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.all(40),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            /*Text(
+                              'Laundro',
+                              style: TextStyle(
+                                color: Colors.white,
+                                //fontFamily: 'OpenSans',
+                                fontSize: 30.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),*/
+                            Hero(
+                              tag: 'logo',
+                              child: Icon(
+                                Icons.local_laundry_service,
+                                size: 150,
+                              ),
+                            ),
+                            SizedBox(height: 30.0),
+                            _buildEmailTF(),
+                            SizedBox(
+                              height: 30.0,
+                            ),
+                            _buildPasswordTF(),
+                            _buildForgotPasswordBtn(),
+                            _buildLoginBtn(),
+                            _buildSignInWithText(),
+                            _buildSocialBtnRow(),
+                            _buildSignupBtn(),
+                          ],
                         ),
-                        SizedBox(height: 30.0),
-                        _buildEmailTF(),
-                        SizedBox(
-                          height: 30.0,
-                        ),
-                        _buildPasswordTF(),
-                        _buildForgotPasswordBtn(),
-                        _buildLoginBtn(),
-                        _buildSignInWithText(),
-                        _buildSocialBtnRow(),
-                        _buildSignupBtn(),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 )
               ],

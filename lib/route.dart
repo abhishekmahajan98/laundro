@@ -11,7 +11,7 @@ import './pages/dry_cleaning_menu_page.dart';
 import './pages/cart_page.dart';
 import './pages/order_conform_page.dart';
 import './pages/test_page.dart';
-
+import './pages/extradetails.dart';
 Map<String, WidgetBuilder> routes(BuildContext context) {
   return <String, WidgetBuilder>{
     "/": (context)=>SplashScreen(),
@@ -27,5 +27,6 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     "/order-confirm-page": (context) => OrderConfirmPage(),
     "/my_account":(context)=> MyAccount(),
     '/test_page':(context)=>FirestoreTest(),
+    "/extradetails":(context)=>UserDetailsPage(),
   };
 }
