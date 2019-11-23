@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laundro/pages/logo_splash.dart';
 import 'package:laundro/pages/my_account.dart';
 import 'package:laundro/pages/password_reset_page.dart';
 import './pages/home_page.dart';
@@ -13,7 +14,8 @@ import './pages/test_page.dart';
 
 Map<String, WidgetBuilder> routes(BuildContext context) {
   return <String, WidgetBuilder>{
-    "/": (context) => LoginScreen(),
+    "/": (context)=>SplashScreen(),
+    '/login':(context)=>LoginScreen(),
     "/register": (context) => RegistrationScreen(),
     "/login": (context) => LoginScreen(),
     "/home": (context) => HomePage(),

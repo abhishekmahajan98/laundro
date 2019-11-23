@@ -126,7 +126,7 @@ class _SideDrawerState extends State<SideDrawer> {
               _auth.signOut();
               googleSignIn.signOut();
               Navigator.of(context).pushNamedAndRemoveUntil(
-                  "/", (Route<dynamic> route) => false);
+                  "/login", (Route<dynamic> route) => false);
             },
             child: ListTile(
               title: Text('Logout'),

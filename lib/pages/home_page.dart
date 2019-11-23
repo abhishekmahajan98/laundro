@@ -44,7 +44,12 @@ class _HomePageState extends State<HomePage> {
           child: Scaffold(
         appBar: AppBar(
           elevation: 0.1,
-          title: Text('Laundro'),
+          title: Hero(
+            tag: 'logo',
+            child: Icon(
+              Icons.local_laundry_service,
+            ),
+          ),
           centerTitle: true,
           backgroundColor: Color(0xFF73AEF5),
           actions: <Widget>[

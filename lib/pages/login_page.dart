@@ -43,11 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        /*Text(
-          'Email',
-          style: kLabelStyle,
-        ),
-        SizedBox(height: 10.0),*/
+
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
@@ -67,8 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Icons.email,
                 color: Colors.white,
               ),
-              hintText: 'Enter your Email',
-              hintStyle: kHintTextStyle,
+              labelText: 'Email',
+              labelStyle: kLabelStyle,
             ),
           ),
         ),
@@ -77,6 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildPasswordTF() {
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -104,8 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Icons.lock,
                 color: Colors.white,
               ),
-              hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
+              labelText: 'Password',
+              labelStyle:kLabelStyle,
             ),
           ),
         ),
@@ -140,13 +137,15 @@ class _LoginScreenState extends State<LoginScreen> {
             circularSpinner = true;
           });
           try {
-            final user = await _auth.signInWithEmailAndPassword(
+            final firebaseUser = await _auth.signInWithEmailAndPassword(
                 email: email, password: password);
-            if (user != null) {
-              final user=await _auth.currentUser();
-              loggedInUser=user;
-              prefs.setString('loggedInUserEmail', loggedInUser.email);
-              prefs.setString('loggedInUserDisplayName', loggedInUser.displayName);
+            if (firebaseUser != null) {
+              final currentFirebaseUser=await _auth.currentUser();
+              loggedInUser=currentFirebaseUser;
+              user.email=loggedInUser.email;
+              user.uid=loggedInUser.uid;
+              prefs.setString('loggedInUserEmail', user.email);
+              prefs.setString('loggedInUserDisplayName', user.uid);
               Navigator.pushReplacementNamed(context, '/home');
             }
           } catch (e) {
@@ -249,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   user.email=loggedInUser.email;
                   user.uid=loggedInUser.uid;
                   user.displayName=loggedInUser.displayName;
-                  prefs.setString('loggedInUserEmail', user.uid);
+                  prefs.setString('loggedInUserEmail', user.email);
                   prefs.setString('loggedInUserDisplayName', user.displayName);
                   prefs.setString('loggedInUserUid',user.uid );
                   final userCheck=await _firestore.collection('users').where('email',isEqualTo: prefs.getString('loggedInUserEmail')).limit(1).getDocuments();
@@ -349,13 +348,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          'Sign In',
+                        /*Text(
+                          'Laundro',
                           style: TextStyle(
                             color: Colors.white,
                             //fontFamily: 'OpenSans',
                             fontSize: 30.0,
                             fontWeight: FontWeight.bold,
+                          ),
+                        ),*/
+                        Hero(
+                          tag: 'logo',
+                          child: Icon(
+                            Icons.local_laundry_service,
+                            size: 150,
                           ),
                         ),
                         SizedBox(height: 30.0),
