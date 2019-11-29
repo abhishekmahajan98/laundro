@@ -1,6 +1,7 @@
 import 'package:carousel_pro/carousel_pro.dart';
 
 import 'package:flutter/material.dart';
+import 'package:laundro/constants.dart';
 
 import '../components/side_drawer.dart';
 
@@ -101,16 +102,24 @@ class _HomePageState extends State<HomePage> {
                               child: GestureDetector(
                                 onTap: () =>
                                     Navigator.pushNamed(context, '/iron'),
-                                child: Container(
-                                  height: double.infinity,
-                                  margin: EdgeInsets.all(10),
-                                  //child:Image.asset('images/products/Design.png'),
-                                  decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius: BorderRadius.circular(40),
-                                          image: DecorationImage(
-                                                image: ExactAssetImage(
-                                                  'images/products/Design.png')),),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 3,
+                                      child: Image(
+                                        image: AssetImage('images/icons/ironing.png'),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child:Text(
+                                        'Ironing',
+                                        style: kCategoryTextStyle,
+                                        ),
+                                    ),
+                                    
+                                  ],
                                 ),
                               ),
                             ),
@@ -119,17 +128,24 @@ class _HomePageState extends State<HomePage> {
                               child: GestureDetector(
                                 onTap: () =>
                                     Navigator.pushNamed(context, '/wash'),
-                                child: Container(
-                                  height: double.infinity,
-                                  margin: EdgeInsets.all(10),
-                                  //child: Text("hii"),
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: ExactAssetImage(
-                                              'images/products/wash.png')),
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(40),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 3,
+                                      child: Image(
+                                        image: AssetImage('images/icons/washing.png'),
                                       ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child:Text(
+                                        'Washing',
+                                        style: kCategoryTextStyle,
+                                        ),
+                                    )
+                                    
+                                  ],
                                 ),
                               ),
                             ),
@@ -145,16 +161,24 @@ class _HomePageState extends State<HomePage> {
                               child: GestureDetector(
                                 onTap: () =>
                                     Navigator.pushNamed(context, '/dry-clean'),
-                                child: Container(
-                                  height: double.infinity,
-                                  margin: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: ExactAssetImage(
-                                              'images/products/Dry.png'),
-                                              ),
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(40)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 3,
+                                      child: Image(
+                                        image: AssetImage('images/icons/dryclean.png'),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child:Text(
+                                        'Dry-Cleaning',
+                                        style: kCategoryTextStyle,
+                                        ),
+                                    )
+                                    
+                                  ],
                                 ),
                               ),
                             ),
@@ -187,86 +211,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-/*new ListView(
-        children: <Widget>[
-          image_carousel,
-          Container(
-            color: Theme.of(context).backgroundColor,
-            height: 400.0,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                    child: Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: GestureDetector(
-                      onTap: () => Navigator.pushNamed(context, '/iron'),
-                      child: Container(
-                        margin: EdgeInsets.all(10.0),
-                        height: 170.0,
-                        child: Image.asset('images/products/Design.png'),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).buttonColor,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    )),
-                    Expanded(
-                        child: GestureDetector(
-                            onTap: () => Navigator.pushNamed(context, '/wash'),
-                            child: Container(
-                              margin: EdgeInsets.all(10.0),
-                              height: 170.0,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: ExactAssetImage(
-                                        'images/products/wash.png')),
-                                color: Theme.of(context).buttonColor,
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ))),
-                  ],
-                )),
-                Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: GestureDetector(
-                              onTap: () =>
-                                  Navigator.pushNamed(context, '/dry-clean'),
-                              child: Container(
-                                margin:
-                                    EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
-                                height: 170,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: ExactAssetImage(
-                                          'images/products/Dry.png')),
-                                  color: Theme.of(context).buttonColor,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ))),
-                      Expanded(
-                          child: Container(
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
-                        height: 170,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: ExactAssetImage(
-                                  'images/products/tailoring.png')),
-                          color: Theme.of(context).buttonColor,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      )),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}*/

@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:laundro/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
@@ -15,6 +17,8 @@ class _MyAccountState extends State<MyAccount> {
   bool editPrimaryAddress=false;
   bool editSecondaryAddress=false;
   String displayName='null',email='null';
+  String updatedNumber=User.phone;
+  final _firestore=Firestore.instance;
   
   @override
   void initState() {
@@ -23,13 +27,7 @@ class _MyAccountState extends State<MyAccount> {
   }
   void instantiateSP() async{
     prefs = await SharedPreferences.getInstance();
-    setState(() {
-      email=prefs.getString('loggedInUserEmail');
-      displayName=prefs.getString('loggedInUserDisplayName');
-      //photourl=prefs.getString('loggedInUserPhotoUrl');
-      //print(photourl);
-    });
-
+    print(User.uid);
   }
 
   @override
@@ -46,7 +44,17 @@ class _MyAccountState extends State<MyAccount> {
                 'Save',
                 style: TextStyle(color: Colors.white,fontSize: 20),
               ),
-              onPressed: (){},
+              onPressed: (){
+                if(updatedNumber.length==10 && updatedNumber!=User.phone){
+                  User.phone=updatedNumber;
+                  prefs.remove('loggedInUserPhoneNumber');
+                  prefs.setString('loggedInUserPhoneNumber', User.phone);
+                  _firestore.collection('users').document(User.uid).updateData({
+                    'phoneNumber':User.phone,
+                    });
+                  Navigator.pop(context);
+                }
+              },
             )
           ],
           backgroundColor: Color(0xFF73AEF5),
@@ -129,13 +137,16 @@ class _MyAccountState extends State<MyAccount> {
                         title: TextFormField(
                           enabled: editPhoneNumber,
                           keyboardType: TextInputType.phone,
-                          initialValue: '8800418884',
+                          initialValue: User.phone,
                           style: TextStyle(
                             fontSize: 20,
-                            color: Colors.white,
+                            color: updatedNumber.length==10?Colors.white:Colors.red,
                           ),
                           onChanged: (value){
-                            print(value);
+                            setState(() {
+                              updatedNumber=value;
+                            });
+                            
                           },
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(top: 14.0),
@@ -224,8 +235,7 @@ class _MyAccountState extends State<MyAccount> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
-                                  ),
-                                  
+                                  ),   
                                   decoration: InputDecoration(
                                   contentPadding: EdgeInsets.only(top: 14.0),
                                   prefixText:'Line 3:',
@@ -340,7 +350,6 @@ class _MyAccountState extends State<MyAccount> {
                           ),
                         ],
                       )
-                      
                     ],
                   )
                 ),

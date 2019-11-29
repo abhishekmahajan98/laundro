@@ -8,7 +8,7 @@ class FirestoreTest extends StatefulWidget {
 }
 
 class _FirestoreTestState extends State<FirestoreTest> {
-  final _auth=FirebaseAuth.instance;
+
   FirebaseUser loggedInUser;
   final _firestore=Firestore.instance;
   String messageText;

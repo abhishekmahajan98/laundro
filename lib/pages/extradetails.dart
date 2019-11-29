@@ -1,7 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:laundro/components/check_numeric.dart';
+import 'package:laundro/constants.dart';
+import 'package:laundro/model/user_model.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class UserDetailsPage extends StatefulWidget {
@@ -15,7 +20,22 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   String selectedDay;
   String selectedMonth;
   String selectedYear;
-  int group=1;
+  String userGender='male';
+  SharedPreferences prefs;
+  final _firestore=Firestore.instance;
+  
+  @override
+  void initState(){
+    super.initState();
+    instantiateSP();
+    if(User.phone==null){
+      User.phone='';
+    }
+  }
+  void instantiateSP() async{
+    prefs=await SharedPreferences.getInstance();
+  }
+
 
   Widget _buildName() {
     return Container(
@@ -32,10 +52,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         ],
       ),
       height: 60.0,
-      child: TextField(
-        obscureText: true,
+      child: TextFormField(
         onChanged: (value) {
-
+          setState(() {
+            User.displayName=value;
+          });
+          
         },
 
         style: TextStyle(
@@ -45,15 +67,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           border: InputBorder.none,
           labelText: 'Name',
           contentPadding: EdgeInsets.only(top: 4.0,left: 44.0),
-
-          //hintText: 'Enter your Name',
-
-          labelStyle: TextStyle(
-
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
-          ),
+          labelStyle: kLabelStyle,
         ),
       ),
     );
@@ -76,27 +90,22 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       ),
       height: 60.0,
       child: TextField(
-        obscureText: true,
         onChanged: (value) {
-
+          setState(() {
+            User.phone=value;
+          });
+          
         },
         keyboardType: TextInputType.phone,
         style: TextStyle(
-          color: Colors.white,
+          color: User.phone.length==10?Colors.white:Colors.red,
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
 
           labelText: "Phone Number" ,
           contentPadding: EdgeInsets.only(top: 4.0,left: 44.0),
-
-
-
-          labelStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontFamily: 'OpenSans',
-          ),
+          labelStyle: kLabelStyle,
         ),
       ),
     );
@@ -108,12 +117,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         initialDate: selectedDate,
         firstDate: DateTime(1950, 1),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != User.dob)
       setState(() {
-        selectedDate = picked;
-
+        User.dob = picked;
       });
-    //return selectedDate;
   }
   Widget _buildGender()
   {
@@ -148,12 +155,14 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Radio(value: 1,
-              groupValue: group,
-              onChanged: (T){
-                print(T);
+          Radio(value: 'male',
+              groupValue: userGender,
+              
+              onChanged: (gender){
+                print(gender);
                 setState(() {
-                  group =T;
+                  userGender =gender;
+                  User.gender=gender;
 
                 });
               }
@@ -170,16 +179,15 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Radio(value: 2,
-              groupValue: group,
-              onChanged: (T){
-                print(T);
-                setState(() {
-                  group =T;
-
-                });
-              }
-
+          Radio(value: 'female',
+            groupValue: userGender,
+            onChanged: (gender){
+              print(gender);
+              setState(() {
+                userGender=gender;
+                User.gender=gender;
+              });
+            }
           ),
         ],
       ),
@@ -223,13 +231,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           ),
           onChanged: (value){
             setState(() {
-
             });
           },
-
-
-
-
         ),
       ),
       trailing: GestureDetector(
@@ -239,13 +242,67 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         ),
         onTap: () async{
           await _selectDate(context);
-          selectedDay=selectedDate.day.toString();
-          selectedMonth=selectedDate.month.toString();
-          selectedYear=selectedDate.year.toString();
-          print(selectedDate.toString());
-
+          selectedDay=User.dob.day.toString();
+          selectedMonth=User.dob.month.toString();
+          selectedYear=User.dob.year.toString();
+          print(User.dob.toString());
         },
       ),
+    );
+  }
+  Widget _nextButton(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          'Next',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20
+          ),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        FloatingActionButton(
+          backgroundColor: Colors.white,
+          child: Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.blue,
+          ),
+          onPressed: (){
+            if(User.displayName!='' && User.phone.length==10 && User.dob!=null && isNumeric(User.phone)){
+              prefs.setString('loggedInUserDisplayName', User.displayName);
+              prefs.setString('loggedInUserPhoneNumber', User.phone);
+              prefs.setString('loggedInUserDOB', User.dob.toString());
+              prefs.setString('loggedInUserGender', User.gender);
+              _firestore.document('users/'+User.uid).setData({
+                      'email':User.email,
+                      'displayName':User.displayName,
+                      'phoneNumber':User.phone,
+                      'gender':User.gender,
+                      'dob':User.dob.toString(),
+                    });
+              Navigator.pushReplacementNamed(context, '/home');
+            }
+            else{
+              Alert(
+              context: context,
+              title: 'Please fill the form ',
+              desc:
+                  'Please fill the name,10 digit phone number and the Date of birth',
+              buttons: [
+                DialogButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ]).show();
+            }
+          },),
+      ],
     );
   }
 
@@ -302,29 +359,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                   SizedBox(height: 30.0),
                   _buildGender(),
                   SizedBox(height: 30,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Text(
-                        'Next',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      FloatingActionButton(
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.blue,
-                        ),
-                        onPressed: (){},),
-                    ],
-                  ),
+                  _nextButton(),
 
 
 

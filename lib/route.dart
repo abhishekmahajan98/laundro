@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laundro/pages/login_buffer_page.dart';
 import 'package:laundro/pages/logo_splash.dart';
 import 'package:laundro/pages/my_account.dart';
 import 'package:laundro/pages/password_reset_page.dart';
@@ -28,5 +29,6 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     "/my_account":(context)=> MyAccount(),
     '/test_page':(context)=>FirestoreTest(),
     "/extradetails":(context)=>UserDetailsPage(),
+    '/login_buffer':(context)=>BufferPage(),
   };
 }

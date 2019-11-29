@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
-  final _firestore=Firestore.instance;
   String email, password;
   bool showSpinner = false;
   SharedPreferences prefs;
@@ -111,18 +109,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             final newUser = await _auth.createUserWithEmailAndPassword(
                 email: email, password: password);
             if (newUser != null) {
-              Navigator.pushReplacementNamed(context, "/home");
               final firebaseUser = await _auth.currentUser();
               loggedInUser = firebaseUser;
-              user.uid=loggedInUser.uid;
-              user.email=loggedInUser.email;
+              User.uid=loggedInUser.uid;
+              User.email=loggedInUser.email;
               prefs = await SharedPreferences.getInstance();
-              prefs.setString('loggedInUserEmail',user.email);
-              prefs.setString('loggedInUserUid', user.uid);
-              _firestore.document('users/'+prefs.getString('loggedInUserUid')).setData({
-                'email':user.email,
-              });
-              //prefs.setString('loggedInUserDisplayName', loggedInUser.displayName);
+              prefs.setString('loggedInUserEmail',User.email);
+              prefs.setString('loggedInUserUid', User.uid);
+              Navigator.pushReplacementNamed(context,"/extradetails");
             }
           } catch (e) {
             print(e);

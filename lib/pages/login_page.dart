@@ -21,7 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool showSpinner = false;
   bool circularSpinner = false;
   SharedPreferences prefs;
-  User user=new User();
   
   @override
   void initState(){
@@ -77,11 +76,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        /*Text(
-          'Password',
-          style: kLabelStyle,
-        ),
-        SizedBox(height: 10.0),*/
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
@@ -142,11 +136,18 @@ class _LoginScreenState extends State<LoginScreen> {
             if (firebaseUser != null) {
               final currentFirebaseUser=await _auth.currentUser();
               loggedInUser=currentFirebaseUser;
-              user.email=loggedInUser.email;
-              user.uid=loggedInUser.uid;
-              prefs.setString('loggedInUserEmail', user.email);
-              prefs.setString('loggedInUserDisplayName', user.uid);
-              Navigator.pushReplacementNamed(context, '/home');
+              User.email=loggedInUser.email;
+              User.uid=loggedInUser.uid;
+              prefs.setString('loggedInUserEmail', User.email);
+              prefs.setString('loggedInUserUserid', User.uid);
+              final userCheck=await _firestore.collection('users').where('email',isEqualTo: User.email).limit(1).getDocuments();
+              final userCheckList=userCheck.documents;
+              if(userCheckList.length==1){
+                Navigator.pushReplacementNamed(context,'/login_buffer');
+              }
+              else{
+                Navigator.pushReplacementNamed(context, '/extradetails');
+              }
             }
           } catch (e) {
             print(e);
@@ -245,24 +246,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (res != null) {
                   final firebaseUser=await _auth.currentUser();
                   loggedInUser=firebaseUser;
-                  user.email=loggedInUser.email;
-                  user.uid=loggedInUser.uid;
-                  user.displayName=loggedInUser.displayName;
-                  prefs.setString('loggedInUserEmail', user.email);
-                  prefs.setString('loggedInUserDisplayName', user.displayName);
-                  prefs.setString('loggedInUserUid',user.uid );
-                  final userCheck=await _firestore.collection('users').where('email',isEqualTo: prefs.getString('loggedInUserEmail')).limit(1).getDocuments();
+                  User.email=loggedInUser.email;
+                  User.uid=loggedInUser.uid;
+                  prefs.setString('loggedInUserEmail', User.email);
+                  prefs.setString('loggedInUserUid',User.uid);
+                  final userCheck=await _firestore.collection('users').where('email',isEqualTo: User.email).limit(1).getDocuments();
                   final userCheckList=userCheck.documents;
                   if(userCheckList.length==1){
-                    print('already exists');
+                    Navigator.pushReplacementNamed(context,'/login_buffer');
                   }
                   else{
-                    print('new user!!');
-                    _firestore.document('users/'+prefs.getString('loggedInUserUid')).setData({
-                      'email':prefs.getString('loggedInUserEmail'),
-                    });
+                    Navigator.pushReplacementNamed(context, '/extradetails');
                     }
-                  Navigator.pushReplacementNamed(context, '/home');
+                  
                 } else {
                   print("error logging in with google");
                   account.clearAuthCache();
