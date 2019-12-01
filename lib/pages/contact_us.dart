@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ContactUs extends StatefulWidget {
   @override
   _ContactUsState createState() => _ContactUsState();
 }
 
 class _ContactUsState extends State<ContactUs> {
+  final _firestore = Firestore.instance;
+  String message = "";
   @override
   Widget build(BuildContext context) {
-
-final _firestore=Firestore.instance;
-String message="";
-
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Contact us'),
         centerTitle: true,
-
       ),
-      body:  Stack(
+      body: Stack(
         children: <Widget>[
-
           Container(
             height: double.infinity,
             width: double.infinity,
@@ -39,64 +36,59 @@ String message="";
               ),
             ),
           ),
-
           Container(
             margin: EdgeInsets.all(30),
-            child:Column(
+            child: Column(
               children: <Widget>[
                 SizedBox(
                   height: 20,
                 ),
-
-                Text('queries',
+                Text(
+                  'queries',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.0,
-
                   ),
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 ListTile(
-
-
-                  title:TextField(
+                  title: TextField(
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                         hintText: "Enter your queries",
                         hintStyle: TextStyle(color: Colors.white30),
                         border: OutlineInputBorder(
                             borderRadius:
-                            BorderRadius.all(new Radius.circular(25.0))),
+                                BorderRadius.all(new Radius.circular(25.0))),
                         labelStyle: TextStyle(color: Colors.white)),
                     maxLines: 8,
                     style: TextStyle(
                       color: Colors.white,
                     ),
-                    onChanged: (value)
-                    {
+                    onChanged: (value) {
                       setState(() {
-                        message=value;
+                        message = value;
                       });
-
-
                     },
                   ),
                 ),
                 ButtonTheme(
-
                   minWidth: 250.0,
                   height: 40.0,
                   child: RaisedButton(
-                    onPressed: (){
+                    onPressed: () {
                       print(message);
                       _firestore.collection('queries').add({
-                        'message' : message,
+                        'message': message,
                       });
                     },
                     color: Colors.blue,
-                    child: Text("Send ",style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      "Send ",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
                 Divider(
@@ -114,9 +106,8 @@ String message="";
                       color: Colors.white,
                       fontSize: 20.0,
                     ),
-                  ) ,
+                  ),
                 ),
-
                 ListTile(
                   leading: Icon(
                     Icons.email,
@@ -128,19 +119,13 @@ String message="";
                       color: Colors.white,
                       fontSize: 20.0,
                     ),
-                  ) ,
+                  ),
                 ),
-
-
               ],
             ),
           ),
-
         ],
       ),
     );
-
-
   }
 }
-
