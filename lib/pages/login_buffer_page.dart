@@ -1,67 +1,57 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:laundro/model/user_model.dart';
-class SplashScreen extends StatefulWidget {
+import 'package:shared_preferences/shared_preferences.dart';
+
+class BufferPage extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _BufferPageState createState() => _BufferPageState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
-  final _auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+class _BufferPageState extends State<BufferPage> {
+  final _firestore = Firestore.instance;
   SharedPreferences prefs;
-  /*@override
-  void initState() {
-    Timer(
-      Duration(seconds: 1),
-      (){
-        Navigator.pushNamed(context, '/login');
-        } 
-    );
-    super.initState();
-  }*/
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    Timer(
-      Duration(seconds: 1),
-      (){
-        instantiateSP();
-        } 
-    );
-  }
-  void instantiateSP() async{
-    prefs = await SharedPreferences.getInstance();
-    checkLoggedInStatus();
+    Timer(Duration(seconds: 1), () {
+      instantiateSP();
+      retrieveUserData();
+    });
   }
 
-  void checkLoggedInStatus() async{
-    if(prefs.containsKey('loggedInUserEmail')){
-      try{
-        User.email=prefs.getString('loggedInUserEmail');
-        User.uid=prefs.getString('loggedInUserUid');
-        User.phone=prefs.getString('loggedInUserPhoneNumber');
-        User.displayName=prefs.getString('loggedInUserDisplayName');
-        User.gender=prefs.getString('loggedInUserGender');
-        User.dob=DateTime.parse(prefs.getString('loggedInUserDOB'));
-        Navigator.pushReplacementNamed(context, '/home');
-      }
-      catch(e){
-        print(e);
-        prefs.clear();
-        _auth.signOut();
-        googleSignIn.signOut();
-        Navigator.pushReplacementNamed(context, '/login');
-        
-      }
-    }
-    else{
-      Navigator.pushReplacementNamed(context, '/login');
+  void instantiateSP() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  void retrieveUserData() async {
+    final document =
+        await _firestore.collection('users').document(User.uid).get();
+    if (document.data['displayName'] != null &&
+        document.data['phoneNumber'] != null) {
+      User.displayName = document.data['displayName'];
+      User.dob = DateTime.parse(document.data['dob']);
+      User.phone = document.data['phoneNumber'];
+      User.gender = document.data['gender'];
+      prefs.setString('loggedInUserDisplayName', User.displayName);
+      prefs.setString('loggedInUserPhoneNumber', User.phone);
+      prefs.setString('loggedInUserDOB', User.dob.toString());
+      prefs.setString('loggedInUserGender', User.gender);
+      navigateToHome();
+    } else {
+      navigateToDetails();
     }
   }
+
+  void navigateToHome() {
+    Navigator.pushReplacementNamed(context, '/home');
+  }
+
+  void navigateToDetails() {
+    Navigator.pushReplacementNamed(context, '/extradetails');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top:20),
+                    padding: const EdgeInsets.only(top: 20),
                     child: Text(
                       'Laundro',
                       textAlign: TextAlign.center,
@@ -105,12 +95,11 @@ class _SplashScreenState extends State<SplashScreen> {
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
-                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            
           ],
         ),
       ),

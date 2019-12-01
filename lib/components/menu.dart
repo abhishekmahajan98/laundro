@@ -127,17 +127,18 @@ class _MenuState extends State<Menu> {
                 ? Center(child: CircularProgressIndicator())
                 : Column(children: <Widget>[
                     Expanded(
-                        child: ListView.builder(
-                            itemCount: _menuItems.length,
-                            itemBuilder: (BuildContext context, int i) {
-                              return MenuItem(
-                                title: _menuItems[i]["title"],
-                                qty: _menuItems[i]["qty"],
-                                price: _menuItems[i]["price"],
-                                addQty: () => addItem(i),
-                                removeQty: () => removeItem(i),
-                              );
-                            })),
+                      child: ListView.builder(
+                          itemCount: _menuItems.length,
+                          itemBuilder: (BuildContext context, int i) {
+                            return MenuItem(
+                              title: _menuItems[i]["title"],
+                              qty: _menuItems[i]["qty"],
+                              price: _menuItems[i]["price"],
+                              addQty: () => addItem(i),
+                              removeQty: () => removeItem(i),
+                            );
+                          }),
+                    ),
                     Container(
                         width: 500,
                         height: 50,

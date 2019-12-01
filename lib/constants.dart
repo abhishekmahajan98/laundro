@@ -55,3 +55,10 @@ final kBoxDecorationStyle = BoxDecoration(
     ),
   ],
 );
+
+final kCategoryTextStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 18,
+  fontFamily: 'OpenSans',
+);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:laundro/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 class SideDrawer extends StatefulWidget {
   @override
   _SideDrawerState createState() => _SideDrawerState();
@@ -13,22 +13,11 @@ class _SideDrawerState extends State<SideDrawer> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   SharedPreferences prefs;
   FirebaseUser loggedInUser;
-  String email = 'null', displayName = 'null'; /*photourl='null'*/
   @override
   void initState() {
     super.initState();
-    instantiateSP();
   }
 
-  void instantiateSP() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      email = prefs.getString('loggedInUserEmail');
-      displayName = prefs.getString('loggedInUserDisplayName');
-      //photourl=prefs.getString('loggedInUserPhotoUrl');
-      //print(photourl);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +26,8 @@ class _SideDrawerState extends State<SideDrawer> {
         children: <Widget>[
           //header
           UserAccountsDrawerHeader(
-            accountName: Text(email),
-            accountEmail: displayName == null ? Text('') : Text(displayName),
+            accountName: Text(User.email),
+            accountEmail: User.displayName == null ? Text('') : Text(User.displayName),
             currentAccountPicture: GestureDetector(
               child: CircleAvatar(
                   backgroundColor: Colors.white,

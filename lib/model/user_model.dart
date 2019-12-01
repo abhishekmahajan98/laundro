@@ -2,13 +2,13 @@
 enum Gender { male, female }
 
 class User {
-  String email;
-  String displayName;
-  String uid;
-  String phone;
-  String address;
-  int pincode;
-  String gender;
-  DateTime dob;
-  List<Map<dynamic, dynamic>> orderHistory;
+  static String email='';
+  static String displayName='';
+  static String uid='';
+  static String phone='';
+  static String address;
+  static int pincode;
+  static String gender='male';
+  static DateTime dob;
+  static List<Map<dynamic, dynamic>> orderHistory;
 }
