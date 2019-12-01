@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laundro/pages/contact_us.dart';
 import 'package:laundro/pages/logo_splash.dart';
 import 'package:laundro/pages/my_account.dart';
 import 'package:laundro/pages/password_reset_page.dart';
@@ -11,7 +12,7 @@ import './pages/dry_cleaning_menu_page.dart';
 import './pages/cart_page.dart';
 import './pages/order_conform_page.dart';
 import './pages/test_page.dart';
-
+import './pages/contact_us.dart';
 Map<String, WidgetBuilder> routes(BuildContext context) {
   return <String, WidgetBuilder>{
     "/": (context)=>SplashScreen(),
@@ -27,5 +28,6 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     "/order-confirm-page": (context) => OrderConfirmPage(),
     "/my_account":(context)=> MyAccount(),
     '/test_page':(context)=>FirestoreTest(),
+    '/contactus':(context)=>ContactUs(),
   };
 }
