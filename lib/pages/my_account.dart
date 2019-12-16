@@ -155,8 +155,8 @@ class _MyAccountState extends State<MyAccount> {
                                 color: Colors.white,
                               ),
                               prefixText: '+91-',
-                              hintText: 'Enter your Email',
-                              hintStyle: kHintTextStyle,
+                              //hintText: 'Enter your Email',
+                              //hintStyle: kHintTextStyle,
                             ),
                           ),
                           trailing: GestureDetector(
