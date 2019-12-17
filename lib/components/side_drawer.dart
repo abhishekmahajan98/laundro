@@ -41,16 +41,7 @@ class _SideDrawerState extends State<SideDrawer> {
             ),
           ),
           //body
-          InkWell(
-            onTap: () => Navigator.pushNamed(context, '/'),
-            child: ListTile(
-              title: Text('Home'),
-              leading: Icon(
-                Icons.home,
-                color: Color(0xFF73AEF5),
-              ),
-            ),
-          ),
+
           InkWell(
             onTap: () => Navigator.pushNamed(context, '/my_account'),
             child: ListTile(
@@ -72,7 +63,7 @@ class _SideDrawerState extends State<SideDrawer> {
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: ()  =>  Navigator.pushNamed(context, '/cart'),
             child: ListTile(
               title: Text('Shopping Cart'),
               leading: Icon(

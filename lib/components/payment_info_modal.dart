@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laundro/model/user_model.dart';
 
 class PaymentInfoModal extends StatelessWidget {
   final Function paymentHandler;
@@ -31,7 +32,7 @@ class PaymentInfoModal extends StatelessWidget {
                   alignment: Alignment.centerLeft),
               SizedBox(height: 10),
               Container(
-                  child: Text("+91$phone", style: TextStyle(fontSize: 16)),
+                  child: Text("+91 "+User.phone, style: TextStyle(fontSize: 16)),
                   alignment: Alignment.centerLeft),
               SizedBox(height: 20),
               Container(

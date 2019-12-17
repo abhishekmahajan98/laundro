@@ -131,7 +131,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
         color: Colors.white,
         child: Text(
-          'LOGIN',
+          'SIGN-UP',
           style: TextStyle(
             color: Color(0xFF527DAA),
             letterSpacing: 1.5,
