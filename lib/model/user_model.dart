@@ -8,8 +8,11 @@ class User {
   static String phone='';
   static String address='';
 
-  static int pincode;
+  static String pincode='';
   static String gender='male';
   static DateTime dob;
   static List<Map<dynamic, dynamic>> orderHistory;
+
+
+
 }

@@ -21,8 +21,10 @@ class _MyAccountState extends State<MyAccount> {
   String updatedLine2='';
   String updatedCity;
   String updatedState;
-  String pincode='';
-  String PrimaryAddress=User.address;
+  String pincode=User.pincode;
+  String primaryAddress=User.address;
+
+
 
   final _firestore = Firestore.instance;
 
@@ -62,10 +64,15 @@ class _MyAccountState extends State<MyAccount> {
 
                   Navigator.pop(context);
                 }
-                PrimaryAddress=updatedLine1+"\\"+updatedLine2+"\\"+updatedCity+"\\"+updatedState+"\\"+pincode;
-                User.address=PrimaryAddress;
+                primaryAddress=updatedLine1+"\\"+updatedLine2+"\\"+updatedCity+"\\"+updatedState+"\\"+pincode;
+                User.address=primaryAddress;
                 _firestore.collection('users').document(User.uid).updateData({
                   'Address':User.address,
+
+                });
+                User.pincode=pincode;
+                _firestore.collection('users').document(User.uid).updateData({
+                  'pincode':User.pincode,
                 });
 
               },
@@ -215,6 +222,7 @@ class _MyAccountState extends State<MyAccount> {
                               ),
 
                             ),
+
                         ListTile(
                           leading: Text("Line 1      "),
                           title: TextFormField(
@@ -282,6 +290,8 @@ class _MyAccountState extends State<MyAccount> {
                         ListTile(
                           leading: Text("Pincode  "),
                           title: TextFormField(
+                            initialValue: pincode,
+
                             style: TextStyle(
                               color: pincode.length == 6
                                   ? Colors.white

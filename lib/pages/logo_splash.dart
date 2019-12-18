@@ -47,6 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
         User.displayName=prefs.getString('loggedInUserDisplayName');
         User.gender=prefs.getString('loggedInUserGender');
         User.dob=DateTime.parse(prefs.getString('loggedInUserDOB'));
+
         Navigator.pushReplacementNamed(context, '/home');
       }
       catch(e){
