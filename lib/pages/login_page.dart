@@ -149,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (userCheckList.length == 1) {
                 Navigator.pushReplacementNamed(context, '/login_buffer');
               } else {
-                Navigator.pushReplacementNamed(context, '/extradetails');
+                Navigator.pushReplacementNamed(context, '/initial_detials');
               }
             }
           } catch (e) {
@@ -266,7 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (userCheckList.length == 1) {
                     Navigator.pushReplacementNamed(context, '/login_buffer');
                   } else {
-                    Navigator.pushReplacementNamed(context, '/extradetails');
+                    Navigator.pushReplacementNamed(context, '/initial_details');
                   }
                 } else {
                   print("error logging in with google");

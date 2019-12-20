@@ -115,7 +115,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               prefs = await SharedPreferences.getInstance();
               prefs.setString('loggedInUserEmail', User.email);
               prefs.setString('loggedInUserUid', User.uid);
-              Navigator.pushReplacementNamed(context, "/extradetails");
+              Navigator.pushReplacementNamed(context, "/initial_details");
             }
           } catch (e) {
             print(e);
