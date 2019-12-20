@@ -7,6 +7,7 @@ import 'package:laundro/model/user_model.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -16,24 +17,25 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   FirebaseUser loggedInUser;
-  final _firestore=Firestore.instance;
+  final _firestore = Firestore.instance;
   String email, password;
   bool showSpinner = false;
   bool circularSpinner = false;
   SharedPreferences prefs;
-  
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     instantiateSP();
   }
-  void instantiateSP() async{
+
+  void instantiateSP() async {
     prefs = await SharedPreferences.getInstance();
     checkLoggedInStatus();
   }
 
-  void checkLoggedInStatus(){
-    if(prefs.containsKey('loggedInUserEmail')){
+  void checkLoggedInStatus() {
+    if (prefs.containsKey('loggedInUserEmail')) {
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
@@ -42,7 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
@@ -72,7 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildPasswordTF() {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.white,
               ),
               labelText: 'Password',
-              labelStyle:kLabelStyle,
+              labelStyle: kLabelStyle,
             ),
           ),
         ),
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLoginBtn() {
     return Container(
-      padding: EdgeInsets.only(top: 2,bottom: 20),
+      padding: EdgeInsets.only(top: 2, bottom: 20),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
@@ -134,18 +134,21 @@ class _LoginScreenState extends State<LoginScreen> {
             final firebaseUser = await _auth.signInWithEmailAndPassword(
                 email: email, password: password);
             if (firebaseUser != null) {
-              final currentFirebaseUser=await _auth.currentUser();
-              loggedInUser=currentFirebaseUser;
-              User.email=loggedInUser.email;
-              User.uid=loggedInUser.uid;
+              final currentFirebaseUser = await _auth.currentUser();
+              loggedInUser = currentFirebaseUser;
+              User.email = loggedInUser.email;
+              User.uid = loggedInUser.uid;
               prefs.setString('loggedInUserEmail', User.email);
               prefs.setString('loggedInUserUserid', User.uid);
-              final userCheck=await _firestore.collection('users').where('email',isEqualTo: User.email).limit(1).getDocuments();
-              final userCheckList=userCheck.documents;
-              if(userCheckList.length==1){
-                Navigator.pushReplacementNamed(context,'/login_buffer');
-              }
-              else{
+              final userCheck = await _firestore
+                  .collection('users')
+                  .where('email', isEqualTo: User.email)
+                  .limit(1)
+                  .getDocuments();
+              final userCheckList = userCheck.documents;
+              if (userCheckList.length == 1) {
+                Navigator.pushReplacementNamed(context, '/login_buffer');
+              } else {
                 Navigator.pushReplacementNamed(context, '/extradetails');
               }
             }
@@ -157,11 +160,13 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         },
         padding: EdgeInsets.all(15.0),
-        shape:RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
         color: Colors.white,
-        child: circularSpinner?CircularProgressIndicator():Text(
+        child: circularSpinner
+            ? CircularProgressIndicator()
+            : Text(
                 'LOGIN',
                 style: TextStyle(
                   color: Color(0xFF527DAA),
@@ -229,7 +234,9 @@ class _LoginScreenState extends State<LoginScreen> {
               'images/facebook.jpg',
             ),
           ),
-          SizedBox(width: 40,),
+          SizedBox(
+            width: 40,
+          ),
           _buildSocialBtn(
             () async {
               setState(() {
@@ -237,28 +244,30 @@ class _LoginScreenState extends State<LoginScreen> {
               });
               try {
                 GoogleSignInAccount account = await _googleSignIn.signIn();
-                
+
                 AuthResult res = await _auth
                     .signInWithCredential(GoogleAuthProvider.getCredential(
                   idToken: (await account.authentication).idToken,
                   accessToken: (await account.authentication).accessToken,
                 ));
                 if (res != null) {
-                  final firebaseUser=await _auth.currentUser();
-                  loggedInUser=firebaseUser;
-                  User.email=loggedInUser.email;
-                  User.uid=loggedInUser.uid;
+                  final firebaseUser = await _auth.currentUser();
+                  loggedInUser = firebaseUser;
+                  User.email = loggedInUser.email;
+                  User.uid = loggedInUser.uid;
                   prefs.setString('loggedInUserEmail', User.email);
-                  prefs.setString('loggedInUserUid',User.uid);
-                  final userCheck=await _firestore.collection('users').where('email',isEqualTo: User.email).limit(1).getDocuments();
-                  final userCheckList=userCheck.documents;
-                  if(userCheckList.length==1){
-                    Navigator.pushReplacementNamed(context,'/login_buffer');
-                  }
-                  else{
+                  prefs.setString('loggedInUserUid', User.uid);
+                  final userCheck = await _firestore
+                      .collection('users')
+                      .where('email', isEqualTo: User.email)
+                      .limit(1)
+                      .getDocuments();
+                  final userCheckList = userCheck.documents;
+                  if (userCheckList.length == 1) {
+                    Navigator.pushReplacementNamed(context, '/login_buffer');
+                  } else {
                     Navigator.pushReplacementNamed(context, '/extradetails');
-                    }
-                  
+                  }
                 } else {
                   print("error logging in with google");
                   account.clearAuthCache();

@@ -19,7 +19,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool showSpinner = false;
   SharedPreferences prefs;
   FirebaseUser loggedInUser;
-  User user=new User();
 
   Widget _buildEmailTF() {
     return Column(
@@ -111,12 +110,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             if (newUser != null) {
               final firebaseUser = await _auth.currentUser();
               loggedInUser = firebaseUser;
-              User.uid=loggedInUser.uid;
-              User.email=loggedInUser.email;
+              User.uid = loggedInUser.uid;
+              User.email = loggedInUser.email;
               prefs = await SharedPreferences.getInstance();
-              prefs.setString('loggedInUserEmail',User.email);
+              prefs.setString('loggedInUserEmail', User.email);
               prefs.setString('loggedInUserUid', User.uid);
-              Navigator.pushReplacementNamed(context,"/extradetails");
+              Navigator.pushReplacementNamed(context, "/extradetails");
             }
           } catch (e) {
             print(e);
