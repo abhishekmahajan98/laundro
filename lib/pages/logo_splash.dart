@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:laundro/model/user_model.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -19,49 +20,47 @@ class _SplashScreenState extends State<SplashScreen> {
       Duration(seconds: 1),
       (){
         Navigator.pushNamed(context, '/login');
-        } 
+        }
     );
     super.initState();
   }*/
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    Timer(
-      Duration(seconds: 1),
-      (){
-        instantiateSP();
-        } 
-    );
+    Timer(Duration(seconds: 1), () {
+      instantiateSP();
+    });
   }
-  void instantiateSP() async{
+
+  void instantiateSP() async {
     prefs = await SharedPreferences.getInstance();
     checkLoggedInStatus();
   }
 
-  void checkLoggedInStatus() async{
-    if(prefs.containsKey('loggedInUserEmail')){
-      try{
-        User.email=prefs.getString('loggedInUserEmail');
-        User.uid=prefs.getString('loggedInUserUid');
-        User.phone=prefs.getString('loggedInUserPhoneNumber');
-        User.displayName=prefs.getString('loggedInUserDisplayName');
-        User.gender=prefs.getString('loggedInUserGender');
-        User.dob=DateTime.parse(prefs.getString('loggedInUserDOB'));
+  void checkLoggedInStatus() async {
+    if (prefs.containsKey('loggedInUserEmail')) {
+      try {
+        User.email = prefs.getString('loggedInUserEmail');
+        User.uid = prefs.getString('loggedInUserUid');
+        User.phone = prefs.getString('loggedInUserPhoneNumber');
+        User.displayName = prefs.getString('loggedInUserDisplayName');
+        User.gender = prefs.getString('loggedInUserGender');
+        User.dob = DateTime.parse(prefs.getString('loggedInUserDOB'));
         Navigator.pushReplacementNamed(context, '/home');
-      }
-      catch(e){
+      } catch (e) {
         print(e);
         prefs.clear();
         _auth.signOut();
         googleSignIn.signOut();
         Navigator.pushReplacementNamed(context, '/login');
-        
       }
-    }
-    else{
+    } else {
+      prefs.clear();
+      _auth.signOut();
       Navigator.pushReplacementNamed(context, '/login');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top:20),
+                    padding: const EdgeInsets.only(top: 20),
                     child: Text(
                       'Laundro',
                       textAlign: TextAlign.center,
@@ -105,12 +104,11 @@ class _SplashScreenState extends State<SplashScreen> {
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
-                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            
           ],
         ),
       ),
