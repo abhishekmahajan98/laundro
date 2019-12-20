@@ -17,6 +17,15 @@ class _MyAccountState extends State<MyAccount> {
   bool editSecondaryAddress = false;
   String displayName = 'null', email = 'null';
   String updatedNumber = User.phone;
+  String updatedLine1='';
+  String updatedLine2='';
+  String updatedCity;
+  String updatedState;
+  String pincode=User.pincode;
+  String primaryAddress=User.address;
+
+
+
   final _firestore = Firestore.instance;
 
   @override
@@ -52,8 +61,25 @@ class _MyAccountState extends State<MyAccount> {
                   _firestore.collection('users').document(User.uid).updateData({
                     'phoneNumber': User.phone,
                   });
+
                   Navigator.pop(context);
                 }
+                if (updatedLine1.length >=1 && pincode.length==6 ) {
+                  primaryAddress =
+                      updatedLine1 + "\\" + updatedLine2 + "\\" + updatedCity +
+                          "\\" + updatedState + "\\" + pincode;
+                  User.address = primaryAddress;
+                  _firestore.collection('users').document(User.uid).updateData({
+                    'Address': User.address,
+
+                  });
+                  User.pincode = pincode;
+                  _firestore.collection('users').document(User.uid).updateData({
+                    'pincode': User.pincode,
+                  });
+                  Navigator.pop(context);
+                }
+
               },
             )
           ],
@@ -173,204 +199,123 @@ class _MyAccountState extends State<MyAccount> {
                             ),
                           ),
                         ),
-                        ExpansionTile(
-                          title: Text(
-                            'Addresses',
-                            style: TextStyle(color: Colors.white, fontSize: 22),
-                          ),
-                          children: <Widget>[
-                            ExpansionTile(
+
+                            ListTile(
+
+                              leading: Icon(
+
+                                Icons.home,
+                                color: Colors.white,
+                              ),
                               title: Text(
                                 'Primary Address',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18),
                               ),
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          editPrimaryAddress =
-                                              !editPrimaryAddress;
-                                        });
-                                      },
-                                      child: Icon(
-                                        editPrimaryAddress == false
-                                            ? Icons.edit
-                                            : Icons.check,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    )
-                                  ],
+                              trailing: GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    editPrimaryAddress=!editPrimaryAddress;
+                                  });
+                                },
+                                child: Icon(
+                                  editPrimaryAddress == false
+                                      ? Icons.edit
+                                      : Icons.check,
+                                  color: Colors.black,
                                 ),
-                                ListTile(
-                                  title: TextFormField(
-                                    enabled: editPrimaryAddress,
-                                    keyboardType: TextInputType.text,
-                                    initialValue: 'F-63',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(top: 14.0),
-                                      prefixText: 'Line 1:',
-                                    ),
-                                  ),
-                                ),
-                                ListTile(
-                                  title: TextFormField(
-                                    enabled: editPrimaryAddress,
-                                    keyboardType: TextInputType.text,
-                                    initialValue: 'Mansarover Garden',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(top: 14.0),
-                                      prefixText: 'Line 2:',
-                                    ),
-                                  ),
-                                ),
-                                ListTile(
-                                  title: TextFormField(
-                                    enabled: editPrimaryAddress,
-                                    keyboardType: TextInputType.text,
-                                    initialValue: 'Mansarover Garden',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(top: 14.0),
-                                      prefixText: 'Line 3:',
-                                    ),
-                                  ),
-                                ),
-                                ListTile(
-                                  title: TextFormField(
-                                    enabled: editPrimaryAddress,
-                                    keyboardType: TextInputType.number,
-                                    initialValue: '11015',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(top: 14.0),
-                                      prefixText: 'Pin Code',
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            ExpansionTile(
-                              title: Text(
-                                'Secondary Address',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
                               ),
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          editSecondaryAddress =
-                                              !editSecondaryAddress;
-                                        });
-                                      },
-                                      child: Icon(
-                                        editSecondaryAddress == false
-                                            ? Icons.edit
-                                            : Icons.check,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    )
-                                  ],
-                                ),
-                                ListTile(
-                                  title: TextFormField(
-                                    enabled: editSecondaryAddress,
-                                    keyboardType: TextInputType.text,
-                                    initialValue: 'F-63',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(top: 14.0),
-                                      prefixText: 'Line 1:',
-                                    ),
-                                  ),
-                                ),
-                                ListTile(
-                                  title: TextFormField(
-                                    enabled: editSecondaryAddress,
-                                    keyboardType: TextInputType.text,
-                                    initialValue: 'Mansarover Garden',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(top: 14.0),
-                                      prefixText: 'Line 2:',
-                                    ),
-                                  ),
-                                ),
-                                ListTile(
-                                  title: TextFormField(
-                                    enabled: editSecondaryAddress,
-                                    keyboardType: TextInputType.text,
-                                    initialValue: 'Mansarover Garden',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(top: 14.0),
-                                      prefixText: 'Line 3:',
-                                    ),
-                                  ),
-                                ),
-                                ListTile(
-                                  title: TextFormField(
-                                    enabled: editSecondaryAddress,
-                                    keyboardType: TextInputType.number,
-                                    initialValue: '110015',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(top: 14.0),
-                                      prefixText: 'Pin Code:',
-                                    ),
-                                  ),
-                                )
-                              ],
+
                             ),
+
+                        ListTile(
+                          leading: Text("Line 1      "),
+                          title: TextFormField(
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            enabled: editPrimaryAddress,
+                            keyboardType: TextInputType.text,
+                            onChanged: (value) {
+                              setState(() {
+                                updatedLine1 = value;
+                              });
+                            },
+
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text("Line 2      "),
+                          title: TextFormField(
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            enabled: editPrimaryAddress,
+                            keyboardType: TextInputType.text,
+                            onChanged: (value) {
+                              setState(() {
+                                updatedLine2 = value;
+                              });
+                            },
+
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text("City         "),
+                          title: TextFormField(
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            enabled: editPrimaryAddress,
+                            keyboardType: TextInputType.text,
+                            onChanged: (value) {
+                              setState(() {
+                                updatedCity = value;
+                              });
+                            },
+
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text("State       "),
+                          title: TextFormField(
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            enabled: editPrimaryAddress,
+                            keyboardType: TextInputType.text,
+                            onChanged: (value) {
+                              setState(() {
+                                updatedState = value;
+                              });
+                            },
+
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text("Pincode  "),
+                          title: TextFormField(
+                            initialValue: pincode,
+
+                            style: TextStyle(
+                              color: pincode.length == 6
+                                  ? Colors.white
+                                  : Colors.red,
+                            ),
+                            enabled: editPrimaryAddress,
+                            keyboardType: TextInputType.phone,
+                            onChanged: (value) {
+                              setState(() {
+                                pincode = value;
+                              });
+                            },
+
+                          ),
+                        ),
+
                           ],
                         )
-                      ],
-                    )),
+                      ),
               ],
             ),
           ],

@@ -36,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen> {
     prefs = await SharedPreferences.getInstance();
     checkLoggedInStatus();
   }
-
   void checkLoggedInStatus() async {
     if (prefs.containsKey('loggedInUserEmail')) {
       try {
@@ -46,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
         User.displayName = prefs.getString('loggedInUserDisplayName');
         User.gender = prefs.getString('loggedInUserGender');
         User.dob = DateTime.parse(prefs.getString('loggedInUserDOB'));
+
         Navigator.pushReplacementNamed(context, '/home');
       } catch (e) {
         print(e);
