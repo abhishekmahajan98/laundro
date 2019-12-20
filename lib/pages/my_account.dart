@@ -64,16 +64,21 @@ class _MyAccountState extends State<MyAccount> {
 
                   Navigator.pop(context);
                 }
-                primaryAddress=updatedLine1+"\\"+updatedLine2+"\\"+updatedCity+"\\"+updatedState+"\\"+pincode;
-                User.address=primaryAddress;
-                _firestore.collection('users').document(User.uid).updateData({
-                  'Address':User.address,
+                if (updatedLine1.length >=1 && pincode.length==6 ) {
+                  primaryAddress =
+                      updatedLine1 + "\\" + updatedLine2 + "\\" + updatedCity +
+                          "\\" + updatedState + "\\" + pincode;
+                  User.address = primaryAddress;
+                  _firestore.collection('users').document(User.uid).updateData({
+                    'Address': User.address,
 
-                });
-                User.pincode=pincode;
-                _firestore.collection('users').document(User.uid).updateData({
-                  'pincode':User.pincode,
-                });
+                  });
+                  User.pincode = pincode;
+                  _firestore.collection('users').document(User.uid).updateData({
+                    'pincode': User.pincode,
+                  });
+                  Navigator.pop(context);
+                }
 
               },
             )
