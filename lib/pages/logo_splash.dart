@@ -36,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
     prefs = await SharedPreferences.getInstance();
     checkLoggedInStatus();
   }
+
   void checkLoggedInStatus() async {
     if (prefs.containsKey('loggedInUserEmail')) {
       try {
@@ -45,7 +46,16 @@ class _SplashScreenState extends State<SplashScreen> {
         User.displayName = prefs.getString('loggedInUserDisplayName');
         User.gender = prefs.getString('loggedInUserGender');
         User.dob = DateTime.parse(prefs.getString('loggedInUserDOB'));
-
+        User.primaryAddress = prefs.getString('loggedInUserPrimaryAddress');
+        User.primaryAddressLine1 =
+            prefs.getString('loggedInUserPrimaryAddressLine1');
+        User.primaryAddressLine2 =
+            prefs.getString('loggedInUserPrimaryAddressLine2');
+        User.primaryAddressCity =
+            prefs.getString('loggedInUserPrimaryAddressCity');
+        User.primaryAddressState =
+            prefs.getString('loggedInUserPrimaryAddressState');
+        User.pincode = prefs.getString('loggedInUserPrimaryAddressPincode');
         Navigator.pushReplacementNamed(context, '/home');
       } catch (e) {
         print(e);
@@ -90,10 +100,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 children: <Widget>[
                   Hero(
                     tag: 'logo',
-                    child: Icon(
-                      Icons.local_laundry_service,
-                      size: 80,
-                    ),
+                    child: Image.asset(
+                      'images/app_logo/LOGO1.png'
+                    )
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),

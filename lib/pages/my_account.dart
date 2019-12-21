@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:laundro/model/user_model.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../constants.dart';
 
 class MyAccount extends StatefulWidget {
   @override
@@ -15,16 +14,14 @@ class _MyAccountState extends State<MyAccount> {
   bool editPhoneNumber = false;
   bool editPrimaryAddress = false;
   bool editSecondaryAddress = false;
-  String displayName = 'null', email = 'null';
+  String displayName = User.displayName, email = User.email;
   String updatedNumber = User.phone;
-  String updatedLine1='';
-  String updatedLine2='';
-  String updatedCity;
-  String updatedState;
-  String pincode=User.pincode;
-  String primaryAddress=User.address;
-
-
+  String updatedAddressLine1 = User.primaryAddressLine1;
+  String updatedAddressLine2 = User.primaryAddressLine2;
+  String updatedCity = User.primaryAddressCity;
+  String updatedState = User.primaryAddressState;
+  String updatedPincode = User.pincode;
+  String updatedPrimaryAddress = User.primaryAddress;
 
   final _firestore = Firestore.instance;
 
@@ -36,7 +33,6 @@ class _MyAccountState extends State<MyAccount> {
 
   void instantiateSP() async {
     prefs = await SharedPreferences.getInstance();
-    print(User.uid);
   }
 
   @override
@@ -67,32 +63,85 @@ class _MyAccountState extends State<MyAccount> {
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
               onPressed: () {
-                if (updatedNumber.length == 10 && updatedNumber != User.phone) {
-                  User.phone = updatedNumber;
-                  prefs.remove('loggedInUserPhoneNumber');
-                  prefs.setString('loggedInUserPhoneNumber', User.phone);
-                  _firestore.collection('users').document(User.uid).updateData({
-                    'phoneNumber': User.phone,
-                  });
-
+                updatedPrimaryAddress = updatedAddressLine1 +
+                    "+" +
+                    updatedAddressLine2 +
+                    "+" +
+                    updatedCity +
+                    "+" +
+                    updatedState +
+                    "+" +
+                    updatedPincode;
+                if (updatedNumber != User.phone ||
+                    updatedPincode != User.pincode ||
+                    updatedPrimaryAddress != User.primaryAddress) {
+                  if (updatedPincode.length == 6 &&
+                      updatedNumber.length == 10 &&
+                      updatedAddressLine1.length >= 1 &&
+                      updatedCity.length > 1 &&
+                      updatedState.length > 1) {
+                    User.primaryAddress = updatedPrimaryAddress;
+                    User.phone = updatedNumber;
+                    User.primaryAddressLine1 = updatedAddressLine1;
+                    User.primaryAddressLine2 = updatedAddressLine2;
+                    User.primaryAddressCity = updatedCity;
+                    User.primaryAddressState = updatedState;
+                    User.pincode = updatedPincode;
+                    //remove previous prefs
+                    prefs.remove('loggedInUserPhoneNumber');
+                    prefs.remove('loggedInUserPrimaryAddress');
+                    prefs.remove('loggedInUserPrimaryAddressLine1');
+                    prefs.remove('loggedInUserPrimaryAddressLine2');
+                    prefs.remove('loggedInUserPrimaryAddressCity');
+                    prefs.remove('loggedInUserPrimaryAddressState');
+                    prefs.remove('loggedInUserPrimaryAddressPincode');
+                    //set updated prefs
+                    prefs.setString('loggedInUserPhoneNumber', User.phone);
+                    prefs.setString('loggedInUserPrimaryAddressLine1',
+                        User.primaryAddressLine1);
+                    prefs.setString('loggedInUserPrimaryAddressLine2',
+                        User.primaryAddressLine2);
+                    prefs.setString('loggedInUserPrimaryAddressCity',
+                        User.primaryAddressCity);
+                    prefs.setString('loggedInUserPrimaryAddressState',
+                        User.primaryAddressState);
+                    prefs.setString(
+                        'loggedInUserPrimaryAddressPincode', User.pincode);
+                    prefs.setString(
+                        'loggedInUserPrimaryAddress', User.primaryAddress);
+                    _firestore
+                        .collection('users')
+                        .document(User.uid)
+                        .updateData({
+                      'phoneNumber': User.phone,
+                      'primaryAddress': User.primaryAddress,
+                      'primaryAddressLine1': User.primaryAddressLine1,
+                      'primaryAddressLine2': User.primaryAddressLine2,
+                      'primaryAddressCity': User.primaryAddressCity,
+                      'primaryAddressState': User.primaryAddressState,
+                      'primaryAddressPincode': User.pincode,
+                    });
+                    Navigator.pop(context);
+                  }
+                  else{
+                    Alert(
+                      context: context,
+                      title: 'Invalid data in Fields',
+                      desc:
+                          'Please check the fields entered.',
+                      buttons: [
+                        DialogButton(
+                          child: Text('Okay'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ]).show();
+                  }
+                }
+                else{
                   Navigator.pop(context);
                 }
-                if (updatedLine1.length >=1 && pincode.length==6 ) {
-                  primaryAddress =
-                      updatedLine1 + "\\" + updatedLine2 + "\\" + updatedCity +
-                          "\\" + updatedState + "\\" + pincode;
-                  User.address = primaryAddress;
-                  _firestore.collection('users').document(User.uid).updateData({
-                    'Address': User.address,
-
-                  });
-                  User.pincode = pincode;
-                  _firestore.collection('users').document(User.uid).updateData({
-                    'pincode': User.pincode,
-                  });
-                  Navigator.pop(context);
-                }
-
               },
             )
           ],

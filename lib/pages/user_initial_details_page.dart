@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:laundro/components/check_numeric.dart';
@@ -7,7 +6,6 @@ import 'package:laundro/model/user_model.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class UserDetailsPage extends StatefulWidget {
   @override
@@ -20,22 +18,21 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   String selectedDay;
   String selectedMonth;
   String selectedYear;
-  String userGender='male';
+  String userGender = 'male';
   SharedPreferences prefs;
-  final _firestore=Firestore.instance;
-  
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     instantiateSP();
-    if(User.phone==null){
-      User.phone='';
+    if (User.phone == null) {
+      User.phone = '';
     }
   }
-  void instantiateSP() async{
-    prefs=await SharedPreferences.getInstance();
-  }
 
+  void instantiateSP() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
   Widget _buildName() {
     return Container(
@@ -55,26 +52,23 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       child: TextFormField(
         onChanged: (value) {
           setState(() {
-            User.displayName=value;
+            User.displayName = value;
           });
-          
         },
-
         style: TextStyle(
           color: Colors.white,
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
           labelText: 'Name',
-          contentPadding: EdgeInsets.only(top: 4.0,left: 44.0),
+          contentPadding: EdgeInsets.only(top: 4.0, left: 44.0),
           labelStyle: kLabelStyle,
         ),
       ),
     );
   }
 
-  Widget _buildPhone()
-  {
+  Widget _buildPhone() {
     return Container(
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
@@ -92,25 +86,23 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       child: TextField(
         onChanged: (value) {
           setState(() {
-            User.phone=value;
+            User.phone = value;
           });
-          
         },
         keyboardType: TextInputType.phone,
         style: TextStyle(
-          color: User.phone.length==10?Colors.white:Colors.red,
+          color: User.phone.length == 10 ? Colors.white : Colors.red,
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
-
-          labelText: "Phone Number" ,
-          contentPadding: EdgeInsets.only(top: 4.0,left: 44.0),
+          labelText: "Phone Number",
+          contentPadding: EdgeInsets.only(top: 4.0, left: 44.0),
           labelStyle: kLabelStyle,
         ),
       ),
     );
-
   }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -122,14 +114,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         User.dob = picked;
       });
   }
-  Widget _buildGender()
-  {
-    return Container(
 
+  Widget _buildGender() {
+    return Container(
       height: 60.0,
       //alignment: Alignment.center,
       decoration: BoxDecoration(
-
         color: Color(0xFF6CA8F1),
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
@@ -155,19 +145,16 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Radio(value: 'male',
+          Radio(
+              value: 'male',
               groupValue: userGender,
-              
-              onChanged: (gender){
+              onChanged: (gender) {
                 print(gender);
                 setState(() {
-                  userGender =gender;
-                  User.gender=gender;
-
+                  userGender = gender;
+                  User.gender = gender;
                 });
-              }
-
-          ),
+              }),
           Icon(
             FontAwesomeIcons.venus,
             color: Colors.white,
@@ -179,30 +166,28 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Radio(value: 'female',
-            groupValue: userGender,
-            onChanged: (gender){
-              print(gender);
-              setState(() {
-                userGender=gender;
-                User.gender=gender;
-              });
-            }
-          ),
+          Radio(
+              value: 'female',
+              groupValue: userGender,
+              onChanged: (gender) {
+                print(gender);
+                setState(() {
+                  userGender = gender;
+                  User.gender = gender;
+                });
+              }),
         ],
       ),
     );
   }
-  Widget _buildDOB(){
+
+  Widget _buildDOB() {
     return ListTile(
-
       contentPadding: EdgeInsets.all(0),
-
       title: Container(
         alignment: Alignment.centerLeft,
         height: 60.0,
         decoration: BoxDecoration(
-
           color: Color(0xFF6CA8F1),
           borderRadius: BorderRadius.circular(10.0),
           boxShadow: [
@@ -215,23 +200,25 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         ),
         child: TextField(
           enabled: false,
-
-
           decoration: InputDecoration(
-
             border: InputBorder.none,
-            hintText: selectedDay!=null?"DOB:   "+selectedDay+"/"+selectedMonth+"/"+selectedYear:'Select your DOB',
-            contentPadding:EdgeInsets.only(left: 40.0),
+            hintText: selectedDay != null
+                ? "DOB:   " +
+                    selectedDay +
+                    "/" +
+                    selectedMonth +
+                    "/" +
+                    selectedYear
+                : 'Select your DOB',
+            contentPadding: EdgeInsets.only(left: 40.0),
             hintStyle: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
-
           ),
-          onChanged: (value){
-            setState(() {
-            });
+          onChanged: (value) {
+            setState(() {});
           },
         ),
       ),
@@ -240,27 +227,25 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           Icons.calendar_today,
           color: Colors.white,
         ),
-        onTap: () async{
+        onTap: () async {
           await _selectDate(context);
-          selectedDay=User.dob.day.toString();
-          selectedMonth=User.dob.month.toString();
-          selectedYear=User.dob.year.toString();
+          selectedDay = User.dob.day.toString();
+          selectedMonth = User.dob.month.toString();
+          selectedYear = User.dob.year.toString();
           print(User.dob.toString());
         },
       ),
     );
   }
-  Widget _nextButton(){
+
+  Widget _nextButton() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Text(
           'Next',
           style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 20
-          ),
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         SizedBox(
           width: 10,
@@ -271,41 +256,32 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
             Icons.arrow_forward_ios,
             color: Colors.blue,
           ),
-          onPressed: (){
-            if(User.displayName!='' && User.phone.length==10 && User.dob!=null && isNumeric(User.phone)){
-              prefs.setString('loggedInUserDisplayName', User.displayName);
-              prefs.setString('loggedInUserPhoneNumber', User.phone);
-              prefs.setString('loggedInUserDOB', User.dob.toString());
-              prefs.setString('loggedInUserGender', User.gender);
-              _firestore.document('users/'+User.uid).setData({
-                      'email':User.email,
-                      'displayName':User.displayName,
-                      'phoneNumber':User.phone,
-                      'gender':User.gender,
-                      'dob':User.dob.toString(),
-                    });
-              Navigator.pushReplacementNamed(context, '/home');
-            }
-            else{
+          onPressed: () {
+            if (User.displayName != '' &&
+                User.phone.length == 10 &&
+                User.dob != null &&
+                isNumeric(User.phone)) {
+              Navigator.pushReplacementNamed(context, '/initial_address');
+            } else {
               Alert(
-              context: context,
-              title: 'Please fill the form ',
-              desc:
-                  'Please fill the name,10 digit phone number and the Date of birth',
-              buttons: [
-                DialogButton(
-                  child: Text('Okay'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ]).show();
+                  context: context,
+                  title: 'Please fill the form ',
+                  desc:
+                      'Please fill the name,10 digit phone number and the Date of birth',
+                  buttons: [
+                    DialogButton(
+                      child: Text('Okay'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ]).show();
             }
-          },),
+          },
+        ),
       ],
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -314,7 +290,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       body: Stack(
         children: <Widget>[
           Container(
-
             height: double.infinity,
             width: double.infinity,
             decoration: BoxDecoration(
@@ -347,7 +322,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   SizedBox(height: 30.0),
                   _buildName(),
                   SizedBox(height: 30.0),
@@ -358,11 +332,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                   _buildDOB(),
                   SizedBox(height: 30.0),
                   _buildGender(),
-                  SizedBox(height: 30,),
+                  SizedBox(
+                    height: 30,
+                  ),
                   _nextButton(),
-
-
-
                 ],
               ),
             ),

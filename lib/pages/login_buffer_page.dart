@@ -29,15 +29,32 @@ class _BufferPageState extends State<BufferPage> {
     final document =
         await _firestore.collection('users').document(User.uid).get();
     if (document.data['displayName'] != null &&
-        document.data['phoneNumber'] != null) {
+        document.data['phoneNumber'] != null &&
+        document.data['primaryAddress'] != null) {
       User.displayName = document.data['displayName'];
       User.dob = DateTime.parse(document.data['dob']);
       User.phone = document.data['phoneNumber'];
       User.gender = document.data['gender'];
+      User.primaryAddress = document.data['primaryAddress'];
+      User.primaryAddressLine1 = document.data['primaryAddressLine1'];
+      User.primaryAddressLine2 = document.data['primaryAddressLine2'];
+      User.primaryAddressCity = document.data['primaryAddressCity'];
+      User.primaryAddressState = document.data['primaryAddressState'];
+      User.pincode = document.data['primaryAddressPincode'];
       prefs.setString('loggedInUserDisplayName', User.displayName);
       prefs.setString('loggedInUserPhoneNumber', User.phone);
       prefs.setString('loggedInUserDOB', User.dob.toString());
       prefs.setString('loggedInUserGender', User.gender);
+      prefs.setString(
+          'loggedInUserPrimaryAddressLine1', User.primaryAddressLine1);
+      prefs.setString(
+          'loggedInUserPrimaryAddressLine2', User.primaryAddressLine2);
+      prefs.setString(
+          'loggedInUserPrimaryAddressCity', User.primaryAddressCity);
+      prefs.setString(
+          'loggedInUserPrimaryAddressState', User.primaryAddressState);
+      prefs.setString('loggedInUserPrimaryAddressPincode', User.pincode);
+      prefs.setString('loggedInUserPrimaryAddress', User.primaryAddress);
       navigateToHome();
     } else {
       navigateToDetails();
