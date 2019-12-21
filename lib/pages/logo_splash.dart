@@ -100,10 +100,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 children: <Widget>[
                   Hero(
                     tag: 'logo',
-                    child: Icon(
-                      Icons.local_laundry_service,
-                      size: 80,
-                    ),
+                    child: Image.asset(
+                      'images/app_logo/LOGO1.png'
+                    )
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),

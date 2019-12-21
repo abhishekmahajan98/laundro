@@ -47,12 +47,13 @@ class _HomePageState extends State<HomePage> {
           elevation: 0.1,
           title: Hero(
             tag: 'logo',
-            child: Icon(
-              Icons.local_laundry_service,
-            ),
+            child: Image.asset(
+              'images/app_logo/LOGO1.png',
+              width: 200,
+              )
           ),
           centerTitle: true,
-          backgroundColor: Color(0xFF73AEF5),
+          backgroundColor: Color(0XFF6bacde),
           actions: <Widget>[
             new IconButton(
               icon: Icon(

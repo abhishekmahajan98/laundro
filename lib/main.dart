@@ -7,6 +7,7 @@ Future<void> main() async  => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
+    precacheImage(AssetImage("images/app_logo/LOGO1.png"), context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Laundro',

@@ -78,7 +78,7 @@ class _SideDrawerState extends State<SideDrawer> {
             height: 5,
           ),
           InkWell(
-            onTap: () => Navigator.pushNamed(context, '/about'),
+            onTap: (){},
             child: ListTile(
               title: Text('About us'),
               leading: Icon(

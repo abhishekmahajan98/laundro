@@ -20,7 +20,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   String selectedYear;
   String userGender = 'male';
   SharedPreferences prefs;
-  final _firestore = Firestore.instance;
 
   @override
   void initState() {
