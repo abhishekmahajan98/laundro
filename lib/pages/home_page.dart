@@ -71,19 +71,7 @@ class _HomePageState extends State<HomePage> {
         body: Container(
           height: double.infinity,
           width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF73AEF5),
-                  Color(0xFF61A4F1),
-                  Color(0xFF478DE0),
-                  Color(0xFF398AE5),
-                ],
-                stops: [0.1, 0.4, 0.7, 0.9],
-              ),
-            ),
+            color: Color(0xfff2f3f7),
           child: Column(
             children: <Widget>[
               Expanded(
@@ -100,53 +88,41 @@ class _HomePageState extends State<HomePage> {
                           children: <Widget>[
                             Expanded(
                               flex: 1,
+
                               child: GestureDetector(
                                 onTap: () =>
                                     Navigator.pushNamed(context, '/iron'),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 3,
-                                      child: Image(
-                                        image: AssetImage('images/icons/ironing.png'),
-                                      ),
+                                child: Container(
+                                  height: double.infinity,
+                                  margin: EdgeInsets.fromLTRB(10.0, 10, 2, 2),
+                                  child: Image(
+                                    image: AssetImage(
+                                        'images/icons/ironing.png'
                                     ),
-                                    Expanded(
-                                      flex: 1,
-                                      child:Text(
-                                        'Ironing',
-                                        style: kCategoryTextStyle,
-                                        ),
-                                    ),
-                                    
-                                  ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+
+                                  ),
                                 ),
                               ),
                             ),
+
                             Expanded(
                               flex: 1,
                               child: GestureDetector(
                                 onTap: () =>
                                     Navigator.pushNamed(context, '/wash'),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 3,
-                                      child: Image(
-                                        image: AssetImage('images/icons/washing.png'),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child:Text(
-                                        'Washing',
-                                        style: kCategoryTextStyle,
-                                        ),
-                                    )
-                                    
-                                  ],
+                                child: Container(
+                                  height: double.infinity,
+                                    margin: EdgeInsets.fromLTRB(2, 10, 10, 2),
+                                  child: Image(image: AssetImage(
+                                      'images/icons/washing.png'
+                                  ), ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+
+                                  ),
                                 ),
                               ),
                             ),
@@ -162,24 +138,16 @@ class _HomePageState extends State<HomePage> {
                               child: GestureDetector(
                                 onTap: () =>
                                     Navigator.pushNamed(context, '/dry-clean'),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 3,
-                                      child: Image(
-                                        image: AssetImage('images/icons/dryclean.png'),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child:Text(
-                                        'Dry-Cleaning',
-                                        style: kCategoryTextStyle,
-                                        ),
-                                    )
-                                    
-                                  ],
+                                child: Container(
+                                  height: double.infinity,
+                                  margin: EdgeInsets.fromLTRB(10, 2, 2, 2),
+                                  child: Image(image: AssetImage(
+                                      'images/icons/dryclean.png'
+                                  ), ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+
+                                  ),
                                 ),
                               ),
                             ),
@@ -190,11 +158,11 @@ class _HomePageState extends State<HomePage> {
                                     Navigator.pushNamed(context, '/iron'),
                                 child: Container(
                                   height: double.infinity,
-                                  margin: EdgeInsets.all(10),
+                                  margin: EdgeInsets.fromLTRB(2, 2, 10, 2),
                                   //child: Center(child: Text("hii")),
                                   decoration: BoxDecoration(
-                                    color: Colors.yellow,
-                                    borderRadius: BorderRadius.circular(40),
+                                    color: Colors.white,
+
                                     ),
                                 ),
                               ),

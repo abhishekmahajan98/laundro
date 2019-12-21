@@ -39,6 +39,19 @@ class _MyAccountState extends State<MyAccount> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: Container(
+          margin: EdgeInsets.only(left: 30),
+          width: double.infinity,
+          height: 60,
+          child: RaisedButton(
+            color: Colors.blue,
+            onPressed: (){},
+            child: Text(
+                'Save',
+              style: kCategoryTextStyle,
+            ),
+          ),
+        ),
         appBar: AppBar(
           title: Text("My Account"),
           centerTitle: true,
@@ -134,80 +147,52 @@ class _MyAccountState extends State<MyAccount> {
           ],
           backgroundColor: Color(0xFF73AEF5),
         ),
-        body: Stack(
+        body: Column(
           children: <Widget>[
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      color: Colors.white,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 7,
-                    child: Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Color(0xFF73AEF5),
-                            Color(0xFF61A4F1),
-                            Color(0xFF478DE0),
-                            Color(0xFF398AE5),
-                          ],
-                          stops: [0.3, 0.4, 0.7, 0.9],
-                        ),
+            Expanded(
+              flex: 3,
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(color: Colors.blue),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 60,
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 50,
                       ),
                     ),
-                  ),
-                ],
+
+                    Text(
+                      User.displayName == null ? '' : User.displayName,
+                      style: TextStyle(
+                        fontSize: 30,
+
+                      ),
+                    ),
+
+                  ],
+                ),
               ),
             ),
-            Column(
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CircleAvatar(
-                        radius: 60,
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 50,
-                        ),
+            Expanded(
+                flex: 7,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Color(
+                          0xfff2f3f7
                       ),
-                    ],
                   ),
-                ),
-                Expanded(
-                    flex: 3,
-                    child: ListView(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              User.displayName == null ? '' : User.displayName,
-                              style: TextStyle(
-                                fontSize: 30,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        ListTile(
+                  child: ListView(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 20, 10,5),
+                        decoration: BoxDecoration(color: Colors.white,),
+                        child: ListTile(
                           title: TextFormField(
                             enabled: editPhoneNumber,
                             keyboardType: TextInputType.phone,
@@ -215,7 +200,7 @@ class _MyAccountState extends State<MyAccount> {
                             style: TextStyle(
                               fontSize: 20,
                               color: updatedNumber.length == 10
-                                  ? Colors.white
+                                  ? Colors.black
                                   : Colors.red,
                             ),
                             onChanged: (value) {
@@ -227,7 +212,7 @@ class _MyAccountState extends State<MyAccount> {
                               contentPadding: EdgeInsets.only(top: 14.0),
                               prefixIcon: Icon(
                                 Icons.phone,
-                                color: Colors.white,
+                                color: Colors.black,
                               ),
                               prefixText: '+91-',
                               //hintText: 'Enter your Email',
@@ -248,114 +233,124 @@ class _MyAccountState extends State<MyAccount> {
                             ),
                           ),
                         ),
-                        ListTile(
-                          leading: Icon(
-                            Icons.home,
-                            color: Colors.white,
-                          ),
-                          title: Text(
-                            'Primary Address',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          trailing: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                editPrimaryAddress = !editPrimaryAddress;
-                              });
-                            },
-                            child: Icon(
-                              editPrimaryAddress == false
-                                  ? Icons.edit
-                                  : Icons.check,
-                              color: Colors.black,
-                            ),
-                          ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
                         ),
-                        ListTile(
-                          leading: Text("Line 1      "),
-                          title: TextFormField(
-                            style: TextStyle(
-                              color: Colors.white,
+                        child: Column(
+                          children: <Widget>[
+                            ListTile(
+                              leading: Icon(
+                                Icons.home,
+                              ),
+                              title: Text(
+                                'Primary Address',
+                                style: TextStyle(
+                                    fontSize: 18),
+                              ),
+                              trailing: GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    editPrimaryAddress=!editPrimaryAddress;
+                                  });
+                                },
+                                child: Icon(
+                                  editPrimaryAddress == false
+                                      ? Icons.edit
+                                      : Icons.check,
+                                  color: Colors.black,
+                                ),
+                              ),
+
                             ),
-                            enabled: editPrimaryAddress,
-                            keyboardType: TextInputType.text,
-                            initialValue: updatedAddressLine1,
-                            onChanged: (value) {
-                              setState(() {
-                                updatedAddressLine1 = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          leading: Text("Line 2      "),
-                          title: TextFormField(
-                            style: TextStyle(
-                              color: Colors.white,
+                            ListTile(
+                              leading: Text("Line 1      "),
+                              title: TextFormField(
+                                enabled: editPrimaryAddress,
+                                keyboardType: TextInputType.text,
+                                onChanged: (value) {
+                                  setState(() {
+                                    updatedLine1 = value;
+                                  });
+                                },
+
+                              ),
                             ),
-                            enabled: editPrimaryAddress,
-                            keyboardType: TextInputType.text,
-                            initialValue: updatedAddressLine2,
-                            onChanged: (value) {
-                              setState(() {
-                                updatedAddressLine2 = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          leading: Text("City         "),
-                          title: TextFormField(
-                            style: TextStyle(
-                              color: Colors.white,
+                            ListTile(
+                              leading: Text("Line 2      "),
+                              title: TextFormField(
+
+                                enabled: editPrimaryAddress,
+                                keyboardType: TextInputType.text,
+                                onChanged: (value) {
+                                  setState(() {
+                                    updatedLine2 = value;
+                                  });
+                                },
+
+                              ),
                             ),
-                            enabled: editPrimaryAddress,
-                            keyboardType: TextInputType.text,
-                            initialValue: updatedCity,
-                            onChanged: (value) {
-                              setState(() {
-                                updatedCity = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          leading: Text("State       "),
-                          title: TextFormField(
-                            style: TextStyle(
-                              color: Colors.white,
+                            ListTile(
+                              leading: Text("City         "),
+                              title: TextFormField(
+
+                                enabled: editPrimaryAddress,
+                                keyboardType: TextInputType.text,
+                                onChanged: (value) {
+                                  setState(() {
+                                    updatedCity = value;
+                                  });
+                                },
+
+                              ),
                             ),
-                            enabled: editPrimaryAddress,
-                            keyboardType: TextInputType.text,
-                            initialValue: updatedState,
-                            onChanged: (value) {
-                              setState(() {
-                                updatedState = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          leading: Text("Pincode  "),
-                          title: TextFormField(
-                            initialValue: updatedPincode,
-                            style: TextStyle(
-                              color: updatedPincode.length == 6
-                                  ? Colors.white
-                                  : Colors.red,
+                            ListTile(
+                              leading: Text("State       "),
+                              title: TextFormField(
+
+                                enabled: editPrimaryAddress,
+                                keyboardType: TextInputType.text,
+                                onChanged: (value) {
+                                  setState(() {
+                                    updatedState = value;
+                                  });
+                                },
+
+                              ),
                             ),
-                            enabled: editPrimaryAddress,
-                            keyboardType: TextInputType.phone,
-                            onChanged: (value) {
-                              setState(() {
-                                updatedPincode = value;
-                              });
-                            },
-                          ),
+                            ListTile(
+                              leading: Text("Pincode  "),
+                              title: TextFormField(
+                                initialValue: pincode,
+                                style: TextStyle(
+                                  color: pincode.length == 6
+                                      ? Colors.black
+                                      : Colors.red,
+                                ),
+                                enabled: editPrimaryAddress,
+                                keyboardType: TextInputType.phone,
+                                onChanged: (value) {
+                                  setState(() {
+                                    pincode = value;
+                                  });
+                                },
+
+                              ),
+                            ),
+
+                          ],
                         ),
-                      ],
-                    )),
-              ],
+                      ),
+                      SizedBox(
+                        height: 70,
+                      ),
+
+
+                    ],
+                  ),
+                )
             ),
           ],
         ),
