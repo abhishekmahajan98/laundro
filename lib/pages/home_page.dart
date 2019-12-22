@@ -1,7 +1,6 @@
-import 'package:carousel_pro/carousel_pro.dart';
-
 import 'package:flutter/material.dart';
-import 'package:laundro/constants.dart';
+import 'package:laundro/components/home_carousel.dart';
+import 'package:laundro/components/square_button.dart';
 
 import '../components/side_drawer.dart';
 
@@ -13,36 +12,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    Widget imageCarousel = new Container(
-      margin: EdgeInsets.only(top:10),
-      height: 200.0,
-      width: 400,
-      //image slideshow
-      child: new Carousel(
-        borderRadius: true,
-        radius: Radius.circular(40),
-        //overlayShadow: true,
-        boxFit: BoxFit.cover,
-        animationCurve: Curves.easeInOut,
-        images: [
-          AssetImage('images/c1.jpg'),
-          AssetImage('images/m1.jpeg'),
-          AssetImage('images/m2.jpg'),
-          AssetImage('images/w1.jpeg'),
-          AssetImage('images/w3.jpeg'),
-          AssetImage('images/w4.jpeg'),
-        ],
-        autoplay: true,
-        animationDuration: Duration(milliseconds: 1000),
-        dotSize: 4.0,
-        indicatorBgPadding: 4.0,
-        dotColor: Colors.pinkAccent,
-        dotBgColor: Colors.transparent,
-      ),
-    );
-
     return SafeArea(
-          child: Scaffold(
+      child: Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           elevation: 0.1,
           title: Hero(
@@ -74,10 +46,13 @@ class _HomePageState extends State<HomePage> {
             color: Color(0xfff2f3f7),
           child: Column(
             children: <Widget>[
+              //carousel expanded
               Expanded(
                 flex: 2,
+                //from components/home_carousel
                 child: imageCarousel,
               ),
+              //rest of buttons
               Expanded(
                 flex: 3,
                   child: Column(
@@ -86,45 +61,23 @@ class _HomePageState extends State<HomePage> {
                         flex: 1,
                         child: Row(
                           children: <Widget>[
-                            Expanded(
-                              flex: 1,
-
-                              child: GestureDetector(
-                                onTap: () =>
-                                    Navigator.pushNamed(context, '/iron'),
-                                child: Container(
-                                  height: double.infinity,
-                                  margin: EdgeInsets.fromLTRB(10.0, 10, 2, 2),
-                                  child: Image(
-                                    image: AssetImage(
-                                        'images/icons/ironing.png'
-                                    ),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-
-                                  ),
-                                ),
-                              ),
+                            SquareButtton(
+                              marginL: 10,
+                              marginT: 10,
+                              marginR: 2,
+                              marginB: 2,
+                              imageRoute:'images/icons/ironing.png',
+                              buttonTag: 'Ironing',
+                              ontap: () => Navigator.pushNamed(context, '/iron'),
                             ),
-
-                            Expanded(
-                              flex: 1,
-                              child: GestureDetector(
-                                onTap: () =>
-                                    Navigator.pushNamed(context, '/wash'),
-                                child: Container(
-                                  height: double.infinity,
-                                    margin: EdgeInsets.fromLTRB(2, 10, 10, 2),
-                                  child: Image(image: AssetImage(
-                                      'images/icons/washing.png'
-                                  ), ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-
-                                  ),
-                                ),
-                              ),
+                            SquareButtton(
+                              marginL: 2,
+                              marginT: 10,
+                              marginR: 10,
+                              marginB: 2,
+                              imageRoute:'images/icons/washing.png',
+                              buttonTag: 'Washing',
+                              ontap: () => Navigator.pushNamed(context, '/wash'),
                             ),
                           ],
                         ),
@@ -133,39 +86,23 @@ class _HomePageState extends State<HomePage> {
                         flex: 1,
                         child: Row(
                           children: <Widget>[
-                            Expanded(
-                              flex: 1,
-                              child: GestureDetector(
-                                onTap: () =>
-                                    Navigator.pushNamed(context, '/dry-clean'),
-                                child: Container(
-                                  height: double.infinity,
-                                  margin: EdgeInsets.fromLTRB(10, 2, 2, 2),
-                                  child: Image(image: AssetImage(
-                                      'images/icons/dryclean.png'
-                                  ), ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-
-                                  ),
-                                ),
-                              ),
+                            SquareButtton(
+                              marginL: 10,
+                              marginT: 2,
+                              marginR: 2,
+                              marginB: 2,
+                              imageRoute:'images/icons/dryclean.png',
+                              buttonTag: 'Dry Cleaning',
+                              ontap: () => Navigator.pushNamed(context, '/dry-clean'),
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: GestureDetector(
-                                onTap: () =>
-                                    Navigator.pushNamed(context, '/iron'),
-                                child: Container(
-                                  height: double.infinity,
-                                  margin: EdgeInsets.fromLTRB(2, 2, 10, 2),
-                                  //child: Center(child: Text("hii")),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-
-                                    ),
-                                ),
-                              ),
+                            SquareButtton(
+                              marginL: 2,
+                              marginT: 2,
+                              marginR: 10,
+                              marginB: 2,
+                              imageRoute:'images/cloth_donate.png',
+                              buttonTag: 'Donate Clothes',
+                              ontap: () => Navigator.pushNamed(context, '/donate_page'),
                             ),
                           ],
                         ),

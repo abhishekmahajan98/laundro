@@ -145,6 +145,10 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Cart'),
+        centerTitle: true,
+      ),
         body: SafeArea(
             child: Container(
                 child: items.length == 0

@@ -53,7 +53,9 @@ class _SideDrawerState extends State<SideDrawer> {
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/previous_orders_page');
+            },
             child: ListTile(
               title: Text('Previous Orders'),
               leading: Icon(
@@ -78,7 +80,7 @@ class _SideDrawerState extends State<SideDrawer> {
             height: 5,
           ),
           InkWell(
-            onTap: (){},
+            onTap: ()=>Navigator.pushNamed(context, '/about_page'),
             child: ListTile(
               title: Text('About us'),
               leading: Icon(

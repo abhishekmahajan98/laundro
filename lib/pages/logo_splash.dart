@@ -101,20 +101,11 @@ class _SplashScreenState extends State<SplashScreen> {
                   Hero(
                     tag: 'logo',
                     child: Image.asset(
-                      'images/app_logo/LOGO1.png'
+                      'images/app_logo/LOGO1.png',
+                      width: 400,
                     )
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      'Laundro',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  
                 ],
               ),
             ),
