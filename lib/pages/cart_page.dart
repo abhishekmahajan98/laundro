@@ -107,13 +107,13 @@ class _CartPageState extends State<CartPage> {
         : json.decode(_prefs.getString("dry-clean"));
 
     List.from(iron).forEach((item) {
-      ironCost += item["qty"] * ["price"];
+      ironCost += item["qty"] * item["price"];
     });
     List.from(dryClean).forEach((item) {
-      ironCost += item["qty"] * ["price"];
+      ironCost += item["qty"] * item["price"];
     });
     List.from(wash).forEach((item) {
-      washCost += item["qty"] * ["price"];
+      washCost += item["qty"] * item["price"];
     });
     print(ironCost.toString() +
         " " +
