@@ -67,6 +67,7 @@ class _AboutPageState extends State<AboutPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 30,right: 30,top: 10,bottom: 10),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Center(
                           child: Text(
@@ -75,19 +76,21 @@ class _AboutPageState extends State<AboutPage> {
                             ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
-                        Center(
-                          child: CircleAvatar(
-                            backgroundImage: AssetImage('images/team/abhishek.jpeg'),
-                            radius: 75,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 90,right: 90),
+                          child: Divider(
+                            color: Colors.black,
+                            thickness: 3,
                           ),
                         ),
-                        Center(
-                          child: Text(
-                            'Our Team',
-                            style: kTitleTextStyle,
-                            ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        CircleAvatar(
+                          backgroundImage: AssetImage('images/team/abhishek.jpeg'),
+                          radius: 60,
                         ),
                       ],
                     ),
