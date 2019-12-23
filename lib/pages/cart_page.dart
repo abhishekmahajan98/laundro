@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:laundro/model/order_model.dart';
+import 'package:laundro/model/payment_model.dart';
+import 'package:laundro/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 import '../components/cart_list.dart';
 import '../components/payment_info_modal.dart';
@@ -15,8 +20,10 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   List items = [];
+  double ironTotal,washingTotal,dryCleaningTotal;
   SharedPreferences _prefs;
   Razorpay _razorpay;
+  var iron,wash,dryClean;
 
   @override
   void initState() {
@@ -28,8 +35,28 @@ class _CartPageState extends State<CartPage> {
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     if (response.paymentId != null) {
+      var userRef = Firestore.instance.collection("user").document(User.uid);
+      var paymentRef = Firestore.instance.collection("payment").document();
+      var orderRef = Firestore.instance.collection("order").document();
+      final paymentId =Uuid().v4().split("-").sublist(0, 2).join();
+      
+      final orderId = Uuid().v4().split("-")[0];
+      Order.userDetail["userId"] = User.uid;
+      Order.userDetail["phone"] = User.phone;
+      Order.userDetail["address"] = User.primaryAddress;
+      Order.userDetail["pincode"] = User.pincode;
+      Order.paymentDetail["paymentId"] = Payment.paymentId;
+      Order.deliveryCost = deliveryTotal;
+      Order.total =  getTotal+deliveryTotal;
+      Order.otp = Uuid().v4().split("-")[3];
+
+
+      await Firestore.instance.runTransaction((Transaction t) async {
+
+      });
+
       Navigator.pop(context);
       Navigator.pushReplacementNamed(context, "/order-confirm-page");
     }
@@ -69,15 +96,20 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> _getData() async {
     _prefs = await SharedPreferences.getInstance();
-    var iron = _prefs.getString("iron") == null
+    iron = _prefs.getString("iron") == null
         ? []
         : json.decode(_prefs.getString("iron"));
-    var wash = _prefs.getString("wash") == null
+    wash = _prefs.getString("wash") == null
         ? []
         : json.decode(_prefs.getString("wash"));
-    var dryClean = _prefs.getString("dry-clean") == null
+    dryClean = _prefs.getString("dry-clean") == null
         ? []
         : json.decode(_prefs.getString("dry-clean"));
+
+    var dryCleaningCost = 0;
+    var washingCost = 0;
+    var ironCost = 0;
+
 
     this.setState(() {
       items = [...wash, ...iron, ...dryClean];
@@ -145,10 +177,10 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Cart'),
-        centerTitle: true,
-      ),
+        appBar: AppBar(
+          title: Text('Cart'),
+          centerTitle: true,
+        ),
         body: SafeArea(
             child: Container(
                 child: items.length == 0

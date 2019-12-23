@@ -72,3 +72,8 @@ const kBlackLabelTextStyle = TextStyle(
   fontWeight: FontWeight.normal,
   fontSize: 18.0,
 );
+const kparagraphTextStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.normal,
+  fontSize: 18.0,
+);

@@ -14,16 +14,6 @@ class _SplashScreenState extends State<SplashScreen> {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   SharedPreferences prefs;
-  /*@override
-  void initState() {
-    Timer(
-      Duration(seconds: 1),
-      (){
-        Navigator.pushNamed(context, '/login');
-        }
-    );
-    super.initState();
-  }*/
   @override
   void initState() {
     super.initState();

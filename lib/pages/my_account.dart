@@ -137,7 +137,6 @@ class _MyAccountState extends State<MyAccount> {
         appBar: AppBar(
           title: Text("My Account"),
           centerTitle: true,
-
           backgroundColor: Color(0xFF73AEF5),
         ),
         body: Column(
@@ -159,15 +158,12 @@ class _MyAccountState extends State<MyAccount> {
                         size: 50,
                       ),
                     ),
-
                     Text(
                       User.displayName == null ? '' : User.displayName,
                       style: TextStyle(
                         fontSize: 30,
-
                       ),
                     ),
-
                   ],
                 ),
               ),
