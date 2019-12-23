@@ -77,3 +77,9 @@ const kparagraphTextStyle = TextStyle(
   fontWeight: FontWeight.normal,
   fontSize: 18.0,
 );
+
+const kteamMemberName = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+);

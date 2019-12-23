@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laundro/components/team_member_widget.dart';
 import 'package:laundro/constants.dart';
 class AboutPage extends StatefulWidget {
   @override
@@ -6,13 +7,14 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('About us'),
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0XFF6bacde),
       ),
       body:Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -21,10 +23,19 @@ class _AboutPageState extends State<AboutPage> {
           Expanded(
             flex: 1,
             child: Container(
-              width: double.infinity,
-              height: double.infinity,
+              width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Color(0XFF6bacde),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    'images/app_logo/LOGO1.png',
+                    height: 100,
+                    width: 400,
+                  ),
+                ],
               ),
             ),
           ),
@@ -78,23 +89,61 @@ class _AboutPageState extends State<AboutPage> {
                         SizedBox(
                           height: 10,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 90,right: 90),
-                          child: Divider(
+                        teamMember(imagePath: 'images/team/abhishek.jpeg',name: 'Abhishek Mahajan',position: 'Director'),
+                        teamMember(imagePath: 'images/team/sourabh.jpeg',name: 'Sourabh Pisipati',position: 'Director'),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 50,right: 50),
+                    child: Divider(
+                      color: Colors.black,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Center(
+                      child: Text(
+                            'You can reach us at:',
+                        style: kTitleTextStyle,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30,right: 30,top: 10),
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          leading: Icon(
+                            Icons.web,
+                            size: 40,
                             color: Colors.black,
-                            thickness: 3,
+                          ),
+                          title: Text(
+                            'laundroindia.com',
+                            style: kBlackLabelTextStyle,
                           ),
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        CircleAvatar(
-                          backgroundImage: AssetImage('images/team/abhishek.jpeg'),
-                          radius: 60,
+                        ListTile(
+                          leading: Icon(
+                            Icons.home,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          title: Text(
+                            '5th floor,Basic Engineering Laboratory,SRM University,Chennai-603203',
+                            style: kBlackLabelTextStyle,
+                          ),
                         ),
                       ],
                     ),
-                  )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 50,right: 50),
+                    child: Divider(
+                      color: Colors.black,
+                    ),
+                  ),
                 ],
               ),
             ),
