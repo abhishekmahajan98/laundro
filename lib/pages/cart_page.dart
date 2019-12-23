@@ -20,10 +20,13 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   List items = [];
-  double ironTotal,washingTotal,dryCleaningTotal;
+  double ironTotal, washingTotal, dryCleaningTotal;
   SharedPreferences _prefs;
   Razorpay _razorpay;
-  var iron,wash,dryClean;
+  var iron, wash, dryClean;
+  var dryCleanCost = 0;
+  var washCost = 0;
+  var ironCost = 0;
 
   @override
   void initState() {
@@ -40,8 +43,8 @@ class _CartPageState extends State<CartPage> {
       var userRef = Firestore.instance.collection("user").document(User.uid);
       var paymentRef = Firestore.instance.collection("payment").document();
       var orderRef = Firestore.instance.collection("order").document();
-      final paymentId =Uuid().v4().split("-").sublist(0, 2).join();
-      
+      final paymentId = Uuid().v4().split("-").sublist(0, 2).join();
+
       final orderId = Uuid().v4().split("-")[0];
       Order.userDetail["userId"] = User.uid;
       Order.userDetail["phone"] = User.phone;
@@ -49,13 +52,10 @@ class _CartPageState extends State<CartPage> {
       Order.userDetail["pincode"] = User.pincode;
       Order.paymentDetail["paymentId"] = Payment.paymentId;
       Order.deliveryCost = deliveryTotal;
-      Order.total =  getTotal+deliveryTotal;
+      Order.total = getTotal + deliveryTotal;
       Order.otp = Uuid().v4().split("-")[3];
 
-
-      await Firestore.instance.runTransaction((Transaction t) async {
-
-      });
+      await Firestore.instance.runTransaction((Transaction t) async {});
 
       Navigator.pop(context);
       Navigator.pushReplacementNamed(context, "/order-confirm-page");
@@ -106,11 +106,20 @@ class _CartPageState extends State<CartPage> {
         ? []
         : json.decode(_prefs.getString("dry-clean"));
 
-    var dryCleaningCost = 0;
-    var washingCost = 0;
-    var ironCost = 0;
-
-
+    List.from(iron).forEach((item) {
+      ironCost += item["qty"] * ["price"];
+    });
+    List.from(dryClean).forEach((item) {
+      ironCost += item["qty"] * ["price"];
+    });
+    List.from(wash).forEach((item) {
+      washCost += item["qty"] * ["price"];
+    });
+    print(ironCost.toString() +
+        " " +
+        washCost.toString() +
+        " " +
+        dryCleanCost.toString());
     this.setState(() {
       items = [...wash, ...iron, ...dryClean];
     });
