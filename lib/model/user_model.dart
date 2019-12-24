@@ -13,5 +13,5 @@ class User {
   static String pincode = '';
   static String gender = 'male';
   static DateTime dob;
-  static List<Map<dynamic, dynamic>> orderHistory;
+  static Map<dynamic, dynamic> orderHistory;
 }

@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:laundro/model/order_model.dart';
 import 'package:laundro/model/payment_model.dart';
 import 'package:laundro/model/user_model.dart';
+import 'package:laundro/pages/order_conform_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../components/cart_list.dart';
 import '../components/payment_info_modal.dart';
-
-final _WALLETS = ["paytm", "citrus", "amazonpay", "payzapp", "freecharge"];
 
 class CartPage extends StatefulWidget {
   @override
@@ -20,13 +19,10 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   List items = [];
-  double ironTotal, washingTotal, dryCleaningTotal;
   SharedPreferences _prefs;
   Razorpay _razorpay;
-  var iron, wash, dryClean;
-  var dryCleanCost = 0;
-  var washCost = 0;
-  var ironCost = 0;
+  List iron, wash, dryClean;
+  double dryCleanCost = 0, washCost = 0, ironCost = 0;
 
   @override
   void initState() {
@@ -35,42 +31,141 @@ class _CartPageState extends State<CartPage> {
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     if (response.paymentId != null) {
       var userRef = Firestore.instance.collection("user").document(User.uid);
       var paymentRef = Firestore.instance.collection("payment").document();
-      var orderRef = Firestore.instance.collection("order").document();
-      final paymentId = Uuid().v4().split("-").sublist(0, 2).join();
+      var orderIRef = Firestore.instance.collection("order").document();
+      var orderWRef = Firestore.instance.collection("order").document();
+      var orderDCRef = Firestore.instance.collection("order").document();
 
-      final orderId = Uuid().v4().split("-")[0];
+      Payment.paymentId = Uuid().v4().split("-").sublist(0, 2).join();
+      Payment.razonPayId = response.paymentId;
+      Payment.paymentStatus = PaymentStatus.completed.toString();
+      Payment.amount = getTotal + deliveryTotal;
+      Payment.userDetail["userId"] = User.uid;
+      Payment.userDetail["phone"] = User.phone;
+
+      final orderIId = Uuid().v4().split("-")[0];
+      final orderWId = Uuid().v4().split("-")[0];
+      final orderDCId = Uuid().v4().split("-")[0];
+      final otpI = Uuid().v4().split("-")[3];
+      final otpW = Uuid().v4().split("-")[3];
+      final otpDC = Uuid().v4().split("-")[3];
+      Order.deliveryDateTime = DateTime.now();
       Order.userDetail["userId"] = User.uid;
       Order.userDetail["phone"] = User.phone;
       Order.userDetail["address"] = User.primaryAddress;
       Order.userDetail["pincode"] = User.pincode;
       Order.paymentDetail["paymentId"] = Payment.paymentId;
-      Order.deliveryCost = deliveryTotal;
-      Order.total = getTotal + deliveryTotal;
-      Order.otp = Uuid().v4().split("-")[3];
+      Order.deliveryCost = deliveryTotal / 3;
 
-      await Firestore.instance.runTransaction((Transaction t) async {});
+      if (List.from(iron).length > 0) {
+        Order.orderId = orderIId;
+        Order.otp = otpI;
+        Order.orderItemList = iron;
+        Order.total = ironCost;
+        User.orderHistory[orderIRef.documentID] = {
+          "orderId": Order.orderId,
+          "deliveryCost": Order.deliveryCost,
+          "total": Order.total,
+          "otp": Order.otp,
+          "orderPlacedDateTime": Order.orderPlacedDateTime,
+          "orderItemList": Order.orderItemList,
+          "userDetail": Order.userDetail,
+          "shopDetail": Order.shopDetail,
+          "orderStatus": Order.orderStatus,
+          "paymentDetail": Order.paymentDetail
+        };
+      }
+      if (List.from(wash).length > 0) {
+        Order.orderId = orderWId;
+        Order.otp = otpW;
+        Order.orderItemList = wash;
+        Order.total = washCost;
+        User.orderHistory[orderWRef.documentID] = {
+          "orderId": Order.orderId,
+          "deliveryCost": Order.deliveryCost,
+          "total": Order.total,
+          "otp": Order.otp,
+          "orderPlacedDateTime": Order.orderPlacedDateTime,
+          "orderItemList": Order.orderItemList,
+          "userDetail": Order.userDetail,
+          "shopDetail": Order.shopDetail,
+          "orderStatus": Order.orderStatus,
+          "paymentDetail": Order.paymentDetail
+        };
+      }
+      if (List.from(dryClean).length > 0) {
+        Order.orderId = orderDCId;
+        Order.otp = otpDC;
+        Order.orderItemList = dryClean;
+        Order.total = dryCleanCost;
+        User.orderHistory[orderDCRef.documentID] = {
+          "orderId": Order.orderId,
+          "deliveryCost": Order.deliveryCost,
+          "total": Order.total,
+          "otp": Order.otp,
+          "orderPlacedDateTime": Order.orderPlacedDateTime,
+          "orderItemList": Order.orderItemList,
+          "userDetail": Order.userDetail,
+          "shopDetail": Order.shopDetail,
+          "orderStatus": Order.orderStatus,
+          "paymentDetail": Order.paymentDetail
+        };
+      }
+
+      await Firestore.instance.runTransaction((Transaction t) async {
+        t.set(paymentRef, {
+          "paymentId": Payment.paymentId,
+          "razonPayId": Payment.razonPayId,
+          "paymentStatus": Payment.paymentStatus,
+          "amount": Payment.amount,
+          "userDetail": Payment.userDetail
+        });
+
+        t.update(userRef, {"orderHistory": User.orderHistory});
+        if (List.from(iron).length > 0) {
+          t.set(orderIRef, {...User.orderHistory[orderIRef.documentID]});
+        }
+        if (List.from(wash).length > 0) {
+          t.set(orderWRef, {...User.orderHistory[orderWRef.documentID]});
+        }
+        if (List.from(dryClean).length > 0) {
+          t.set(orderDCRef, {...User.orderHistory[orderDCRef.documentID]});
+        }
+      });
 
       Navigator.pop(context);
-      Navigator.pushReplacementNamed(context, "/order-confirm-page");
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => OrderConfirmPage(
+                    dryCleanId: orderDCRef.documentID,
+                    ironId: orderIRef.documentID,
+                    washId: orderWRef.documentID,
+                  )));
     }
   }
 
-  void _handlePaymentError(PaymentFailureResponse response) {
+  void _handlePaymentError(PaymentFailureResponse response) async {
+    Payment.paymentId = Uuid().v4().split("-").sublist(0, 2).join();
+    Payment.razonPayId = null;
+    Payment.paymentStatus = PaymentStatus.cancelled.toString();
+    Payment.amount = getTotal + deliveryTotal;
+    Payment.userDetail["userId"] = User.uid;
+    Payment.userDetail["phone"] = User.phone;
+
+    await Firestore.instance.collection("payment").document().setData({
+      "paymentId": Payment.paymentId,
+      "razonPayId": Payment.razonPayId,
+      "paymentStatus": Payment.paymentStatus,
+      "amount": Payment.amount,
+      "userDetail": Payment.userDetail
+    });
     showDialogBox(response.code.toString() + ": " + response.message);
-  }
-
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    if (_WALLETS.contains(response.walletName)) {
-      Navigator.pop(context);
-      Navigator.pushReplacementNamed(context, "/order-confirm-page");
-    }
   }
 
   void startPayment() {
@@ -84,9 +179,6 @@ class _CartPageState extends State<CartPage> {
           'contact': '9123456789',
           'email': 'gaurav.kumar@example.com'
         },
-        'external': {
-          "wallets": _WALLETS,
-        }
       };
       _razorpay.open(options);
     } catch (e) {
