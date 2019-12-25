@@ -8,7 +8,7 @@ class Order {
   static String otp;
   static DateTime orderPlacedDateTime;
   static DateTime deliveryDateTime;
-  static List<Map<dynamic, dynamic>> orderItemList;
+  static List<dynamic> orderItemList;
   static Map<dynamic, dynamic> userDetail = {
     "userId": null,
     "phone": null,
