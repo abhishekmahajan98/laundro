@@ -55,7 +55,10 @@ final kBoxDecorationStyle = BoxDecoration(
     ),
   ],
 );
-
+final kBlackLabelStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+);
 final kCategoryTextStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,

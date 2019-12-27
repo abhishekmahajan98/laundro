@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laundro/components/orders_stream.dart';
 import 'package:laundro/constants.dart';
 
 
@@ -16,12 +17,11 @@ class _YourOrdersPageState extends State<YourOrdersPage> {
         centerTitle: true,
         backgroundColor: Color(0XFF6bacde),
       ),
-      body: Center(
-        child: Text(
-          'Yours Orders',
-          style: kCategoryTextStyle,
-        ),
-      ),
+      body: Column(
+        children: <Widget>[
+          OrdersStream(),
+        ],
+      )
     );
   }
 }
