@@ -1,30 +1,31 @@
 import 'package:uuid/uuid.dart';
 
 class Order {
-  String orderId = Uuid().v4().split("-")[0];
-  String instruction;
-  double deliveryCost = 0;
-  double subTotal;
-  DateTime orderPlacedDateTime;
-  DateTime deliveryDateTime;
-  List<Map<dynamic, dynamic>> orderItemList;
-  Map<dynamic, dynamic> userDetail = {
-    "userid": null,
+  static String orderId ;
+  static String instruction;
+  static double deliveryCost = 0;
+  static double total;
+  static String otp;
+  static DateTime orderPlacedDateTime;
+  static DateTime deliveryDateTime;
+  static List<Map<dynamic, dynamic>> orderItemList;
+  static Map<dynamic, dynamic> userDetail = {
+    "userId": null,
     "phone": null,
     "address": null,
     "pincode": null
   };
-  Map<dynamic, dynamic> shopDetail = {
+  static Map<dynamic, dynamic> shopDetail = {
     "shopId": null,
     "name": null,
   };
-  Map<dynamic, bool> orderStatus = {
+  static Map<dynamic, bool> orderStatus = {
     "hasAccepted ": false,
     "hasPickedUp ": false,
     // "hasProcessed": false,
     "hasDelivered": false,
   };
-  Map<dynamic, dynamic> paymentDetail = {
+  static Map<dynamic, dynamic> paymentDetail = {
     "paymentId": null,
     "paymentMode": null
   };

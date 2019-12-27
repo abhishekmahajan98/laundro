@@ -45,7 +45,7 @@ final kLabelStyle = TextStyle(
 );
 
 final kBoxDecorationStyle = BoxDecoration(
-  color: Color(0xFF6CA8F1),
+  color: Color(0xFF80b8e3),
   borderRadius: BorderRadius.circular(10.0),
   boxShadow: [
     BoxShadow(
@@ -61,4 +61,25 @@ final kCategoryTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 18,
   fontFamily: 'OpenSans',
+);
+const kTitleTextStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+);
+const kBlackLabelTextStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.normal,
+  fontSize: 18.0,
+);
+const kparagraphTextStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.normal,
+  fontSize: 18.0,
+);
+
+const kteamMemberName = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
 );

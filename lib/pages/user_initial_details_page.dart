@@ -5,7 +5,6 @@ import 'package:laundro/constants.dart';
 import 'package:laundro/model/user_model.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserDetailsPage extends StatefulWidget {
   @override

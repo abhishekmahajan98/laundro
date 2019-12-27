@@ -14,16 +14,6 @@ class _SplashScreenState extends State<SplashScreen> {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   SharedPreferences prefs;
-  /*@override
-  void initState() {
-    Timer(
-      Duration(seconds: 1),
-      (){
-        Navigator.pushNamed(context, '/login');
-        }
-    );
-    super.initState();
-  }*/
   @override
   void initState() {
     super.initState();
@@ -57,16 +47,19 @@ class _SplashScreenState extends State<SplashScreen> {
             prefs.getString('loggedInUserPrimaryAddressState');
         User.pincode = prefs.getString('loggedInUserPrimaryAddressPincode');
         Navigator.pushReplacementNamed(context, '/home');
+        //Navigator.pushReplacementNamed(context, '/test_page');
       } catch (e) {
         print(e);
         prefs.clear();
         _auth.signOut();
         googleSignIn.signOut();
         Navigator.pushReplacementNamed(context, '/login');
+
       }
     } else {
       prefs.clear();
       _auth.signOut();
+      googleSignIn.signOut();
       Navigator.pushReplacementNamed(context, '/login');
     }
   }
@@ -81,17 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF73AEF5),
-                    Color(0xFF61A4F1),
-                    Color(0xFF478DE0),
-                    Color(0xFF398AE5),
-                  ],
-                  stops: [0.1, 0.4, 0.7, 0.9],
-                ),
+                color: Color(0XFF6bacde),
               ),
             ),
             Center(
@@ -101,20 +84,11 @@ class _SplashScreenState extends State<SplashScreen> {
                   Hero(
                     tag: 'logo',
                     child: Image.asset(
-                      'images/app_logo/LOGO1.png'
+                      'images/app_logo/LOGO1.png',
+                      width: 300,
                     )
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      'Laundro',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+
                 ],
               ),
             ),

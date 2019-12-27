@@ -3,13 +3,10 @@ import 'package:laundro/model/user_model.dart';
 
 class PaymentInfoModal extends StatelessWidget {
   final Function paymentHandler;
-  final String email, phone, address;
+  // final String email, phone, address;
 
   PaymentInfoModal(
-      {@required this.paymentHandler,
-      this.email = "",
-      this.phone = "How do we call you?",
-      this.address = "Where do we reach you?"});
+      {@required this.paymentHandler});
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +17,16 @@ class PaymentInfoModal extends StatelessWidget {
               child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(children: <Widget>[
-              email.length == 0
-                  ? Container()
-                  : Container(
+              Container(
                       child: Text("Email", style: TextStyle(fontSize: 25))),
-              SizedBox(height: email.length == 0 ? 0 : 10),
-              email.length == 0 ? Container() : Container(child: Text(email)),
-              SizedBox(height: email.length == 0 ? 0 : 20),
+              Container(child: Text(User.email)),
+              
               Container(
                   child: Text("Phone", style: TextStyle(fontSize: 18)),
                   alignment: Alignment.centerLeft),
               SizedBox(height: 10),
               Container(
-                  child: Text("+91 "+User.phone, style: TextStyle(fontSize: 16)),
+                  child: Text("+91 "+User.phone.toString(), style: TextStyle(fontSize: 16)),
                   alignment: Alignment.centerLeft),
               SizedBox(height: 20),
               Container(
@@ -41,7 +35,7 @@ class PaymentInfoModal extends StatelessWidget {
               SizedBox(height: 10),
               Container(
                   child: Wrap(children: <Widget>[
-                    Text(address, style: TextStyle(fontSize: 18))
+                    Text(User.primaryAddress.split("+").join(","), style: TextStyle(fontSize: 18))
                   ]),
                   alignment: Alignment.centerLeft),
             ]),

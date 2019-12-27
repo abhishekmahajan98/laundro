@@ -4,6 +4,8 @@ import 'package:laundro/model/user_model.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constants.dart';
+
 class MyAccount extends StatefulWidget {
   @override
   _MyAccountState createState() => _MyAccountState();
@@ -39,13 +41,94 @@ class _MyAccountState extends State<MyAccount> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomPadding: false,
         floatingActionButton: Container(
           margin: EdgeInsets.only(left: 30),
           width: double.infinity,
           height: 60,
           child: RaisedButton(
-            color: Colors.blue,
-            onPressed: (){},
+            color: Color(0XFF6bacde),
+            onPressed: (){
+              updatedPrimaryAddress = updatedAddressLine1 +
+                  "+" +
+                  updatedAddressLine2 +
+                  "+" +
+                  updatedCity +
+                  "+" +
+                  updatedState +
+                  "+" +
+                  updatedPincode;
+              if (updatedNumber != User.phone ||
+                  updatedPincode != User.pincode ||
+                  updatedPrimaryAddress != User.primaryAddress) {
+                if (updatedPincode.length == 6 &&
+                    updatedNumber.length == 10 &&
+                    updatedAddressLine1.length >= 1 &&
+                    updatedCity.length > 1 &&
+                    updatedState.length > 1) {
+                  User.primaryAddress = updatedPrimaryAddress;
+                  User.phone = updatedNumber;
+                  User.primaryAddressLine1 = updatedAddressLine1;
+                  User.primaryAddressLine2 = updatedAddressLine2;
+                  User.primaryAddressCity = updatedCity;
+                  User.primaryAddressState = updatedState;
+                  User.pincode = updatedPincode;
+                  //remove previous prefs
+                  prefs.remove('loggedInUserPhoneNumber');
+                  prefs.remove('loggedInUserPrimaryAddress');
+                  prefs.remove('loggedInUserPrimaryAddressLine1');
+                  prefs.remove('loggedInUserPrimaryAddressLine2');
+                  prefs.remove('loggedInUserPrimaryAddressCity');
+                  prefs.remove('loggedInUserPrimaryAddressState');
+                  prefs.remove('loggedInUserPrimaryAddressPincode');
+                  //set updated prefs
+                  prefs.setString('loggedInUserPhoneNumber', User.phone);
+                  prefs.setString('loggedInUserPrimaryAddressLine1',
+                      User.primaryAddressLine1);
+                  prefs.setString('loggedInUserPrimaryAddressLine2',
+                      User.primaryAddressLine2);
+                  prefs.setString('loggedInUserPrimaryAddressCity',
+                      User.primaryAddressCity);
+                  prefs.setString('loggedInUserPrimaryAddressState',
+                      User.primaryAddressState);
+                  prefs.setString(
+                      'loggedInUserPrimaryAddressPincode', User.pincode);
+                  prefs.setString(
+                      'loggedInUserPrimaryAddress', User.primaryAddress);
+                  _firestore
+                      .collection('users')
+                      .document(User.uid)
+                      .updateData({
+                    'phoneNumber': User.phone,
+                    'primaryAddress': User.primaryAddress,
+                    'primaryAddressLine1': User.primaryAddressLine1,
+                    'primaryAddressLine2': User.primaryAddressLine2,
+                    'primaryAddressCity': User.primaryAddressCity,
+                    'primaryAddressState': User.primaryAddressState,
+                    'primaryAddressPincode': User.pincode,
+                  });
+                  Navigator.pop(context);
+                }
+                else{
+                  Alert(
+                      context: context,
+                      title: 'Invalid data in Fields',
+                      desc:
+                      'Please check the fields entered.',
+                      buttons: [
+                        DialogButton(
+                          child: Text('Okay'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ]).show();
+                }
+              }
+              else{
+                Navigator.pop(context);
+              }
+            },
             child: Text(
                 'Save',
               style: kCategoryTextStyle,
@@ -55,97 +138,7 @@ class _MyAccountState extends State<MyAccount> {
         appBar: AppBar(
           title: Text("My Account"),
           centerTitle: true,
-          actions: <Widget>[
-            FlatButton(
-              highlightColor: Colors.blue,
-              child: Text(
-                'Save',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () {
-                updatedPrimaryAddress = updatedAddressLine1 +
-                    "+" +
-                    updatedAddressLine2 +
-                    "+" +
-                    updatedCity +
-                    "+" +
-                    updatedState +
-                    "+" +
-                    updatedPincode;
-                if (updatedNumber != User.phone ||
-                    updatedPincode != User.pincode ||
-                    updatedPrimaryAddress != User.primaryAddress) {
-                  if (updatedPincode.length == 6 &&
-                      updatedNumber.length == 10 &&
-                      updatedAddressLine1.length >= 1 &&
-                      updatedCity.length > 1 &&
-                      updatedState.length > 1) {
-                    User.primaryAddress = updatedPrimaryAddress;
-                    User.phone = updatedNumber;
-                    User.primaryAddressLine1 = updatedAddressLine1;
-                    User.primaryAddressLine2 = updatedAddressLine2;
-                    User.primaryAddressCity = updatedCity;
-                    User.primaryAddressState = updatedState;
-                    User.pincode = updatedPincode;
-                    //remove previous prefs
-                    prefs.remove('loggedInUserPhoneNumber');
-                    prefs.remove('loggedInUserPrimaryAddress');
-                    prefs.remove('loggedInUserPrimaryAddressLine1');
-                    prefs.remove('loggedInUserPrimaryAddressLine2');
-                    prefs.remove('loggedInUserPrimaryAddressCity');
-                    prefs.remove('loggedInUserPrimaryAddressState');
-                    prefs.remove('loggedInUserPrimaryAddressPincode');
-                    //set updated prefs
-                    prefs.setString('loggedInUserPhoneNumber', User.phone);
-                    prefs.setString('loggedInUserPrimaryAddressLine1',
-                        User.primaryAddressLine1);
-                    prefs.setString('loggedInUserPrimaryAddressLine2',
-                        User.primaryAddressLine2);
-                    prefs.setString('loggedInUserPrimaryAddressCity',
-                        User.primaryAddressCity);
-                    prefs.setString('loggedInUserPrimaryAddressState',
-                        User.primaryAddressState);
-                    prefs.setString(
-                        'loggedInUserPrimaryAddressPincode', User.pincode);
-                    prefs.setString(
-                        'loggedInUserPrimaryAddress', User.primaryAddress);
-                    _firestore
-                        .collection('users')
-                        .document(User.uid)
-                        .updateData({
-                      'phoneNumber': User.phone,
-                      'primaryAddress': User.primaryAddress,
-                      'primaryAddressLine1': User.primaryAddressLine1,
-                      'primaryAddressLine2': User.primaryAddressLine2,
-                      'primaryAddressCity': User.primaryAddressCity,
-                      'primaryAddressState': User.primaryAddressState,
-                      'primaryAddressPincode': User.pincode,
-                    });
-                    Navigator.pop(context);
-                  }
-                  else{
-                    Alert(
-                      context: context,
-                      title: 'Invalid data in Fields',
-                      desc:
-                          'Please check the fields entered.',
-                      buttons: [
-                        DialogButton(
-                          child: Text('Okay'),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ]).show();
-                  }
-                }
-                else{
-                  Navigator.pop(context);
-                }
-              },
-            )
-          ],
-          backgroundColor: Color(0xFF73AEF5),
+          backgroundColor: Color(0XFF6bacde),
         ),
         body: Column(
           children: <Widget>[
@@ -154,27 +147,30 @@ class _MyAccountState extends State<MyAccount> {
               child: Container(
                 width: double.infinity,
                 height: double.infinity,
-                decoration: BoxDecoration(color: Colors.blue),
+                decoration: BoxDecoration(color: Color(0XFF6bacde),),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CircleAvatar(
                       radius: 60,
+                      backgroundColor: Color(
+                          0xfff2f3f7
+                      ),
                       child: Icon(
                         Icons.person,
-                        color: Colors.white,
+                        color: Colors.black,
                         size: 50,
                       ),
                     ),
-
+                    SizedBox(
+                      height: 10,
+                    ),
                     Text(
                       User.displayName == null ? '' : User.displayName,
                       style: TextStyle(
                         fontSize: 30,
-
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -191,6 +187,31 @@ class _MyAccountState extends State<MyAccount> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.fromLTRB(10, 20, 10,5),
+                        decoration: BoxDecoration(color: Colors.white,),
+                        child: ListTile(
+                          title: TextFormField(
+                            enabled: false,
+                            initialValue: User.email,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(top: 14.0),
+                              prefixIcon: Icon(
+                                Icons.email,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.lock,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 5, 10,5),
                         decoration: BoxDecoration(color: Colors.white,),
                         child: ListTile(
                           title: TextFormField(
@@ -234,6 +255,7 @@ class _MyAccountState extends State<MyAccount> {
                           ),
                         ),
                       ),
+                      
                       Container(
                         margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
                         decoration: BoxDecoration(
@@ -244,6 +266,7 @@ class _MyAccountState extends State<MyAccount> {
                             ListTile(
                               leading: Icon(
                                 Icons.home,
+                                color: Colors.black,
                               ),
                               title: Text(
                                 'Primary Address',
@@ -270,9 +293,14 @@ class _MyAccountState extends State<MyAccount> {
                               title: TextFormField(
                                 enabled: editPrimaryAddress,
                                 keyboardType: TextInputType.text,
+                                initialValue: updatedAddressLine1,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                ),
                                 onChanged: (value) {
                                   setState(() {
-                                    updatedLine1 = value;
+                                    updatedAddressLine1 = value;
                                   });
                                 },
 
@@ -281,12 +309,16 @@ class _MyAccountState extends State<MyAccount> {
                             ListTile(
                               leading: Text("Line 2      "),
                               title: TextFormField(
-
                                 enabled: editPrimaryAddress,
                                 keyboardType: TextInputType.text,
+                                initialValue: updatedAddressLine2,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                ),
                                 onChanged: (value) {
                                   setState(() {
-                                    updatedLine2 = value;
+                                    updatedAddressLine2 = value;
                                   });
                                 },
 
@@ -295,9 +327,13 @@ class _MyAccountState extends State<MyAccount> {
                             ListTile(
                               leading: Text("City         "),
                               title: TextFormField(
-
                                 enabled: editPrimaryAddress,
                                 keyboardType: TextInputType.text,
+                                initialValue: updatedCity,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                ),
                                 onChanged: (value) {
                                   setState(() {
                                     updatedCity = value;
@@ -309,9 +345,13 @@ class _MyAccountState extends State<MyAccount> {
                             ListTile(
                               leading: Text("State       "),
                               title: TextFormField(
-
                                 enabled: editPrimaryAddress,
                                 keyboardType: TextInputType.text,
+                                initialValue: updatedState,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                ),
                                 onChanged: (value) {
                                   setState(() {
                                     updatedState = value;
@@ -323,9 +363,10 @@ class _MyAccountState extends State<MyAccount> {
                             ListTile(
                               leading: Text("Pincode  "),
                               title: TextFormField(
-                                initialValue: pincode,
+                                initialValue: updatedPincode,
                                 style: TextStyle(
-                                  color: pincode.length == 6
+                                  fontSize: 20,
+                                  color: updatedPincode.length == 6
                                       ? Colors.black
                                       : Colors.red,
                                 ),
@@ -333,7 +374,7 @@ class _MyAccountState extends State<MyAccount> {
                                 keyboardType: TextInputType.phone,
                                 onChanged: (value) {
                                   setState(() {
-                                    pincode = value;
+                                    updatedPincode = value;
                                   });
                                 },
 
@@ -346,8 +387,6 @@ class _MyAccountState extends State<MyAccount> {
                       SizedBox(
                         height: 70,
                       ),
-
-
                     ],
                   ),
                 )

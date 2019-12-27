@@ -122,6 +122,11 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.tag),
+        centerTitle: true,
+        backgroundColor: Color(0XFF6bacde),
+      ),
         body: SafeArea(
             child: _menuItems.length == 0
                 ? Center(child: CircularProgressIndicator())

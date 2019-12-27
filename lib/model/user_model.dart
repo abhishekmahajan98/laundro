@@ -10,7 +10,6 @@ class User {
   static String primaryAddressLine2 = '';
   static String primaryAddressState = '';
   static String primaryAddressCity = '';
-
   static String pincode = '';
   static String gender = 'male';
   static DateTime dob;

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:laundro/constants.dart';
+import 'package:laundro/model/user_model.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class ContactUs extends StatefulWidget {
   @override
@@ -16,115 +19,134 @@ class _ContactUsState extends State<ContactUs> {
       appBar: AppBar(
         title: Text('Contact us'),
         centerTitle: true,
+        backgroundColor: Color(0XFF6bacde),
       ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF73AEF5),
-                  Color(0xFF61A4F1),
-                  Color(0xFF478DE0),
-                  Color(0xFF398AE5),
-                ],
-                stops: [0.3, 0.4, 0.7, 0.9],
+      body: Container(
+        decoration: BoxDecoration(
+          color: Color(0xfff2f3f7),
+        ),
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Queries',
+              style: kTitleTextStyle,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ListTile(
+              title: TextField(
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  hintText: "What's Bothering you?",
+                  hintStyle: kBlackLabelTextStyle,
+                  border: OutlineInputBorder(
+                    borderRadius:BorderRadius.all(new Radius.circular(10.0))
+                    ),
+                  labelStyle: TextStyle(color: Colors.black),
+                ),
+                maxLines: 8,
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    message = value;
+                  });
+                },
               ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.all(30),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: 300,
+              height: 50,
+              child: RaisedButton(
+                color: Color(0XFF6bacde),
+                child: Text(
+                  "Send",
+                  style: kCategoryTextStyle,
                 ),
-                Text(
-                  'queries',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ListTile(
-                  title: TextField(
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                        hintText: "Enter your queries",
-                        hintStyle: TextStyle(color: Colors.white30),
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(new Radius.circular(25.0))),
-                        labelStyle: TextStyle(color: Colors.white)),
-                    maxLines: 8,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        message = value;
-                      });
-                    },
-                  ),
-                ),
-                ButtonTheme(
-                  minWidth: 250.0,
-                  height: 40.0,
-                  child: RaisedButton(
-                    onPressed: () {
-                      print(message);
+                onPressed: () {
+                  if(message!=""){
+                    print(message);
+                    try{
                       _firestore.collection('queries').add({
+                        'uid':User.uid,
+                        'name':User.displayName,
+                        'email':User.email,
                         'message': message,
                       });
-                    },
-                    color: Colors.blue,
-                    child: Text(
-                      "Send ",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-                Divider(
-                  color: Colors.black,
-                  height: 10,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.phone,
-                    color: Colors.white,
-                  ),
-                  title: Text(
-                    "9422222222",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.email,
-                    color: Colors.white,
-                  ),
-                  title: Text(
-                    "laundro@gmail.com",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),
-              ],
+                    }
+                    catch(e){
+                      print(e);
+                    }
+                  
+                  Alert(
+                    context: context,
+                    title: 'Query Registered!!',
+                    desc:
+                        'Thank you for using our application and giving us valuable feedback!\n We will work on the issue occured and get back to you as soon as possible.',
+                    buttons: [
+                      DialogButton(
+                        child: Text('Okay'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ]).show();
+                  }
+                  else{
+                    Alert(
+                    context: context,
+                    title: 'Empty Query',
+                    desc:'Please enter a query then press send!',
+                    buttons: [
+                      DialogButton(
+                        child: Text('Okay'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ]).show();
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+
+            Divider(
+              color: Colors.black,
+              height: 30,
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.phone,
+                color:Colors.black,
+                size: 50,
+              ),
+              title: Text(
+                "8800418884",
+                style: kBlackLabelTextStyle,
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.email,
+                color: Colors.black,
+                size: 50,
+              ),
+              title: Text(
+                "laundro@gmail.com",
+                style: kBlackLabelTextStyle,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

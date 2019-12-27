@@ -33,6 +33,7 @@ dependencies:
   webview_flutter: ^0.3.15+1
   uuid: ^2.0.4
   font_awesome_flutter: ^8.5.0
+  auto_size_text: ^2.1.0
 
 
 dev_dependencies:
@@ -57,6 +58,7 @@ flutter:
     - images/products/
     - images/icons/
     - images/app_logo/
+    - images/team/
   # To add assets to your application, add an assets section, like this:
   #  - images/a_dot_ham.jpeg
 
