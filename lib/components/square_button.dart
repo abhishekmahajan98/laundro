@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
-class SquareButtton extends StatelessWidget {
+class SquareButton extends StatelessWidget {
   final Function ontap; 
   final double marginL,marginR,marginT,marginB;
   final String imageRoute,buttonTag;
+  
 
-  SquareButtton({
+  SquareButton({
     @required this.ontap,
     @required this.imageRoute,
     @required this.buttonTag,
@@ -30,15 +31,19 @@ class SquareButtton extends StatelessWidget {
             color: Colors.white,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Image.asset(
-                imageRoute,
-                height: 150,
-                ),
+              Padding(
+                padding: const EdgeInsets.only(top:0 ,bottom: 5),
+                child: Image.asset(
+                  imageRoute,
+                  height: 1.5*(MediaQuery.of(context).size.height/10),
+                  ),
+              ),
               Text(
                 buttonTag,
                 style: kCategoryTextStyle,
+                
                 ),
             ],
           ),

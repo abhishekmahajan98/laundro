@@ -33,22 +33,22 @@ class _SideDrawerState extends State<SideDrawer> {
                   backgroundColor: Colors.white,
                   child: Icon(
                     Icons.person,
-                    color: Color(0xFF73AEF5),
+                    color: Color(0XFF6bacde),
                   )),
             ),
             decoration: BoxDecoration(
-              color: Color(0xFF73AEF5),
+              color: Color(0XFF6bacde),
             ),
           ),
+          
           //body
-
           InkWell(
             onTap: () => Navigator.pushNamed(context, '/my_account'),
             child: ListTile(
               title: Text('My Account'),
               leading: Icon(
                 Icons.person,
-                color: Color(0xFF73AEF5),
+                color: Color(0XFF6bacde),
               ),
             ),
           ),
@@ -60,7 +60,7 @@ class _SideDrawerState extends State<SideDrawer> {
               title: Text('Previous Orders'),
               leading: Icon(
                 Icons.shopping_basket,
-                color: Color(0xFF73AEF5),
+                color: Color(0XFF6bacde),
               ),
             ),
           ),
@@ -70,7 +70,7 @@ class _SideDrawerState extends State<SideDrawer> {
               title: Text('Shopping Cart'),
               leading: Icon(
                 Icons.shopping_cart,
-                color: Color(0xFF73AEF5),
+                color: Color(0XFF6bacde),
               ),
             ),
           ),
@@ -85,7 +85,7 @@ class _SideDrawerState extends State<SideDrawer> {
               title: Text('About us'),
               leading: Icon(
                 Icons.help,
-                color: Color(0xFF73AEF5),
+                color: Color(0XFF6bacde),
               ),
             ),
           ),
@@ -95,7 +95,7 @@ class _SideDrawerState extends State<SideDrawer> {
               title: Text('Contact us'),
               leading: Icon(
                 Icons.contact_phone,
-                color: Color(0xFF73AEF5),
+                color: Color(0XFF6bacde),
               ),
             ),
           ),
@@ -112,7 +112,7 @@ class _SideDrawerState extends State<SideDrawer> {
               title: Text('Logout'),
               leading: Icon(
                 Icons.exit_to_app,
-                color: Color(0xFF73AEF5),
+                color: Color(0XFF6bacde),
               ),
             ),
           ),

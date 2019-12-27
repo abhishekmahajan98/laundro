@@ -10,6 +10,7 @@ import 'package:laundro/pages/password_reset_page.dart';
 import 'package:laundro/pages/previous_orders_page.dart';
 import 'package:laundro/pages/user_initial_address_page.dart';
 import 'package:laundro/pages/user_initial_details_page.dart';
+import 'package:laundro/pages/vote_for_feature_page.dart';
 import './pages/home_page.dart';
 import './pages/login_page.dart';
 import './pages/registration_page.dart';
@@ -25,7 +26,6 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     "/": (context) => SplashScreen(),
     '/login': (context) => LoginScreen(),
     "/register": (context) => RegistrationScreen(),
-    "/login": (context) => LoginScreen(),
     "/home": (context) => HomePage(),
     "/iron": (context) => IroningMenuPage(),
     "/wash": (context) => WashingMenuPage(),
@@ -40,7 +40,8 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     '/contactus': (context) => ContactUs(),
     '/initial_address': (context) => UserAddressPage(),
     '/donate_page':(context)=>DonatePage(),
-    '/previous_orders_page':(context)=>PreviousOrdersPage(),
+    '/previous_orders_page':(context)=>YourOrdersPage(),
     '/about_page':(context)=>AboutPage(),
+    '/new_features':(context)=>NewFeaturesVote(),
       };
 }

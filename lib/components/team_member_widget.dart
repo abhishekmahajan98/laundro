@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../constants.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 Widget teamMember({String imagePath,String name,String position,String workProfile=''}){
   return Column(
@@ -30,23 +29,30 @@ Widget teamMember({String imagePath,String name,String position,String workProfi
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                child: Text(
+                child: AutoSizeText(
                   name,
-                  style: kteamMemberName,
+                  minFontSize: 18,
+                  maxFontSize: 25,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 0, 0,0),
-                child: Text(
+                child: AutoSizeText(
                   position,
-                  style: kBlackLabelTextStyle,
+                  minFontSize: 12,
+                  maxFontSize: 20,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 0, 0,0),
-                child: Text(
+                child: AutoSizeText(
                   workProfile,
-                  style: kBlackLabelTextStyle,
+                  minFontSize: 12,
+                  maxFontSize: 20,
                 ),
               ),
             ],

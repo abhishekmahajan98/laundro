@@ -19,9 +19,9 @@ class _ContactUsState extends State<ContactUs> {
       appBar: AppBar(
         title: Text('Contact us'),
         centerTitle: true,
+        backgroundColor: Color(0XFF6bacde),
       ),
       body: Container(
-        
         decoration: BoxDecoration(
           color: Color(0xfff2f3f7),
         ),
@@ -66,7 +66,7 @@ class _ContactUsState extends State<ContactUs> {
               width: 300,
               height: 50,
               child: RaisedButton(
-                color: Colors.blue,
+                color: Color(0XFF6bacde),
                 child: Text(
                   "Send",
                   style: kCategoryTextStyle,
@@ -126,23 +126,23 @@ class _ContactUsState extends State<ContactUs> {
             ListTile(
               leading: Icon(
                 Icons.phone,
-                color: Colors.blue,
+                color:Colors.black,
                 size: 50,
               ),
               title: Text(
                 "8800418884",
-                style: kCategoryTextStyle,
+                style: kBlackLabelTextStyle,
               ),
             ),
             ListTile(
               leading: Icon(
                 Icons.email,
-                color: Colors.blue,
+                color: Colors.black,
                 size: 50,
               ),
               title: Text(
                 "laundro@gmail.com",
-                style: kCategoryTextStyle,
+                style: kBlackLabelTextStyle,
               ),
             ),
           ],

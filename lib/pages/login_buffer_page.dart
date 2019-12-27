@@ -79,17 +79,7 @@ class _BufferPageState extends State<BufferPage> {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF73AEF5),
-                    Color(0xFF61A4F1),
-                    Color(0xFF478DE0),
-                    Color(0xFF398AE5),
-                  ],
-                  stops: [0.1, 0.4, 0.7, 0.9],
-                ),
+                color: Color(0XFF6bacde),
               ),
             ),
             Center(
@@ -98,21 +88,7 @@ class _BufferPageState extends State<BufferPage> {
                 children: <Widget>[
                   Hero(
                     tag: 'logo',
-                    child: Icon(
-                      Icons.local_laundry_service,
-                      size: 80,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      'Laundro',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: Image.asset('images/app_logo/LOGO1.png'),
                   ),
                 ],
               ),

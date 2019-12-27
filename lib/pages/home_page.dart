@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:laundro/components/home_carousel.dart';
 import 'package:laundro/components/square_button.dart';
-
+import 'package:laundro/constants.dart';
 import '../components/side_drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -50,7 +51,7 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 flex: 2,
                 //from components/home_carousel
-                child: imageCarousel,
+                child: ImageCarousel(),
               ),
               //rest of buttons
               Expanded(
@@ -58,10 +59,10 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: <Widget>[
                       Expanded(
-                        flex: 1,
+                        flex: 3,
                         child: Row(
                           children: <Widget>[
-                            SquareButtton(
+                            SquareButton(
                               marginL: 10,
                               marginT: 10,
                               marginR: 2,
@@ -70,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                               buttonTag: 'Ironing',
                               ontap: () => Navigator.pushNamed(context, '/iron'),
                             ),
-                            SquareButtton(
+                            SquareButton(
                               marginL: 2,
                               marginT: 10,
                               marginR: 10,
@@ -83,10 +84,10 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Expanded(
-                        flex: 1,
+                        flex: 3,
                         child: Row(
                           children: <Widget>[
-                            SquareButtton(
+                            SquareButton(
                               marginL: 10,
                               marginT: 2,
                               marginR: 2,
@@ -95,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                               buttonTag: 'Dry Cleaning',
                               ontap: () => Navigator.pushNamed(context, '/dry-clean'),
                             ),
-                            SquareButtton(
+                            SquareButton(
                               marginL: 2,
                               marginT: 2,
                               marginR: 10,
@@ -106,7 +107,34 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.pushNamed(context, '/new_features');
+                          },
+                          child: Container(
+                            color: Colors.white,
+                            margin: EdgeInsets.only(left: 10,right: 10),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                              leading: Icon(
+                                FontAwesomeIcons.voteYea,
+                                color: Colors.black,
+                              ),
+                              title: Text(
+                                'Vote for our next Feature!!',
+                                style: kCategoryTextStyle,
+                                ),
+                              trailing: Icon(
+                                Icons.arrow_forward,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        )
+                      ),
                     ],
                   ),
                   ),

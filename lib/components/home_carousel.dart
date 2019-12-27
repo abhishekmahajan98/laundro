@@ -1,10 +1,17 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 
-Widget imageCarousel = new Container(
-      margin: EdgeInsets.only(top:5),
-      padding: EdgeInsets.only(left: 5,right: 5),
-      height: 200.0,
+class ImageCarousel extends StatefulWidget {
+  @override
+  _ImageCarouselState createState() => _ImageCarouselState();
+}
+
+class _ImageCarouselState extends State<ImageCarousel> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 5,left: 5,right: 5),
+      height: 3*(MediaQuery.of(context).size.height/10),
       width: 400,
       //image slideshow
       child: new Carousel(
@@ -29,3 +36,5 @@ Widget imageCarousel = new Container(
         dotBgColor: Colors.transparent,
       ),
     );
+  }
+}

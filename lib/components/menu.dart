@@ -125,6 +125,7 @@ class _MenuState extends State<Menu> {
       appBar: AppBar(
         title: Text(widget.tag),
         centerTitle: true,
+        backgroundColor: Color(0XFF6bacde),
       ),
         body: SafeArea(
             child: _menuItems.length == 0

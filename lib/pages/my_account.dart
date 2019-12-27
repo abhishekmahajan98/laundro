@@ -41,12 +41,13 @@ class _MyAccountState extends State<MyAccount> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomPadding: false,
         floatingActionButton: Container(
           margin: EdgeInsets.only(left: 30),
           width: double.infinity,
           height: 60,
           child: RaisedButton(
-            color: Colors.blue,
+            color: Color(0XFF6bacde),
             onPressed: (){
               updatedPrimaryAddress = updatedAddressLine1 +
                   "+" +
@@ -137,7 +138,7 @@ class _MyAccountState extends State<MyAccount> {
         appBar: AppBar(
           title: Text("My Account"),
           centerTitle: true,
-          backgroundColor: Color(0xFF73AEF5),
+          backgroundColor: Color(0XFF6bacde),
         ),
         body: Column(
           children: <Widget>[
@@ -146,17 +147,23 @@ class _MyAccountState extends State<MyAccount> {
               child: Container(
                 width: double.infinity,
                 height: double.infinity,
-                decoration: BoxDecoration(color: Colors.blue),
+                decoration: BoxDecoration(color: Color(0XFF6bacde),),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CircleAvatar(
                       radius: 60,
+                      backgroundColor: Color(
+                          0xfff2f3f7
+                      ),
                       child: Icon(
                         Icons.person,
-                        color: Colors.white,
+                        color: Colors.black,
                         size: 50,
                       ),
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     Text(
                       User.displayName == null ? '' : User.displayName,
@@ -180,6 +187,31 @@ class _MyAccountState extends State<MyAccount> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.fromLTRB(10, 20, 10,5),
+                        decoration: BoxDecoration(color: Colors.white,),
+                        child: ListTile(
+                          title: TextFormField(
+                            enabled: false,
+                            initialValue: User.email,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(top: 14.0),
+                              prefixIcon: Icon(
+                                Icons.email,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.lock,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 5, 10,5),
                         decoration: BoxDecoration(color: Colors.white,),
                         child: ListTile(
                           title: TextFormField(
@@ -223,6 +255,7 @@ class _MyAccountState extends State<MyAccount> {
                           ),
                         ),
                       ),
+                      
                       Container(
                         margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
                         decoration: BoxDecoration(
@@ -233,6 +266,7 @@ class _MyAccountState extends State<MyAccount> {
                             ListTile(
                               leading: Icon(
                                 Icons.home,
+                                color: Colors.black,
                               ),
                               title: Text(
                                 'Primary Address',

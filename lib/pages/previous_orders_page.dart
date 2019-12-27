@@ -2,21 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:laundro/constants.dart';
 
 
-class PreviousOrdersPage extends StatefulWidget {
+class YourOrdersPage extends StatefulWidget {
   @override
-  _PreviousOrdersPageState createState() => _PreviousOrdersPageState();
+  _YourOrdersPageState createState() => _YourOrdersPageState();
 }
 
-class _PreviousOrdersPageState extends State<PreviousOrdersPage> {
+class _YourOrdersPageState extends State<YourOrdersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          body: Center(
-            child: Text(
-              'Previous Orders',
-              style: kCategoryTextStyle,
-            ),
-          ),
+      appBar: AppBar(
+        title: Text('Your Orders'),
+        centerTitle: true,
+        backgroundColor: Color(0XFF6bacde),
+      ),
+      body: Center(
+        child: Text(
+          'Yours Orders',
+          style: kCategoryTextStyle,
+        ),
+      ),
     );
   }
 }

@@ -189,6 +189,7 @@ class _CartPageState extends State<CartPage> {
         appBar: AppBar(
           title: Text('Cart'),
           centerTitle: true,
+          backgroundColor: Color(0XFF6bacde),
         ),
         body: SafeArea(
             child: Container(
