@@ -18,7 +18,7 @@ class User {
   String primaryAddressLine2;
   String primaryAddressPincode;
   String primaryAddressState;
-  Map orderHistory;
+  Map orderHistory = {};
 
   User(
       {this.displayName,
@@ -69,10 +69,15 @@ class User {
     return data;
   }
 
-  Future<User> getPrefUser() async {
+  static Future<User> getPrefUser() async {
     final pref = await SharedPreferences.getInstance();
     final userJson = json.decode(pref.getString('user'));
     return User.fromJson(userJson);
+  }
+
+  static Future<bool> doesExists() async {
+    final pref = await SharedPreferences.getInstance();
+    return pref.containsKey('user');
   }
 
   Future<bool> setPrefUser() async {
@@ -91,6 +96,21 @@ class User {
   Future<void> setUserToFirebase(User user) async {
     final fireStore = Firestore.instance;
     final userRef = fireStore.collection("users").document();
-    await userRef.setData({...user.toJson(), uid: userRef.documentID});
+    user.uid = userRef.documentID;
+
+    await userRef.setData({...user.toJson(), "dob": user.dob.toString()});
+  }
+
+  Map<String, dynamic> getFilteredUser() {
+    final userMap = {...this.toJson()};
+    userMap.remove("dob");
+    userMap.remove("displayName");
+    userMap.remove("gender");
+    userMap.remove("primaryAddressCity");
+    userMap.remove("primaryAddressLine1");
+    userMap.remove("primaryAddressLine2");
+    userMap.remove("primaryAddressState");
+    userMap.remove("orderHistory");
+    return userMap;
   }
 }

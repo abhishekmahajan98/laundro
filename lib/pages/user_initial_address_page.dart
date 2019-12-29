@@ -12,7 +12,7 @@ class UserAddressPage extends StatefulWidget {
 
 class _UserAddressPageState extends State<UserAddressPage> {
   SharedPreferences prefs;
-  final _firestore = Firestore.instance;
+  User user;
 
   @override
   void initState() {
@@ -22,6 +22,7 @@ class _UserAddressPageState extends State<UserAddressPage> {
 
   void instantiateSP() async {
     prefs = await SharedPreferences.getInstance();
+    user = await User.getPrefUser();
   }
 
   Widget _buildAddressLine1() {
@@ -42,7 +43,7 @@ class _UserAddressPageState extends State<UserAddressPage> {
       child: TextFormField(
         onChanged: (value) {
           setState(() {
-            User.primaryAddressLine1 = value;
+            user.primaryAddressLine1 = value;
           });
         },
         style: TextStyle(
@@ -76,7 +77,7 @@ class _UserAddressPageState extends State<UserAddressPage> {
       child: TextFormField(
         onChanged: (value) {
           setState(() {
-            User.primaryAddressLine2 = value;
+            user.primaryAddressLine2 = value;
           });
         },
         style: TextStyle(
@@ -110,7 +111,7 @@ class _UserAddressPageState extends State<UserAddressPage> {
       child: TextFormField(
         onChanged: (value) {
           setState(() {
-            User.primaryAddressCity = value;
+            user.primaryAddressCity = value;
           });
         },
         style: TextStyle(
@@ -144,7 +145,7 @@ class _UserAddressPageState extends State<UserAddressPage> {
       child: TextFormField(
         onChanged: (value) {
           setState(() {
-            User.primaryAddressState = value;
+            user.primaryAddressState = value;
           });
         },
         style: TextStyle(
@@ -179,11 +180,13 @@ class _UserAddressPageState extends State<UserAddressPage> {
         keyboardType: TextInputType.number,
         onChanged: (value) {
           setState(() {
-            User.pincode = value;
+            user.primaryAddressPincode = value;
           });
         },
         style: TextStyle(
-          color: User.pincode.length == 6 ? Colors.white : Colors.red,
+          color: user.primaryAddressPincode.length == 6
+              ? Colors.white
+              : Colors.red,
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -213,48 +216,37 @@ class _UserAddressPageState extends State<UserAddressPage> {
             Icons.arrow_forward_ios,
             color: Colors.blue,
           ),
-          onPressed: () {
-            if (User.primaryAddressLine1.length > 1 &&
-                User.primaryAddressCity.length > 1 &&
-                User.primaryAddressState.length > 1 &&
-                User.pincode.length == 6) {
-              User.primaryAddress = User.primaryAddressLine1 +
+          onPressed: () async {
+            if (user.primaryAddressLine1.length > 1 &&
+                user.primaryAddressCity.length > 1 &&
+                user.primaryAddressState.length > 1 &&
+                user.primaryAddressPincode.length == 6) {
+              user.primaryAddress = user.primaryAddressLine1 +
                   '+' +
-                  User.primaryAddressLine2 +
+                  user.primaryAddressLine2 +
                   '+' +
-                  User.primaryAddressCity +
+                  user.primaryAddressCity +
                   '+' +
-                  User.primaryAddressState +
+                  user.primaryAddressState +
                   '+' +
-                  User.pincode;
-              prefs.setString('loggedInUserDisplayName', User.displayName);
-              prefs.setString('loggedInUserPhoneNumber', User.phone);
-              prefs.setString('loggedInUserDOB', User.dob.toString());
-              prefs.setString('loggedInUserGender', User.gender);
-              prefs.setString(
-                  'loggedInUserPrimaryAddressLine1', User.primaryAddressLine1);
-              prefs.setString(
-                  'loggedInUserPrimaryAddressLine2', User.primaryAddressLine2);
-              prefs.setString(
-                  'loggedInUserPrimaryAddressCity', User.primaryAddressCity);
-              prefs.setString(
-                  'loggedInUserPrimaryAddressState', User.primaryAddressState);
-              prefs.setString(
-                  'loggedInUserPrimaryAddressPincode', User.pincode);
-              prefs.setString(
-                  'loggedInUserPrimaryAddress', User.primaryAddress);
-              _firestore.document('users/' + User.uid).setData({
-                'email': User.email,
-                'displayName': User.displayName,
-                'phoneNumber': User.phone,
-                'gender': User.gender,
-                'dob': User.dob.toString(),
-                'primaryAddress': User.primaryAddress,
-                'primaryAddressLine1': User.primaryAddressLine1,
-                'primaryAddressLine2': User.primaryAddressLine2,
-                'primaryAddressCity': User.primaryAddressCity,
-                'primaryAddressState': User.primaryAddressState,
-                'primaryAddressPincode': User.pincode,
+                  user.primaryAddressPincode;
+              await user.setPrefUser();
+              await Firestore.instance
+                  .collection("users")
+                  .document(user.uid)
+                  .setData({
+                'email': user.email,
+                'uid': user.uid,
+                'displayName': user.displayName,
+                'phoneNumber': user.phoneNumber,
+                'gender': user.gender,
+                'dob': user.dob.toString(),
+                'primaryAddress': user.primaryAddress,
+                'primaryAddressLine1': user.primaryAddressLine1,
+                'primaryAddressLine2': user.primaryAddressLine2,
+                'primaryAddressCity': user.primaryAddressCity,
+                'primaryAddressState': user.primaryAddressState,
+                'primaryAddressPincode': user.primaryAddressPincode,
               });
               Navigator.pushReplacementNamed(context, '/home');
             } else {

@@ -1,40 +1,49 @@
+import 'package:uuid/uuid.dart';
+
 class Payment {
   String paymentId;
-  String razorPayId;
+  String razorpayId;
   String paymentStatus;
-  String paymentMode;
   double amount;
-  String userUserId;
-  String phone;
+  Map user;
 
   Payment(
       {this.paymentId,
-      this.razorPayId,
+      this.razorpayId,
       this.paymentStatus,
-      this.paymentMode,
       this.amount,
-      this.userUserId,
-      this.phone});
+      this.user});
 
   Payment.fromJson(Map<String, dynamic> json) {
     paymentId = json['paymentId'];
-    razorPayId = json['razorPayId'];
+    razorpayId = json['razorpayId'];
     paymentStatus = json['paymentStatus'];
-    paymentMode = json['paymentMode'];
     amount = json['amount'];
-    userUserId = json['userUserId'];
-    phone = json['phone'];
+    user = json['user'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['paymentId'] = this.paymentId;
-    data['razorPayId'] = this.razorPayId;
+    data['razorpayId'] = this.razorpayId;
     data['paymentStatus'] = this.paymentStatus;
-    data['paymentMode'] = this.paymentMode;
     data['amount'] = this.amount;
-    data['userUserId'] = this.userUserId;
-    data['phone'] = this.phone;
+    data['user'] = this.user;
     return data;
+  }
+
+  void generatePaymentId() {
+    this.paymentId = Uuid().v1().split("-")[4];
+  }
+
+  void setRazorpayId(String razorpayId) {
+    this.razorpayId = razorpayId;
+  }
+
+  Map<String, dynamic> getFilteredPayment() {
+    final paymentMap = {...this.toJson()};
+    paymentMap.remove("razorpayId");
+    paymentMap.remove("user");
+    return paymentMap;
   }
 }

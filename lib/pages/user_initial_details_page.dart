@@ -19,18 +19,18 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   String selectedYear;
   String userGender = 'male';
   SharedPreferences prefs;
+  User user;
 
   @override
   void initState() {
     super.initState();
     instantiateSP();
-    if (User.phone == null) {
-      User.phone = '';
-    }
   }
 
   void instantiateSP() async {
     prefs = await SharedPreferences.getInstance();
+    user = await User.getPrefUser();
+    if (user.phoneNumber == null) user.phoneNumber = "";
   }
 
   Widget _buildName() {
@@ -51,7 +51,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       child: TextFormField(
         onChanged: (value) {
           setState(() {
-            User.displayName = value;
+            user.displayName = value;
           });
         },
         style: TextStyle(
@@ -85,12 +85,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       child: TextField(
         onChanged: (value) {
           setState(() {
-            User.phone = value;
+            user.phoneNumber = value;
           });
         },
         keyboardType: TextInputType.phone,
         style: TextStyle(
-          color: User.phone.length == 10 ? Colors.white : Colors.red,
+          color: user.phoneNumber.length == 10 ? Colors.white : Colors.red,
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -108,9 +108,9 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         initialDate: selectedDate,
         firstDate: DateTime(1950, 1),
         lastDate: DateTime(2101));
-    if (picked != null && picked != User.dob)
+    if (picked != null && picked != user.dob)
       setState(() {
-        User.dob = picked;
+        user.dob = picked;
       });
   }
 
@@ -151,7 +151,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                 print(gender);
                 setState(() {
                   userGender = gender;
-                  User.gender = gender;
+                  user.gender = gender;
                 });
               }),
           Icon(
@@ -172,7 +172,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                 print(gender);
                 setState(() {
                   userGender = gender;
-                  User.gender = gender;
+                  user.gender = gender;
                 });
               }),
         ],
@@ -228,10 +228,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         ),
         onTap: () async {
           await _selectDate(context);
-          selectedDay = User.dob.day.toString();
-          selectedMonth = User.dob.month.toString();
-          selectedYear = User.dob.year.toString();
-          print(User.dob.toString());
+          selectedDay = user.dob.day.toString();
+          selectedMonth = user.dob.month.toString();
+          selectedYear = user.dob.year.toString();
+          print(user.dob.toString());
         },
       ),
     );
@@ -256,10 +256,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
             color: Colors.blue,
           ),
           onPressed: () {
-            if (User.displayName != '' &&
-                User.phone.length == 10 &&
-                User.dob != null &&
-                isNumeric(User.phone)) {
+            if (user.displayName != '' &&
+                user.phoneNumber.length == 10 &&
+                user.dob != null &&
+                isNumeric(user.phoneNumber)) {
               Navigator.pushReplacementNamed(context, '/initial_address');
             } else {
               Alert(

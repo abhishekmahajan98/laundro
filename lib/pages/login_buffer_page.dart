@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:laundro/model/user_model.dart';
@@ -12,61 +11,33 @@ class BufferPage extends StatefulWidget {
 class _BufferPageState extends State<BufferPage> {
   final _firestore = Firestore.instance;
   SharedPreferences prefs;
+  User user;
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 1), () {
-      instantiateSP();
-      retrieveUserData();
-    });
+    if (mounted) instantiateSP();
   }
 
   void instantiateSP() async {
     prefs = await SharedPreferences.getInstance();
+    user = await User.getPrefUser();
+    retrieveUserData();
   }
 
   void retrieveUserData() async {
     final document =
-        await _firestore.collection('users').document(User.uid).get();
+        await _firestore.collection('users').document(user.uid).get();
     if (document.data['displayName'] != null &&
         document.data['phoneNumber'] != null &&
         document.data['primaryAddress'] != null) {
-      User.displayName = document.data['displayName'];
-      User.dob = DateTime.parse(document.data['dob']);
-      User.phone = document.data['phoneNumber'];
-      User.gender = document.data['gender'];
-      User.primaryAddress = document.data['primaryAddress'];
-      User.primaryAddressLine1 = document.data['primaryAddressLine1'];
-      User.primaryAddressLine2 = document.data['primaryAddressLine2'];
-      User.primaryAddressCity = document.data['primaryAddressCity'];
-      User.primaryAddressState = document.data['primaryAddressState'];
-      User.pincode = document.data['primaryAddressPincode'];
-      prefs.setString('loggedInUserDisplayName', User.displayName);
-      prefs.setString('loggedInUserPhoneNumber', User.phone);
-      prefs.setString('loggedInUserDOB', User.dob.toString());
-      prefs.setString('loggedInUserGender', User.gender);
-      prefs.setString(
-          'loggedInUserPrimaryAddressLine1', User.primaryAddressLine1);
-      prefs.setString(
-          'loggedInUserPrimaryAddressLine2', User.primaryAddressLine2);
-      prefs.setString(
-          'loggedInUserPrimaryAddressCity', User.primaryAddressCity);
-      prefs.setString(
-          'loggedInUserPrimaryAddressState', User.primaryAddressState);
-      prefs.setString('loggedInUserPrimaryAddressPincode', User.pincode);
-      prefs.setString('loggedInUserPrimaryAddress', User.primaryAddress);
-      navigateToHome();
+      User _user = User.fromJson(document.data);
+      _user.email = user.email;
+      _user.uid = user.uid;
+      final isUserSet = await _user.setPrefUser();
+      if (isUserSet) Navigator.pushReplacementNamed(context, '/home');
     } else {
-      navigateToDetails();
+      Navigator.pushReplacementNamed(context, '/extradetails');
     }
-  }
-
-  void navigateToHome() {
-    Navigator.pushReplacementNamed(context, '/home');
-  }
-
-  void navigateToDetails() {
-    Navigator.pushReplacementNamed(context, '/extradetails');
   }
 
   @override

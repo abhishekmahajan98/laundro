@@ -1,9 +1,8 @@
-import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:laundro/model/items_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:laundro/model/user_model.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -13,40 +12,18 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  SharedPreferences prefs;
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 1), () {
-      instantiateSP();
-    });
-  }
-
-  void instantiateSP() async {
-    prefs = await SharedPreferences.getInstance();
-    checkLoggedInStatus();
+    if (mounted) checkLoggedInStatus();
   }
 
   void checkLoggedInStatus() async {
-    if (prefs.containsKey('loggedInUserEmail')) {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('user')) {
       try {
-        User.email = prefs.getString('loggedInUserEmail');
-        User.uid = prefs.getString('loggedInUserUid');
-        User.phone = prefs.getString('loggedInUserPhoneNumber');
-        User.displayName = prefs.getString('loggedInUserDisplayName');
-        User.gender = prefs.getString('loggedInUserGender');
-        User.dob = DateTime.parse(prefs.getString('loggedInUserDOB'));
-        User.primaryAddress = prefs.getString('loggedInUserPrimaryAddress');
-        User.primaryAddressLine1 =
-            prefs.getString('loggedInUserPrimaryAddressLine1');
-        User.primaryAddressLine2 =
-            prefs.getString('loggedInUserPrimaryAddressLine2');
-        User.primaryAddressCity =
-            prefs.getString('loggedInUserPrimaryAddressCity');
-        User.primaryAddressState =
-            prefs.getString('loggedInUserPrimaryAddressState');
-        User.pincode = prefs.getString('loggedInUserPrimaryAddressPincode');
-        Navigator.pushReplacementNamed(context, '/home');
+        final isItemSet = await Items.getAndSetItemsFromFirebase();
+        if (isItemSet) Navigator.pushReplacementNamed(context, '/home');
       } catch (e) {
         print(e);
         prefs.clear();
@@ -89,13 +66,11 @@ class _SplashScreenState extends State<SplashScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Hero(
-                    tag: 'logo',
-                    child: Image.asset(
-                      'images/app_logo/LOGO1.png',
-                      width: 400,
-                    )
-                  ),
-                  
+                      tag: 'logo',
+                      child: Image.asset(
+                        'images/app_logo/LOGO1.png',
+                        width: 400,
+                      )),
                 ],
               ),
             ),

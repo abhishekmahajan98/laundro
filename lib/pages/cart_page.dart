@@ -1,13 +1,8 @@
-import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:laundro/model/items_model.dart';
 import 'package:laundro/model/order_model.dart';
-import 'package:laundro/model/payment_model.dart';
 import 'package:laundro/model/user_model.dart';
-import 'package:laundro/pages/order_conform_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:uuid/uuid.dart';
 
 import '../components/cart_list.dart';
 import '../components/payment_info_modal.dart';
@@ -19,9 +14,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   List items = [];
-  SharedPreferences _prefs;
   Razorpay _razorpay;
-  List iron, wash, dryClean;
   double dryCleanCost = 0, washCost = 0, ironCost = 0;
 
   @override
@@ -34,137 +27,20 @@ class _CartPageState extends State<CartPage> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    if (response.paymentId != null) {
-      var userRef = Firestore.instance.collection("user").document(User.uid);
-      var paymentRef = Firestore.instance.collection("payment").document();
-      var orderIRef = Firestore.instance.collection("order").document();
-      var orderWRef = Firestore.instance.collection("order").document();
-      var orderDCRef = Firestore.instance.collection("order").document();
-
-      Payment.paymentId = Uuid().v4().split("-").sublist(0, 2).join();
-      Payment.razonPayId = response.paymentId;
-      Payment.paymentStatus = PaymentStatus.completed.toString();
-      Payment.amount = getTotal + deliveryTotal;
-      Payment.userDetail["userId"] = User.uid;
-      Payment.userDetail["phone"] = User.phone;
-
-      final orderIId = Uuid().v4().split("-")[0];
-      final orderWId = Uuid().v4().split("-")[0];
-      final orderDCId = Uuid().v4().split("-")[0];
-      final otpI = Uuid().v4().split("-")[3];
-      final otpW = Uuid().v4().split("-")[3];
-      final otpDC = Uuid().v4().split("-")[3];
-      Order.deliveryDateTime = DateTime.now();
-      Order.userDetail["userId"] = User.uid;
-      Order.userDetail["phone"] = User.phone;
-      Order.userDetail["address"] = User.primaryAddress;
-      Order.userDetail["pincode"] = User.pincode;
-      Order.paymentDetail["paymentId"] = Payment.paymentId;
-      Order.deliveryCost = deliveryTotal / 3;
-
-      if (List.from(iron).length > 0) {
-        Order.orderId = orderIId;
-        Order.otp = otpI;
-        Order.orderItemList = iron;
-        Order.total = ironCost;
-        User.orderHistory[orderIRef.documentID] = {
-          "orderId": Order.orderId,
-          "deliveryCost": Order.deliveryCost,
-          "total": Order.total,
-          "otp": Order.otp,
-          "orderPlacedDateTime": Order.orderPlacedDateTime,
-          "orderItemList": Order.orderItemList,
-          "userDetail": Order.userDetail,
-          "shopDetail": Order.shopDetail,
-          "orderStatus": Order.orderStatus,
-          "paymentDetail": Order.paymentDetail
-        };
-      }
-      if (List.from(wash).length > 0) {
-        Order.orderId = orderWId;
-        Order.otp = otpW;
-        Order.orderItemList = wash;
-        Order.total = washCost;
-        User.orderHistory[orderWRef.documentID] = {
-          "orderId": Order.orderId,
-          "deliveryCost": Order.deliveryCost,
-          "total": Order.total,
-          "otp": Order.otp,
-          "orderPlacedDateTime": Order.orderPlacedDateTime,
-          "orderItemList": Order.orderItemList,
-          "userDetail": Order.userDetail,
-          "shopDetail": Order.shopDetail,
-          "orderStatus": Order.orderStatus,
-          "paymentDetail": Order.paymentDetail
-        };
-      }
-      if (List.from(dryClean).length > 0) {
-        Order.orderId = orderDCId;
-        Order.otp = otpDC;
-        Order.orderItemList = dryClean;
-        Order.total = dryCleanCost;
-        User.orderHistory[orderDCRef.documentID] = {
-          "orderId": Order.orderId,
-          "deliveryCost": Order.deliveryCost,
-          "total": Order.total,
-          "otp": Order.otp,
-          "orderPlacedDateTime": Order.orderPlacedDateTime,
-          "orderItemList": Order.orderItemList,
-          "userDetail": Order.userDetail,
-          "shopDetail": Order.shopDetail,
-          "orderStatus": Order.orderStatus,
-          "paymentDetail": Order.paymentDetail
-        };
-      }
-
-      await Firestore.instance.runTransaction((Transaction t) async {
-        t.set(paymentRef, {
-          "paymentId": Payment.paymentId,
-          "razonPayId": Payment.razonPayId,
-          "paymentStatus": Payment.paymentStatus,
-          "amount": Payment.amount,
-          "userDetail": Payment.userDetail
-        });
-
-        t.update(userRef, {"orderHistory": User.orderHistory});
-        if (List.from(iron).length > 0) {
-          t.set(orderIRef, {...User.orderHistory[orderIRef.documentID]});
-        }
-        if (List.from(wash).length > 0) {
-          t.set(orderWRef, {...User.orderHistory[orderWRef.documentID]});
-        }
-        if (List.from(dryClean).length > 0) {
-          t.set(orderDCRef, {...User.orderHistory[orderDCRef.documentID]});
-        }
-      });
-
-      Navigator.pop(context);
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => OrderConfirmPage(
-                    dryCleanId: orderDCRef.documentID,
-                    ironId: orderIRef.documentID,
-                    washId: orderWRef.documentID,
-                  )));
-    }
+    await Order.create(response.paymentId, deliveryTotal);
+    Navigator.pop(context);
+    // Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(
+    //         builder: (BuildContext context) => OrderConfirmPage(
+    //               dryCleanId: orderDCRef.documentID,
+    //               ironId: orderIRef.documentID,
+    //               washId: orderWRef.documentID,
+    //             )));
   }
 
   void _handlePaymentError(PaymentFailureResponse response) async {
-    Payment.paymentId = Uuid().v4().split("-").sublist(0, 2).join();
-    Payment.razonPayId = null;
-    Payment.paymentStatus = PaymentStatus.cancelled.toString();
-    Payment.amount = getTotal + deliveryTotal;
-    Payment.userDetail["userId"] = User.uid;
-    Payment.userDetail["phone"] = User.phone;
-
-    await Firestore.instance.collection("payment").document().setData({
-      "paymentId": Payment.paymentId,
-      "razonPayId": Payment.razonPayId,
-      "paymentStatus": Payment.paymentStatus,
-      "amount": Payment.amount,
-      "userDetail": Payment.userDetail
-    });
+    // TODO make failure payment
     showDialogBox(response.code.toString() + ": " + response.message);
   }
 
@@ -187,41 +63,61 @@ class _CartPageState extends State<CartPage> {
   }
 
   Future<void> _getData() async {
-    _prefs = await SharedPreferences.getInstance();
-    iron = _prefs.getString("iron") == null
-        ? []
-        : json.decode(_prefs.getString("iron"));
-    wash = _prefs.getString("wash") == null
-        ? []
-        : json.decode(_prefs.getString("wash"));
-    dryClean = _prefs.getString("dry-clean") == null
-        ? []
-        : json.decode(_prefs.getString("dry-clean"));
+    Items iron = await Items.getItemsPref("iron");
+    Items wash = await Items.getItemsPref("wash");
+    Items dryclean = await Items.getItemsPref("dryclean");
 
-    List.from(iron).forEach((item) {
-      ironCost += item["qty"] * ["price"];
-    });
-    List.from(dryClean).forEach((item) {
-      ironCost += item["qty"] * ["price"];
-    });
-    List.from(wash).forEach((item) {
-      washCost += item["qty"] * ["price"];
-    });
-    print(ironCost.toString() +
-        " " +
-        washCost.toString() +
-        " " +
-        dryCleanCost.toString());
     this.setState(() {
-      items = [...wash, ...iron, ...dryClean];
+      items = [
+        ...wash
+            .toJson()
+            .keys
+            .toList()
+            .sublist(0, wash.toJson().keys.toList().length - 2)
+            .map((item) {
+          return {
+            "title": item,
+            "tag": wash.tag,
+            "qty": wash.toJson()[item]["quantity"],
+            "price": wash.toJson()[item]["price"]
+          };
+        }),
+        ...iron
+            .toJson()
+            .keys
+            .toList()
+            .sublist(0, iron.toJson().keys.toList().length - 2)
+            .map((item) {
+          return {
+            "title": item,
+            "tag": iron.tag,
+            "qty": iron.toJson()[item]["quantity"],
+            "price": iron.toJson()[item]["price"]
+          };
+        }),
+        ...dryclean
+            .toJson()
+            .keys
+            .toList()
+            .sublist(0, dryclean.toJson().keys.toList().length - 2)
+            .map((item) {
+          return {
+            "title": item,
+            "tag": dryclean.tag,
+            "qty": dryclean.toJson()[item]["quantity"],
+            "price": dryclean.toJson()[item]["price"]
+          };
+        })
+      ];
     });
   }
 
-  showBottom() {
+  showBottom() async {
+    User user = await User.getPrefUser();
     showModalBottomSheet(
         context: context,
         builder: (context) {
-          return PaymentInfoModal(paymentHandler: startPayment);
+          return PaymentInfoModal(paymentHandler: startPayment, user: user);
         });
   }
 

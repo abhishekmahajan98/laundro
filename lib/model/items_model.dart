@@ -12,6 +12,7 @@ class Items {
   Map shorts;
   Map tShirtShirt;
   String tag;
+  double total;
 
   Items(
       {this.bedSheetDouble,
@@ -21,7 +22,8 @@ class Items {
       this.saree,
       this.shorts,
       this.tShirtShirt,
-      this.tag});
+      this.tag,
+      this.total});
 
   Items.fromJson(Map<String, dynamic> json) {
     bedSheetDouble = json['bedSheetDouble'];
@@ -32,6 +34,7 @@ class Items {
     shorts = json['shorts'];
     tShirtShirt = json['t-shirt/shirt'];
     tag = json['tag'];
+    total = json['total'];
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +47,7 @@ class Items {
     data['shorts'] = this.shorts;
     data['t-shirt/shirt'] = this.tShirtShirt;
     data['tag'] = this.tag;
+    data["total"] = this.total;
     return data;
   }
 
@@ -54,13 +58,16 @@ class Items {
     return isItemsSet;
   }
 
-  Future<Items> getItemsPref(String tag) async {
+  static Future<Items> getItemsPref(String tag) async {
     final pref = await SharedPreferences.getInstance();
-    final itemsJson = json.decode(pref.getString(tag));
-    return Items.fromJson(itemsJson);
+    if (pref.containsKey(tag)) {
+      final itemsJson = json.decode(pref.getString(tag));
+      return Items.fromJson(itemsJson);
+    }
+    return Items.fromJson({});
   }
 
-  Future<bool> getAndSetItemsFromFirebase() async {
+  static Future<bool> getAndSetItemsFromFirebase() async {
     final fireStore = Firestore.instance;
     final fireStoreWashItems =
         await fireStore.collection("items").document("wash").get();
@@ -78,5 +85,13 @@ class Items {
     final isDryCleanSet = await dryCleanItems.setItemPref();
 
     return isIronSet && isWashSet && isDryCleanSet;
+  }
+
+  Map<String, dynamic> getFilteredItems() {
+    final itemsMap = {...this.toJson()};
+    itemsMap.keys.forEach((key) {
+      if (itemsMap[key].quantity == 0) itemsMap.remove(key);
+    });
+    return itemsMap;
   }
 }

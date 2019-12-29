@@ -13,18 +13,19 @@ class MyAccount extends StatefulWidget {
 
 class _MyAccountState extends State<MyAccount> {
   SharedPreferences prefs;
+  User user;
   bool editPhoneNumber = false;
   bool editPrimaryAddress = false;
   bool editSecondaryAddress = false;
-  String displayName = User.displayName, email = User.email;
-  String updatedNumber = User.phone;
-  String updatedAddressLine1 = User.primaryAddressLine1;
-  String updatedAddressLine2 = User.primaryAddressLine2;
-  String updatedCity = User.primaryAddressCity;
-  String updatedState = User.primaryAddressState;
-  String updatedPincode = User.pincode;
-  String updatedPrimaryAddress = User.primaryAddress;
-
+  String displayName;
+  String email;
+  String updatedNumber;
+  String updatedAddressLine1;
+  String updatedAddressLine2;
+  String updatedCity;
+  String updatedState;
+  String updatedPincode;
+  String updatedPrimaryAddress;
   final _firestore = Firestore.instance;
 
   @override
@@ -35,6 +36,16 @@ class _MyAccountState extends State<MyAccount> {
 
   void instantiateSP() async {
     prefs = await SharedPreferences.getInstance();
+    user = await User.getPrefUser();
+    displayName = user.displayName;
+    email = user.email;
+    updatedNumber = user.phoneNumber;
+    updatedAddressLine1 = user.primaryAddressLine1;
+    updatedAddressLine2 = user.primaryAddressLine2;
+    updatedCity = user.primaryAddressCity;
+    updatedState = user.primaryAddressState;
+    updatedPincode = user.primaryAddressPincode;
+    updatedPrimaryAddress = user.primaryAddress;
   }
 
   @override
@@ -47,7 +58,7 @@ class _MyAccountState extends State<MyAccount> {
           height: 60,
           child: RaisedButton(
             color: Colors.blue,
-            onPressed: (){
+            onPressed: () async {
               updatedPrimaryAddress = updatedAddressLine1 +
                   "+" +
                   updatedAddressLine2 +
@@ -57,63 +68,40 @@ class _MyAccountState extends State<MyAccount> {
                   updatedState +
                   "+" +
                   updatedPincode;
-              if (updatedNumber != User.phone ||
-                  updatedPincode != User.pincode ||
-                  updatedPrimaryAddress != User.primaryAddress) {
+              if (updatedNumber != user.phoneNumber ||
+                  updatedPincode != user.primaryAddressPincode ||
+                  updatedPrimaryAddress != user.primaryAddress) {
                 if (updatedPincode.length == 6 &&
                     updatedNumber.length == 10 &&
                     updatedAddressLine1.length >= 1 &&
                     updatedCity.length > 1 &&
                     updatedState.length > 1) {
-                  User.primaryAddress = updatedPrimaryAddress;
-                  User.phone = updatedNumber;
-                  User.primaryAddressLine1 = updatedAddressLine1;
-                  User.primaryAddressLine2 = updatedAddressLine2;
-                  User.primaryAddressCity = updatedCity;
-                  User.primaryAddressState = updatedState;
-                  User.pincode = updatedPincode;
-                  //remove previous prefs
-                  prefs.remove('loggedInUserPhoneNumber');
-                  prefs.remove('loggedInUserPrimaryAddress');
-                  prefs.remove('loggedInUserPrimaryAddressLine1');
-                  prefs.remove('loggedInUserPrimaryAddressLine2');
-                  prefs.remove('loggedInUserPrimaryAddressCity');
-                  prefs.remove('loggedInUserPrimaryAddressState');
-                  prefs.remove('loggedInUserPrimaryAddressPincode');
-                  //set updated prefs
-                  prefs.setString('loggedInUserPhoneNumber', User.phone);
-                  prefs.setString('loggedInUserPrimaryAddressLine1',
-                      User.primaryAddressLine1);
-                  prefs.setString('loggedInUserPrimaryAddressLine2',
-                      User.primaryAddressLine2);
-                  prefs.setString('loggedInUserPrimaryAddressCity',
-                      User.primaryAddressCity);
-                  prefs.setString('loggedInUserPrimaryAddressState',
-                      User.primaryAddressState);
-                  prefs.setString(
-                      'loggedInUserPrimaryAddressPincode', User.pincode);
-                  prefs.setString(
-                      'loggedInUserPrimaryAddress', User.primaryAddress);
-                  _firestore
+                  user.primaryAddress = updatedPrimaryAddress;
+                  user.phoneNumber = updatedNumber;
+                  user.primaryAddressLine1 = updatedAddressLine1;
+                  user.primaryAddressLine2 = updatedAddressLine2;
+                  user.primaryAddressCity = updatedCity;
+                  user.primaryAddressState = updatedState;
+                  user.primaryAddressPincode = updatedPincode;
+                  await user.setPrefUser();
+                  await _firestore
                       .collection('users')
-                      .document(User.uid)
+                      .document(user.uid)
                       .updateData({
-                    'phoneNumber': User.phone,
-                    'primaryAddress': User.primaryAddress,
-                    'primaryAddressLine1': User.primaryAddressLine1,
-                    'primaryAddressLine2': User.primaryAddressLine2,
-                    'primaryAddressCity': User.primaryAddressCity,
-                    'primaryAddressState': User.primaryAddressState,
-                    'primaryAddressPincode': User.pincode,
+                    'phoneNumber': user.phoneNumber,
+                    'primaryAddress': user.primaryAddress,
+                    'primaryAddressLine1': user.primaryAddressLine1,
+                    'primaryAddressLine2': user.primaryAddressLine2,
+                    'primaryAddressCity': user.primaryAddressCity,
+                    'primaryAddressState': user.primaryAddressState,
+                    'primaryAddressPincode': user.primaryAddressPincode,
                   });
                   Navigator.pop(context);
-                }
-                else{
+                } else {
                   Alert(
                       context: context,
                       title: 'Invalid data in Fields',
-                      desc:
-                      'Please check the fields entered.',
+                      desc: 'Please check the fields entered.',
                       buttons: [
                         DialogButton(
                           child: Text('Okay'),
@@ -123,13 +111,12 @@ class _MyAccountState extends State<MyAccount> {
                         ),
                       ]).show();
                 }
-              }
-              else{
+              } else {
                 Navigator.pop(context);
               }
             },
             child: Text(
-                'Save',
+              'Save',
               style: kCategoryTextStyle,
             ),
           ),
@@ -159,7 +146,7 @@ class _MyAccountState extends State<MyAccount> {
                       ),
                     ),
                     Text(
-                      User.displayName == null ? '' : User.displayName,
+                      user.displayName == null ? '' : user.displayName,
                       style: TextStyle(
                         fontSize: 30,
                       ),
@@ -172,20 +159,20 @@ class _MyAccountState extends State<MyAccount> {
                 flex: 7,
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Color(
-                          0xfff2f3f7
-                      ),
+                    color: Color(0xfff2f3f7),
                   ),
                   child: ListView(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.fromLTRB(10, 20, 10,5),
-                        decoration: BoxDecoration(color: Colors.white,),
+                        margin: EdgeInsets.fromLTRB(10, 20, 10, 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
                         child: ListTile(
                           title: TextFormField(
                             enabled: editPhoneNumber,
                             keyboardType: TextInputType.phone,
-                            initialValue: User.phone,
+                            initialValue: user.phoneNumber,
                             style: TextStyle(
                               fontSize: 20,
                               color: updatedNumber.length == 10
@@ -236,13 +223,12 @@ class _MyAccountState extends State<MyAccount> {
                               ),
                               title: Text(
                                 'Primary Address',
-                                style: TextStyle(
-                                    fontSize: 18),
+                                style: TextStyle(fontSize: 18),
                               ),
                               trailing: GestureDetector(
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
-                                    editPrimaryAddress=!editPrimaryAddress;
+                                    editPrimaryAddress = !editPrimaryAddress;
                                   });
                                 },
                                 child: Icon(
@@ -252,7 +238,6 @@ class _MyAccountState extends State<MyAccount> {
                                   color: Colors.black,
                                 ),
                               ),
-
                             ),
                             ListTile(
                               leading: Text("Line 1      "),
@@ -269,7 +254,6 @@ class _MyAccountState extends State<MyAccount> {
                                     updatedAddressLine1 = value;
                                   });
                                 },
-
                               ),
                             ),
                             ListTile(
@@ -287,7 +271,6 @@ class _MyAccountState extends State<MyAccount> {
                                     updatedAddressLine2 = value;
                                   });
                                 },
-
                               ),
                             ),
                             ListTile(
@@ -305,7 +288,6 @@ class _MyAccountState extends State<MyAccount> {
                                     updatedCity = value;
                                   });
                                 },
-
                               ),
                             ),
                             ListTile(
@@ -323,7 +305,6 @@ class _MyAccountState extends State<MyAccount> {
                                     updatedState = value;
                                   });
                                 },
-
                               ),
                             ),
                             ListTile(
@@ -343,10 +324,8 @@ class _MyAccountState extends State<MyAccount> {
                                     updatedPincode = value;
                                   });
                                 },
-
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -355,8 +334,7 @@ class _MyAccountState extends State<MyAccount> {
                       ),
                     ],
                   ),
-                )
-            ),
+                )),
           ],
         ),
       ),

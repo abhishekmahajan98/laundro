@@ -110,11 +110,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             if (newUser != null) {
               final firebaseUser = await _auth.currentUser();
               loggedInUser = firebaseUser;
-              User.uid = loggedInUser.uid;
-              User.email = loggedInUser.email;
+              User user = User();
+              user.uid = loggedInUser.uid;
+              user.email = loggedInUser.email;
               prefs = await SharedPreferences.getInstance();
-              prefs.setString('loggedInUserEmail', User.email);
-              prefs.setString('loggedInUserUid', User.uid);
+              user.setPrefUser();
               Navigator.pushReplacementNamed(context, "/initial_details");
             }
           } catch (e) {

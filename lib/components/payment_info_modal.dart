@@ -3,10 +3,8 @@ import 'package:laundro/model/user_model.dart';
 
 class PaymentInfoModal extends StatelessWidget {
   final Function paymentHandler;
-  // final String email, phone, address;
-
-  PaymentInfoModal(
-      {@required this.paymentHandler});
+  final User user;
+  PaymentInfoModal({@required this.paymentHandler, @required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -17,16 +15,15 @@ class PaymentInfoModal extends StatelessWidget {
               child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(children: <Widget>[
-              Container(
-                      child: Text("Email", style: TextStyle(fontSize: 25))),
-              Container(child: Text(User.email)),
-              
+              Container(child: Text("Email", style: TextStyle(fontSize: 25))),
+              Container(child: Text(user.email)),
               Container(
                   child: Text("Phone", style: TextStyle(fontSize: 18)),
                   alignment: Alignment.centerLeft),
               SizedBox(height: 10),
               Container(
-                  child: Text("+91 "+User.phone.toString(), style: TextStyle(fontSize: 16)),
+                  child: Text("+91 " + user.phoneNumber.toString(),
+                      style: TextStyle(fontSize: 16)),
                   alignment: Alignment.centerLeft),
               SizedBox(height: 20),
               Container(
@@ -35,7 +32,8 @@ class PaymentInfoModal extends StatelessWidget {
               SizedBox(height: 10),
               Container(
                   child: Wrap(children: <Widget>[
-                    Text(User.primaryAddress.split("+").join(","), style: TextStyle(fontSize: 18))
+                    Text(user.primaryAddress.split("+").join(","),
+                        style: TextStyle(fontSize: 18))
                   ]),
                   alignment: Alignment.centerLeft),
             ]),

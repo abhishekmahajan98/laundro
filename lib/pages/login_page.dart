@@ -22,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool showSpinner = false;
   bool circularSpinner = false;
   SharedPreferences prefs;
+  User user;
 
   @override
   void initState() {
@@ -35,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void checkLoggedInStatus() {
-    if (prefs.containsKey('loggedInUserEmail')) {
+    if (prefs.containsKey('user')) {
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
@@ -136,20 +137,19 @@ class _LoginScreenState extends State<LoginScreen> {
             if (firebaseUser != null) {
               final currentFirebaseUser = await _auth.currentUser();
               loggedInUser = currentFirebaseUser;
-              User.email = loggedInUser.email;
-              User.uid = loggedInUser.uid;
-              prefs.setString('loggedInUserEmail', User.email);
-              prefs.setString('loggedInUserUserid', User.uid);
+              user.email = loggedInUser.email;
+              user.uid = loggedInUser.uid;
+              await user.setPrefUser();
               final userCheck = await _firestore
                   .collection('users')
-                  .where('email', isEqualTo: User.email)
+                  .where('email', isEqualTo: user.email)
                   .limit(1)
                   .getDocuments();
               final userCheckList = userCheck.documents;
               if (userCheckList.length == 1) {
                 Navigator.pushReplacementNamed(context, '/login_buffer');
               } else {
-                Navigator.pushReplacementNamed(context, '/initial_detials');
+                Navigator.pushReplacementNamed(context, '/initial_details');
               }
             }
           } catch (e) {
@@ -253,13 +253,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (res != null) {
                   final firebaseUser = await _auth.currentUser();
                   loggedInUser = firebaseUser;
-                  User.email = loggedInUser.email;
-                  User.uid = loggedInUser.uid;
-                  prefs.setString('loggedInUserEmail', User.email);
-                  prefs.setString('loggedInUserUid', User.uid);
+                 user.email = loggedInUser.email;
+                  user.uid = loggedInUser.uid;
+                  await user.setPrefUser();
                   final userCheck = await _firestore
                       .collection('users')
-                      .where('email', isEqualTo: User.email)
+                      .where('email', isEqualTo: user.email)
                       .limit(1)
                       .getDocuments();
                   final userCheckList = userCheck.documents;

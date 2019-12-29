@@ -3,6 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:laundro/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class SideDrawer extends StatefulWidget {
   @override
   _SideDrawerState createState() => _SideDrawerState();
@@ -12,12 +13,17 @@ class _SideDrawerState extends State<SideDrawer> {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   SharedPreferences prefs;
+  User user;
   FirebaseUser loggedInUser;
   @override
   void initState() {
     super.initState();
+    instantiateSP();
   }
 
+  void instantiateSP() async {
+    user = await User.getPrefUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +32,9 @@ class _SideDrawerState extends State<SideDrawer> {
         children: <Widget>[
           //header
           UserAccountsDrawerHeader(
-            accountName: Text(User.email),
-            accountEmail: User.displayName == null ? Text('') : Text(User.displayName),
+            accountName: Text(user.email),
+            accountEmail:
+                user.displayName == null ? Text('') : Text(user.displayName),
             currentAccountPicture: GestureDetector(
               child: CircleAvatar(
                   backgroundColor: Colors.white,
@@ -65,7 +72,7 @@ class _SideDrawerState extends State<SideDrawer> {
             ),
           ),
           InkWell(
-            onTap: ()  =>  Navigator.pushNamed(context, '/cart'),
+            onTap: () => Navigator.pushNamed(context, '/cart'),
             child: ListTile(
               title: Text('Shopping Cart'),
               leading: Icon(
@@ -80,7 +87,7 @@ class _SideDrawerState extends State<SideDrawer> {
             height: 5,
           ),
           InkWell(
-            onTap: ()=>Navigator.pushNamed(context, '/about_page'),
+            onTap: () => Navigator.pushNamed(context, '/about_page'),
             child: ListTile(
               title: Text('About us'),
               leading: Icon(
