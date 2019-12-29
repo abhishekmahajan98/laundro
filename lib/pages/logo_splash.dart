@@ -22,8 +22,11 @@ class _SplashScreenState extends State<SplashScreen> {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('user')) {
       try {
-        final isItemSet = await Items.getAndSetItemsFromFirebase();
-        if (isItemSet) Navigator.pushReplacementNamed(context, '/home');
+        if (prefs.containsKey("iron") &&
+            prefs.containsKey("wash") &&
+            prefs.containsKey("dryclean"))
+          await Items.getAndSetItemsFromFirebase();
+        Navigator.pushReplacementNamed(context, '/home');
       } catch (e) {
         print(e);
         prefs.clear();

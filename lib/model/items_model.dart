@@ -26,8 +26,8 @@ class Items {
       this.total});
 
   Items.fromJson(Map<String, dynamic> json) {
-    bedSheetDouble = json['bedSheetDouble'];
-    bedSheetSingle = json['bedSheetSingle'];
+    bedSheetDouble = json['bedSheet(Double)'];
+    bedSheetSingle = json['bedSheet(Single)'];
     jeansPants = json['jeans/pants'];
     pyjamaTrousers = json['pyjama/trousers'];
     saree = json['saree'];
@@ -39,8 +39,8 @@ class Items {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['bedSheetDouble'] = this.bedSheetDouble;
-    data['bedSheetSingle'] = this.bedSheetSingle;
+    data['bedSheet(Double)'] = this.bedSheetDouble;
+    data['bedSheet(Single)'] = this.bedSheetSingle;
     data['jeans/pants'] = this.jeansPants;
     data['pyjama/trousers'] = this.pyjamaTrousers;
     data['saree'] = this.saree;
