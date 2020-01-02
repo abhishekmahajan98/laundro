@@ -35,5 +35,4 @@ class MenuItem extends StatelessWidget {
               ))),
       Divider()
     ]));
-  }
-}
+  }}

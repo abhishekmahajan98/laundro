@@ -62,77 +62,74 @@ class _OrdersBoxState extends State<OrdersBox> {
   }
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 5),
-      child: ExpansionTile(
-        title: Text(
-          widget.customerName,
-          style:TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          )
-        ),
-        subtitle: Text(
-          'Service Type:'+
-          widget.serviceType
-        ),
-        trailing: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Icon(
-            Icons.keyboard_arrow_down,
-            color: Colors.black,
-            size: 50,
-          ),
-        ),
-        children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-                title: Text('Order Id:'+widget.orderId),
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-                title: Text('Phone:'+widget.customerPhoneNumber),
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-                title: Text('Address Line 1:'+widget.addressline1),
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-                title: Text('Address Line 2:'+widget.addressline2),
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-                title: Text('city:'+widget.city), 
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-                title:Text('state:'+widget.state),
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-                title: Text('pincode:'+widget.pincode),
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-                title: Text('total clothes:'+widget.totalClothes),
-                trailing: RaisedButton(
-                  onPressed: (){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ClothDetails(clothList: clothes,)),
-                      );
-                  },
-                  child: Text('Clothes details'),
-                ),
-              ),
-            ],
-          ),
-        ],
+    return ExpansionTile(
+      title: Text(
+        widget.customerName,
+        style:TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        )
       ),
+      subtitle: Text(
+        'Service Type:'+
+        widget.serviceType
+      ),
+      trailing: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Icon(
+          Icons.keyboard_arrow_down,
+          color: Colors.black,
+          size: 50,
+        ),
+      ),
+      children: <Widget>[
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
+              title: Text('Order Id:'+widget.orderId),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
+              title: Text('Phone:'+widget.customerPhoneNumber),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
+              title: Text('Address Line 1:'+widget.addressline1),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
+              title: Text('Address Line 2:'+widget.addressline2),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
+              title: Text('city:'+widget.city), 
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
+              title:Text('state:'+widget.state),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
+              title: Text('pincode:'+widget.pincode),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
+              title: Text('total clothes:'+widget.totalClothes),
+              trailing: RaisedButton(
+                onPressed: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ClothDetails(clothList: clothes,)),
+                    );
+                },
+                child: Text('Clothes details'),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

@@ -70,6 +70,7 @@ class _HomePageState extends State<HomePage> {
                               imageRoute:'images/icons/ironing.png',
                               buttonTag: 'Ironing',
                               ontap: () => Navigator.pushNamed(context, '/iron'),
+                              //Navigator.pushNamed(context, '/iron'),
                             ),
                             SquareButton(
                               marginL: 2,

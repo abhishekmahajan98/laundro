@@ -21,7 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _firestore = Firestore.instance;
   String email, password;
   bool showSpinner = false;
-  bool circularSpinner = false;
   SharedPreferences prefs;
 
   @override
@@ -148,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
         elevation: 5.0,
         onPressed: () async {
           setState(() {
-            circularSpinner = true;
+            showSpinner = true;
           });
           try {
             final firebaseUser = await _auth.signInWithEmailAndPassword(
@@ -176,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
             print(e);
           }
           setState(() {
-            circularSpinner = false;
+            showSpinner = false;
           });
         },
         //padding: EdgeInsets.all(15.0),

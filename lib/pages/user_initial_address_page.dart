@@ -23,7 +23,6 @@ class _UserAddressPageState extends State<UserAddressPage> {
   void instantiateSP() async {
     prefs = await SharedPreferences.getInstance();
   }
-
   Widget _buildAddressLine1() {
     return Container(
       alignment: Alignment.centerLeft,

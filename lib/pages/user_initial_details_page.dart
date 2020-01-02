@@ -19,14 +19,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   String selectedYear;
   String userGender = 'male';
   SharedPreferences prefs;
+  String phone='';
 
   @override
   void initState() {
     super.initState();
     instantiateSP();
-    if (User.phone == null) {
-      User.phone = '';
-    }
   }
 
   void instantiateSP() async {
@@ -49,6 +47,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       ),
       height: 60.0,
       child: TextFormField(
+        initialValue: User.displayName,
         onChanged: (value) {
           setState(() {
             User.displayName = value;
@@ -82,15 +81,16 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         ],
       ),
       height: 60.0,
-      child: TextField(
+      child: TextFormField(
+        initialValue: User.phone,
         onChanged: (value) {
           setState(() {
-            User.phone = value;
+            phone = value;
           });
         },
         keyboardType: TextInputType.phone,
         style: TextStyle(
-          color: User.phone.length == 10 ? Colors.white : Colors.red,
+          color: phone.length == 10 ? Colors.white : Colors.red,
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -256,6 +256,9 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
             color: Colors.blue,
           ),
           onPressed: () {
+            if(phone!=null){
+              User.phone=phone;
+            }
             if (User.displayName != '' &&
                 User.phone.length == 10 &&
                 User.dob != null &&

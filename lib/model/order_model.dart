@@ -1,5 +1,3 @@
-import 'package:uuid/uuid.dart';
-
 class Order {
   static String orderId ;
   static String instruction;

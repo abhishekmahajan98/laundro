@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:awesome_loader/awesome_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:laundro/model/user_model.dart';
@@ -88,8 +89,18 @@ class _BufferPageState extends State<BufferPage> {
                 children: <Widget>[
                   Hero(
                     tag: 'logo',
-                    child: Image.asset('images/app_logo/LOGO1.png'),
+                    child: Image.asset(
+                      'images/app_logo/LOGO1.png',
+                      width: 300,
+                      ),
                   ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  AwesomeLoader(
+                    loaderType: AwesomeLoader.AwesomeLoader3,
+                    color: Colors.white,
+                  )
                 ],
               ),
             ),

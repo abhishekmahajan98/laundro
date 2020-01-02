@@ -1,17 +1,9 @@
-import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:laundro/model/order_model.dart';
-import 'package:laundro/model/payment_model.dart';
-import 'package:laundro/model/user_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:uuid/uuid.dart';
+import 'package:laundro/components/payment_bottom_sheet.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-import '../components/cart_list.dart';
-import '../components/payment_info_modal.dart';
-
-final _WALLETS = ["paytm", "citrus", "amazonpay", "payzapp", "freecharge"];
+import '../Data.dart';
+import '../constants.dart';
 
 class CartPage extends StatefulWidget {
   @override
@@ -19,227 +11,266 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  List items = [];
-  double ironTotal, washingTotal, dryCleaningTotal;
-  SharedPreferences _prefs;
-  Razorpay _razorpay;
-  var iron, wash, dryClean;
-  var dryCleanCost = 0;
-  var washCost = 0;
-  var ironCost = 0;
-
+  List selectedIroningList=[];
+  List selectedWashingList=[];
+  List selectedDryCleaningList=[];
+  double ironingCost=0,washingCost=0,dryCleaningCost=0;
+  double subTotal=0,deliveryCost=0,totalCost=0;
+  int ironingNumber=0,washingNumber=0,dryCleaningNumber=0,totalNumber=0;
+  bool showspinner=false;
   @override
   void initState() {
     super.initState();
-    _getData();
-    _razorpay = Razorpay();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-  }
-
-  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    if (response.paymentId != null) {
-      var userRef = Firestore.instance.collection("user").document(User.uid);
-      var paymentRef = Firestore.instance.collection("payment").document();
-      var orderRef = Firestore.instance.collection("order").document();
-      final paymentId = Uuid().v4().split("-").sublist(0, 2).join();
-
-      final orderId = Uuid().v4().split("-")[0];
-      Order.userDetail["userId"] = User.uid;
-      Order.userDetail["phone"] = User.phone;
-      Order.userDetail["address"] = User.primaryAddress;
-      Order.userDetail["pincode"] = User.pincode;
-      Order.paymentDetail["paymentId"] = Payment.paymentId;
-      Order.deliveryCost = deliveryTotal;
-      Order.total = getTotal + deliveryTotal;
-      Order.otp = Uuid().v4().split("-")[3];
-
-      await Firestore.instance.runTransaction((Transaction t) async {});
-
-      Navigator.pop(context);
-      Navigator.pushReplacementNamed(context, "/order-confirm-page");
-    }
-  }
-
-  void _handlePaymentError(PaymentFailureResponse response) {
-    showDialogBox(response.code.toString() + ": " + response.message);
-  }
-
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    if (_WALLETS.contains(response.walletName)) {
-      Navigator.pop(context);
-      Navigator.pushReplacementNamed(context, "/order-confirm-page");
-    }
-  }
-
-  void startPayment() {
-    try {
-      var options = {
-        'key': 'rzp_test_UR3ON1Z6tddkOu',
-        'amount': (getTotal + deliveryTotal) * 100,
-        'name': 'lAUNDRO',
-        'description': 'laundry service',
-        'prefill': {
-          'contact': '9123456789',
-          'email': 'gaurav.kumar@example.com'
-        },
-        'external': {
-          "wallets": _WALLETS,
-        }
-      };
-      _razorpay.open(options);
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  Future<void> _getData() async {
-    _prefs = await SharedPreferences.getInstance();
-    iron = _prefs.getString("iron") == null
-        ? []
-        : json.decode(_prefs.getString("iron"));
-    wash = _prefs.getString("wash") == null
-        ? []
-        : json.decode(_prefs.getString("wash"));
-    dryClean = _prefs.getString("dry-clean") == null
-        ? []
-        : json.decode(_prefs.getString("dry-clean"));
-
-    List.from(iron).forEach((item) {
-      ironCost += item["qty"] * item["price"];
+    setState(() {
+      showspinner=true;
     });
-    List.from(dryClean).forEach((item) {
-      ironCost += item["qty"] * item["price"];
-    });
-    List.from(wash).forEach((item) {
-      washCost += item["qty"] * item["price"];
-    });
-    print(ironCost.toString() +
-        " " +
-        washCost.toString() +
-        " " +
-        dryCleanCost.toString());
-    this.setState(() {
-      items = [...wash, ...iron, ...dryClean];
+    getSelectedIroningItems();
+    getSelectedWashingItems();
+    getSelectedDryCleaningItems();
+    getIronDetails();
+    getWashingDetails();
+    getDryCleaningDetails();
+    getSubTotal();
+    getTotalClothes();
+    getDeliveryPrice();
+    getTotalCost();
+    setState(() {
+      showspinner=false;
     });
   }
-
-  showBottom() {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return PaymentInfoModal(paymentHandler: startPayment);
+  
+  void getSelectedIroningItems(){
+    for(var i =0;i<Database.ironingDataItems.length;i++){
+      if(Database.ironingDataItems[i]['qty']>0){
+        Map selectedItem={
+          'title':Database.ironingDataItems[i]['title'],
+          'qty':Database.ironingDataItems[i]['qty'],
+          'price':Database.ironingDataItems[i]['price'],
+          'total_item_cost':Database.ironingDataItems[i]['total_item_cost'],
+        };
+        setState(() {
+          selectedIroningList.add(selectedItem);
         });
+      }
+    }
   }
-
-  showDialogBox(String message) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text(message),
-            actions: <Widget>[
-              FlatButton(
-                  child: Text("close"), onPressed: () => Navigator.pop(context))
-            ],
-          );
+  void getSelectedWashingItems(){
+    for(var i =0;i<Database.washingDataItems.length;i++){
+      if(Database.washingDataItems[i]['qty']>0){
+        Map selectedItem={
+          'title':Database.washingDataItems[i]['title'],
+          'qty':Database.washingDataItems[i]['qty'],
+          'price':Database.washingDataItems[i]['price'],
+          'total_item_cost':Database.washingDataItems[i]['total_item_cost'],
+        };
+        setState(() {
+          selectedWashingList.add(selectedItem);
         });
-  }
-
-  get getTotal {
-    int total = 0;
-    try {
-      if (items.length > 0) {
-        for (var i = 0; i < items.length; i++) {
-          total += items[i]["qty"] * items[i]["price"];
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-    return total;
-  }
-
-  get deliveryTotal {
-    int total = 0;
-    int costTotal = getTotal;
-    if (costTotal >= 30 && costTotal < 50) {
-      for (var i = 0; i < items.length; i++) {
-        total += items[i]["qty"] * 2;
-      }
-    } else if (costTotal >= 50 && costTotal <= 80) {
-      for (var i = 0; i < items.length; i++) {
-        total += items[i]["qty"] * 1;
       }
     }
-    return total;
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _razorpay.clear();
+  void getSelectedDryCleaningItems(){
+    for(var i =0;i<Database.dryCleaningDataItems.length;i++){
+      if(Database.dryCleaningDataItems[i]['qty']>0){
+        Map selectedItem={
+          'title':Database.dryCleaningDataItems[i]['title'],
+          'qty':Database.dryCleaningDataItems[i]['qty'],
+          'price':Database.dryCleaningDataItems[i]['price'],
+          'total_item_cost':Database.dryCleaningDataItems[i]['total_item_cost'],
+        };
+        setState(() {
+          selectedDryCleaningList.add(selectedItem);
+        });
+      }
+    }
   }
-
+  void getIronDetails(){
+    for(var i =0;i<selectedIroningList.length;i++){
+      setState(() {
+        ironingCost+=selectedIroningList[i]['total_item_cost'];
+        ironingNumber+=selectedIroningList[i]['qty'];
+      });
+    }
+  }
+  void getWashingDetails(){
+    for(var i =0;i<selectedWashingList.length;i++){
+      setState(() {
+        washingCost+=selectedWashingList[i]['total_item_cost'];
+        washingNumber+=selectedWashingList[i]['qty'];
+      });
+    }
+  }
+  void getDryCleaningDetails(){
+    for(var i =0;i<selectedDryCleaningList.length;i++){
+      setState(() {
+        dryCleaningCost+=selectedDryCleaningList[i]['total_item_cost'];
+        dryCleaningNumber+=selectedDryCleaningList[i]['qty'];
+      });
+    }
+  }
+  void getSubTotal()
+  {
+    setState(() {
+       subTotal=ironingCost+washingCost+dryCleaningCost;
+    });
+  }
+  void getTotalClothes(){
+    setState(() {
+      totalNumber=ironingNumber+dryCleaningNumber+washingNumber;
+    });
+    
+  }
+  void getDeliveryPrice(){
+    setState(() {
+      if(subTotal<100){
+      deliveryCost+=totalNumber;
+      }
+      else{
+        deliveryCost=0;
+      }
+    });
+  }
+  void getTotalCost(){
+    setState(() {
+      totalCost=subTotal+deliveryCost;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Cart'),
-          centerTitle: true,
-          backgroundColor: Color(0XFF6bacde),
-        ),
-        body: SafeArea(
-            child: Container(
-                child: items.length == 0
-                    ? Container(child: Center(child: Text("No Items")))
-                    : Column(children: <Widget>[
-                        Expanded(child: CartList(list: items)),
-                        Divider(),
-                        CostPanel(title: "Sub-Total", cost: getTotal),
-                        CostPanel(
-                            title: "Delivery Cost",
-                            cost: deliveryTotal,
-                            isFree: getTotal > 80),
-                        CostPanel(
-                            title: "Grand Total",
-                            cost: getTotal + deliveryTotal),
-                        Divider(),
-                        MaterialButton(
-                          minWidth: MediaQuery.of(context).size.width,
-                          height: 50,
-                          child: Text("Proceed to payment",
-                              style: TextStyle(fontSize: 16)),
-                          color: getTotal < 30 ? Colors.red : Colors.green,
-                          textColor: Colors.white,
-                          onPressed: () => getTotal < 30
-                              ? showDialogBox("Minimum cart value Rs.30")
-                              : showBottom(),
-                        )
-                      ]))));
-  }
-}
-
-class CostPanel extends StatelessWidget {
-  final String title;
-  final int cost;
-  final bool isFree;
-
-  CostPanel({this.title, this.cost, this.isFree = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(5),
-        child: Row(
+      backgroundColor: Color(0xfff2f3f7),
+      appBar: AppBar(
+        title: Text('Cart'),
+        centerTitle: true,
+        backgroundColor: Color(0XFF6bacde),
+      ),
+      body: ModalProgressHUD(
+        inAsyncCall: showspinner,
+        child: Column(
           children: <Widget>[
-            Expanded(child: Text(title, textAlign: TextAlign.left)),
-            Text(isFree ? "Free" : "Rs." + cost.toString(),
-                textAlign: TextAlign.left,
-                style: TextStyle(color: isFree ? Colors.green : Colors.black))
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  selectedIroningList.length!=0?GestureDetector(
+                    onTap: (){
+                      Navigator.pushReplacementNamed(context, '/iron');
+                    },
+                    child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(child: Text('IR'),),
+                      title: Text('Ironing'),
+                      subtitle: Text('Total clothes:'+ironingNumber.toString()),
+                      trailing: Text('Cost: '+'₹'+ironingCost.toString()),
+                      ),
+                    ),
+                  ):Container(),
+                selectedIroningList.length!=0?Divider():Container(),
+                selectedWashingList.length!=0?GestureDetector(
+                  onTap: (){
+                    Navigator.pushReplacementNamed(context, '/wash');
+                  },
+                 child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(child: Text('WA'),),
+                      title: Text('Washing'),
+                      subtitle: Text('Total clothes:'+washingNumber.toString()),
+                      trailing: Text('Cost: '+'₹'+washingCost.toString()),
+                    ),
+                  ),
+                ):Container(),
+                selectedWashingList.length!=0?Divider():Container(),
+                selectedDryCleaningList.length!=0?GestureDetector(
+                  onTap: (){
+                    Navigator.pushReplacementNamed(context, '/dry-clean');
+                  },
+                 child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(child: Text('DR'),),
+                      title: Text('Dry cleaning'),
+                      subtitle: Text('Total clothes:'+dryCleaningNumber.toString()),
+                      trailing: Text('Cost: '+'₹'+dryCleaningCost.toString()),
+                    ),
+                  ),
+                ):Container(),
+                selectedDryCleaningList.length!=0?Divider():Container(),
+              ],
+            ),
+            ),
+            Container(
+              height: 75,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                children: <Widget>[
+                  Divider(thickness: 1,),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Sub total:'),
+                        Text('₹'+subTotal.toString()),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Delivery:'),
+                        Text(
+                          deliveryCost==0?'Free':deliveryCost.toString(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Total:'),
+                        Text('₹'+totalCost.toString()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: RaisedButton(
+                color: Colors.green,
+                onPressed: (){
+                  showModalBottomSheet(context: context, builder: (builder) {
+                    return ShowPaymentBottom();
+                  });
+                },
+                child: Text(
+                  'Proceed to Payment',
+                  style: kLabelStyle,
+                  ),
+              ),
+            )
           ],
-        ));
+        ),
+      ),
+      );
   }
 }
