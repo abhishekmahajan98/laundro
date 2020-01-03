@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:laundro/constants.dart';
+import 'package:laundro/model/order_model.dart';
 import 'package:laundro/model/user_model.dart';
 
 
@@ -12,7 +13,6 @@ class ShowPaymentBottom extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    String groupVal='COD';
     return Container(
       height: MediaQuery.of(context).size.height*0.6,
       color: Color(0xfff2f3f7),
@@ -75,19 +75,19 @@ class ShowPaymentBottom extends StatelessWidget {
                       ),
                       ListTile(
                         leading: Radio(
-                          groupValue: groupVal,
+                          groupValue: Order.paymentType,
                           value: 'COD',
                           onChanged: (value){
-                            groupVal='COD';
+                            Order.paymentType='COD';
                           },
                         ),
                         title: Text('Cash on Delivery\n(UPI and wallets also available at delivery time)'),
                       ),
+                      //TODO: IMPLEMENT PAYMENT GATEWAYS WITH RAZORPAY OR STRIPE
                       ListTile(
                         leading: Radio(
-                          groupValue: groupVal,
+                          groupValue: Order.paymentType,
                           value: 'Online',
-                          
                           onChanged: null,
                         ),
                         title: Text(
@@ -114,7 +114,7 @@ class ShowPaymentBottom extends StatelessWidget {
             child: RaisedButton(
               color: Colors.green,
               onPressed: (){
-                Navigator.pushReplacementNamed(context, '/order_confirm_buffer');
+                Navigator.pushNamed(context, '/order_confirm_buffer');
               },
               child: Text('Confirm'),
             ),

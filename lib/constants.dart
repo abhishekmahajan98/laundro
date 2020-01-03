@@ -70,6 +70,11 @@ const kTitleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 20,
 );
+const kWhiteTitleTextStyle = TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+);
 const kBlackLabelTextStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.normal,

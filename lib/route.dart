@@ -7,6 +7,7 @@ import 'package:laundro/pages/contact_us.dart';
 import 'package:laundro/pages/logo_splash.dart';
 import 'package:laundro/pages/my_account.dart';
 import 'package:laundro/pages/order_confirm_buffer.dart';
+import 'package:laundro/pages/order_confirmation_page.dart';
 import 'package:laundro/pages/password_reset_page.dart';
 import 'package:laundro/pages/previous_orders_page.dart';
 import 'package:laundro/pages/user_initial_address_page.dart';
@@ -44,5 +45,6 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     '/about_page':(context)=>AboutPage(),
     '/new_features':(context)=>NewFeaturesVote(),
     '/order_confirm_buffer':(context)=>OrderConfirmBuffer(),
+    '/order_confirm_page':(context)=>OrderConfirmationPage(),
       };
 }

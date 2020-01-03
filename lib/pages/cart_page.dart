@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:laundro/components/payment_bottom_sheet.dart';
+import 'package:laundro/model/order_model.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../Data.dart';
 import '../constants.dart';
@@ -11,12 +13,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  List selectedIroningList=[];
-  List selectedWashingList=[];
-  List selectedDryCleaningList=[];
-  double ironingCost=0,washingCost=0,dryCleaningCost=0;
-  double subTotal=0,deliveryCost=0,totalCost=0;
-  int ironingNumber=0,washingNumber=0,dryCleaningNumber=0,totalNumber=0;
+  
   bool showspinner=false;
   @override
   void initState() {
@@ -24,6 +21,7 @@ class _CartPageState extends State<CartPage> {
     setState(() {
       showspinner=true;
     });
+    valuesReset();
     getSelectedIroningItems();
     getSelectedWashingItems();
     getSelectedDryCleaningItems();
@@ -38,7 +36,20 @@ class _CartPageState extends State<CartPage> {
       showspinner=false;
     });
   }
-  
+  void valuesReset(){
+    Order.ironingCost=0;
+    Order.washingCost=0;
+    Order.dryCleaningCost=0;
+    Order.ironingNumber=0;
+    Order.washingNumber=0;
+    Order.dryCleaningNumber=0;
+    Order.subTotal=0;
+    Order.deliveryCost=0;
+    Order.totalCost=0;
+    Order.selectedIroningList.clear();
+    Order.selectedWashingList.clear();
+    Order.selectedDryCleaningList.clear();
+  }
   void getSelectedIroningItems(){
     for(var i =0;i<Database.ironingDataItems.length;i++){
       if(Database.ironingDataItems[i]['qty']>0){
@@ -49,7 +60,7 @@ class _CartPageState extends State<CartPage> {
           'total_item_cost':Database.ironingDataItems[i]['total_item_cost'],
         };
         setState(() {
-          selectedIroningList.add(selectedItem);
+          Order.selectedIroningList.add(selectedItem);
         });
       }
     }
@@ -64,7 +75,7 @@ class _CartPageState extends State<CartPage> {
           'total_item_cost':Database.washingDataItems[i]['total_item_cost'],
         };
         setState(() {
-          selectedWashingList.add(selectedItem);
+          Order.selectedWashingList.add(selectedItem);
         });
       }
     }
@@ -79,60 +90,60 @@ class _CartPageState extends State<CartPage> {
           'total_item_cost':Database.dryCleaningDataItems[i]['total_item_cost'],
         };
         setState(() {
-          selectedDryCleaningList.add(selectedItem);
+          Order.selectedDryCleaningList.add(selectedItem);
         });
       }
     }
   }
   void getIronDetails(){
-    for(var i =0;i<selectedIroningList.length;i++){
+    for(var i =0;i<Order.selectedIroningList.length;i++){
       setState(() {
-        ironingCost+=selectedIroningList[i]['total_item_cost'];
-        ironingNumber+=selectedIroningList[i]['qty'];
+        Order.ironingCost+=Order.selectedIroningList[i]['total_item_cost'];
+        Order.ironingNumber+=Order.selectedIroningList[i]['qty'];
       });
     }
   }
   void getWashingDetails(){
-    for(var i =0;i<selectedWashingList.length;i++){
+    for(var i =0;i<Order.selectedWashingList.length;i++){
       setState(() {
-        washingCost+=selectedWashingList[i]['total_item_cost'];
-        washingNumber+=selectedWashingList[i]['qty'];
+        Order.washingCost+=Order.selectedWashingList[i]['total_item_cost'];
+        Order.washingNumber+=Order.selectedWashingList[i]['qty'];
       });
     }
   }
   void getDryCleaningDetails(){
-    for(var i =0;i<selectedDryCleaningList.length;i++){
+    for(var i =0;i<Order.selectedDryCleaningList.length;i++){
       setState(() {
-        dryCleaningCost+=selectedDryCleaningList[i]['total_item_cost'];
-        dryCleaningNumber+=selectedDryCleaningList[i]['qty'];
+        Order.dryCleaningCost+=Order.selectedDryCleaningList[i]['total_item_cost'];
+        Order.dryCleaningNumber+=Order.selectedDryCleaningList[i]['qty'];
       });
     }
   }
   void getSubTotal()
   {
     setState(() {
-       subTotal=ironingCost+washingCost+dryCleaningCost;
+       Order.subTotal=Order.ironingCost+Order.washingCost+Order.dryCleaningCost;
     });
   }
   void getTotalClothes(){
     setState(() {
-      totalNumber=ironingNumber+dryCleaningNumber+washingNumber;
+      Order.totalNumber=Order.ironingNumber+Order.dryCleaningNumber+Order.washingNumber;
     });
     
   }
   void getDeliveryPrice(){
     setState(() {
-      if(subTotal<100){
-      deliveryCost+=totalNumber;
+      if(Order.subTotal<100){
+      Order.deliveryCost+=Order.totalNumber;
       }
       else{
-        deliveryCost=0;
+        Order.deliveryCost=0;
       }
     });
   }
   void getTotalCost(){
     setState(() {
-      totalCost=subTotal+deliveryCost;
+      Order.totalCost=Order.subTotal+Order.deliveryCost;
     });
   }
   @override
@@ -154,7 +165,7 @@ class _CartPageState extends State<CartPage> {
             Expanded(
               child: ListView(
                 children: <Widget>[
-                  selectedIroningList.length!=0?GestureDetector(
+                  Order.selectedIroningList.length!=0?GestureDetector(
                     onTap: (){
                       Navigator.pushReplacementNamed(context, '/iron');
                     },
@@ -166,13 +177,13 @@ class _CartPageState extends State<CartPage> {
                     child: ListTile(
                       leading: CircleAvatar(child: Text('IR'),),
                       title: Text('Ironing'),
-                      subtitle: Text('Total clothes:'+ironingNumber.toString()),
-                      trailing: Text('Cost: '+'₹'+ironingCost.toString()),
+                      subtitle: Text('Total clothes:'+Order.ironingNumber.toString()),
+                      trailing: Text('Cost: '+'₹'+Order.ironingCost.toString()),
                       ),
                     ),
                   ):Container(),
-                selectedIroningList.length!=0?Divider():Container(),
-                selectedWashingList.length!=0?GestureDetector(
+                Order.selectedIroningList.length!=0?Divider():Container(),
+                Order.selectedWashingList.length!=0?GestureDetector(
                   onTap: (){
                     Navigator.pushReplacementNamed(context, '/wash');
                   },
@@ -184,13 +195,13 @@ class _CartPageState extends State<CartPage> {
                     child: ListTile(
                       leading: CircleAvatar(child: Text('WA'),),
                       title: Text('Washing'),
-                      subtitle: Text('Total clothes:'+washingNumber.toString()),
-                      trailing: Text('Cost: '+'₹'+washingCost.toString()),
+                      subtitle: Text('Total clothes:'+Order.washingNumber.toString()),
+                      trailing: Text('Cost: '+'₹'+Order.washingCost.toString()),
                     ),
                   ),
                 ):Container(),
-                selectedWashingList.length!=0?Divider():Container(),
-                selectedDryCleaningList.length!=0?GestureDetector(
+                Order.selectedWashingList.length!=0?Divider():Container(),
+                Order.selectedDryCleaningList.length!=0?GestureDetector(
                   onTap: (){
                     Navigator.pushReplacementNamed(context, '/dry-clean');
                   },
@@ -202,12 +213,12 @@ class _CartPageState extends State<CartPage> {
                     child: ListTile(
                       leading: CircleAvatar(child: Text('DR'),),
                       title: Text('Dry cleaning'),
-                      subtitle: Text('Total clothes:'+dryCleaningNumber.toString()),
-                      trailing: Text('Cost: '+'₹'+dryCleaningCost.toString()),
+                      subtitle: Text('Total clothes:'+Order.dryCleaningNumber.toString()),
+                      trailing: Text('Cost: '+'₹'+Order.dryCleaningCost.toString()),
                     ),
                   ),
                 ):Container(),
-                selectedDryCleaningList.length!=0?Divider():Container(),
+                Order.selectedDryCleaningList.length!=0?Divider():Container(),
               ],
             ),
             ),
@@ -223,7 +234,7 @@ class _CartPageState extends State<CartPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Sub total:'),
-                        Text('₹'+subTotal.toString()),
+                        Text('₹'+Order.subTotal.toString()),
                       ],
                     ),
                   ),
@@ -234,7 +245,7 @@ class _CartPageState extends State<CartPage> {
                       children: <Widget>[
                         Text('Delivery:'),
                         Text(
-                          deliveryCost==0?'Free':deliveryCost.toString(),
+                          Order.deliveryCost==0?'Free':Order.deliveryCost.toString(),
                         ),
                       ],
                     ),
@@ -245,7 +256,7 @@ class _CartPageState extends State<CartPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Total:'),
-                        Text('₹'+totalCost.toString()),
+                        Text('₹'+Order.totalCost.toString()),
                       ],
                     ),
                   ),
@@ -256,11 +267,28 @@ class _CartPageState extends State<CartPage> {
               height: 50,
               width: MediaQuery.of(context).size.width,
               child: RaisedButton(
-                color: Colors.green,
+                color: Order.subTotal>=30?Colors.green:Colors.red,
                 onPressed: (){
-                  showModalBottomSheet(context: context, builder: (builder) {
-                    return ShowPaymentBottom();
-                  });
+                  if(Order.subTotal>=30){
+                    showModalBottomSheet(context: context, builder: (builder) {
+                      return ShowPaymentBottom();
+                    });
+                  }
+                  else{
+                    Alert(
+                      context: context,
+                      title: 'Minimun subtotal is of ₹30.',
+                      desc: 'We do not accept orders below ₹30.',
+                      buttons: [
+                        DialogButton(
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                          child: Text('Okay'),
+                        ),
+                      ],
+                    ).show();
+                  }
                 },
                 child: Text(
                   'Proceed to Payment',
