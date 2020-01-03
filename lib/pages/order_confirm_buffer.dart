@@ -181,14 +181,16 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
   }
   void batchCommit(){
     try{
-      batch.commit();
+      batch.commit().whenComplete((){
+        Navigator.pushNamed(context, '/order_confirmation_page');
+      }).catchError((){
+       print('failed');
+      });
     }
     catch(e){
       print(e);
+      
     }
-  }
-  void navigateToConfirmationPage(){
-    Navigator.pushNamed(context, '/order_confirm_page');
   }
   @override
   void initState(){
@@ -197,7 +199,8 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
     checkWashingOrder();
     checkDryCleaningOrder();
     batchCommit();
-    //navigateToConfirmationPage();
+    print('batch commited');
+    
     //TODO: CLEAR CART AFTER COMMIT
   }
 

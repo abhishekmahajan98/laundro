@@ -20,7 +20,6 @@ import './pages/ironing_menu_page.dart';
 import './pages/washing_menu_page.dart';
 import './pages/dry_cleaning_menu_page.dart';
 import './pages/cart_page.dart';
-import './pages/order_conform_page.dart';
 
 
 Map<String, WidgetBuilder> routes(BuildContext context) {
@@ -34,7 +33,6 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     "/dry-clean": (context) => DryCleaningMenuPage(),
     "/cart": (context) => CartPage(),
     "/reset_password": (context) => ResetPasswordScreen(),
-    "/order-confirm-page": (context) => OrderConfirmPage(),
     "/my_account": (context) => MyAccount(),
     "/initial_details": (context) => UserDetailsPage(),
     '/login_buffer': (context) => BufferPage(),
@@ -45,6 +43,6 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     '/about_page':(context)=>AboutPage(),
     '/new_features':(context)=>NewFeaturesVote(),
     '/order_confirm_buffer':(context)=>OrderConfirmBuffer(),
-    '/order_confirm_page':(context)=>OrderConfirmationPage(),
+    '/order_confirmation_page':(context)=>OrderConfirmationPage(),
       };
 }
