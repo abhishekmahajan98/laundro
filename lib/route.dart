@@ -10,8 +10,8 @@ import 'package:laundro/pages/order_confirm_buffer.dart';
 import 'package:laundro/pages/order_confirmation_page.dart';
 import 'package:laundro/pages/password_reset_page.dart';
 import 'package:laundro/pages/previous_orders_page.dart';
-import 'package:laundro/pages/user_initial_address_page.dart';
 import 'package:laundro/pages/user_initial_details_page.dart';
+import 'package:laundro/pages/user_initial_location_page.dart';
 import 'package:laundro/pages/vote_for_feature_page.dart';
 import './pages/home_page.dart';
 import './pages/login_page.dart';
@@ -20,7 +20,6 @@ import './pages/ironing_menu_page.dart';
 import './pages/washing_menu_page.dart';
 import './pages/dry_cleaning_menu_page.dart';
 import './pages/cart_page.dart';
-
 
 Map<String, WidgetBuilder> routes(BuildContext context) {
   return <String, WidgetBuilder>{
@@ -35,14 +34,14 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     "/reset_password": (context) => ResetPasswordScreen(),
     "/my_account": (context) => MyAccount(),
     "/initial_details": (context) => UserDetailsPage(),
+    '/initial_location': (context) => UserLocationPage(),
     '/login_buffer': (context) => BufferPage(),
     '/contactus': (context) => ContactUs(),
-    '/initial_address': (context) => UserAddressPage(),
-    '/donate_page':(context)=>DonatePage(),
-    '/previous_orders_page':(context)=>YourOrdersPage(),
-    '/about_page':(context)=>AboutPage(),
-    '/new_features':(context)=>NewFeaturesVote(),
-    '/order_confirm_buffer':(context)=>OrderConfirmBuffer(),
-    '/order_confirmation_page':(context)=>OrderConfirmationPage(),
-      };
+    '/donate_page': (context) => DonatePage(),
+    '/previous_orders_page': (context) => YourOrdersPage(),
+    '/about_page': (context) => AboutPage(),
+    '/new_features': (context) => NewFeaturesVote(),
+    '/order_confirm_buffer': (context) => OrderConfirmBuffer(),
+    '/order_confirmation_page': (context) => OrderConfirmationPage(),
+  };
 }

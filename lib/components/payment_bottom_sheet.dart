@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:laundro/constants.dart';
 import 'package:laundro/model/order_model.dart';
 import 'package:laundro/model/user_model.dart';
 
-
 class ShowPaymentBottom extends StatelessWidget {
-  String getAddress(){
-    if(User.primaryAddressLine2!=null && User.primaryAddressLine2!=''){
-      return User.primaryAddressLine1+','+User.primaryAddressLine2+','+User.primaryAddressCity+','+User.primaryAddressState+','+User.pincode;
-    }
-    return User.primaryAddressLine1+','+User.primaryAddressCity+','+User.primaryAddressState+','+User.pincode;
-  }
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height*0.6,
+      height: MediaQuery.of(context).size.height * 0.6,
       color: Color(0xfff2f3f7),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -27,7 +21,7 @@ class ShowPaymentBottom extends StatelessWidget {
                     child: Text(
                       'User Details',
                       style: kTitleTextStyle,
-                      ),
+                    ),
                   ),
                 ),
                 Row(
@@ -36,7 +30,7 @@ class ShowPaymentBottom extends StatelessWidget {
                   children: <Widget>[
                     FlatButton(
                       padding: EdgeInsets.all(0),
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.pushNamed(context, '/my_account');
                       },
                       child: Text('Edit details'),
@@ -49,16 +43,25 @@ class ShowPaymentBottom extends StatelessWidget {
                       Icons.phone,
                       color: Colors.black,
                     ),
-                    title: Text('+91-'+User.phone),
+                    title: Text('+91-' + User.phone),
                   ),
                 ),
                 Card(
                   child: ListTile(
                     leading: Icon(
                       Icons.home,
-                      color:Colors.black,
+                      color: Colors.black,
                     ),
-                    title: Text(getAddress()),
+                    title: Text(User.primaryAddress),
+                  ),
+                ),
+                Card(
+                  child: ListTile(
+                    leading: Icon(
+                      FontAwesomeIcons.landmark,
+                      color: Colors.black,
+                    ),
+                    title: Text(User.landmark),
                   ),
                 ),
                 Card(
@@ -67,9 +70,7 @@ class ShowPaymentBottom extends StatelessWidget {
                       ListTile(
                         leading: Text(
                           '₹',
-                          style: TextStyle(
-                            fontSize: 25
-                          ),
+                          style: TextStyle(fontSize: 25),
                         ),
                         title: Text('Payment Mode'),
                       ),
@@ -77,11 +78,12 @@ class ShowPaymentBottom extends StatelessWidget {
                         leading: Radio(
                           groupValue: Order.paymentType,
                           value: 'COD',
-                          onChanged: (value){
-                            Order.paymentType='COD';
+                          onChanged: (value) {
+                            Order.paymentType = 'COD';
                           },
                         ),
-                        title: Text('Cash on Delivery\n(UPI and wallets also available at delivery time)'),
+                        title: Text(
+                            'Cash on Delivery\n(UPI and wallets also available at delivery time)'),
                       ),
                       //TODO: IMPLEMENT PAYMENT GATEWAYS WITH RAZORPAY OR STRIPE
                       ListTile(
@@ -113,8 +115,9 @@ class ShowPaymentBottom extends StatelessWidget {
             height: 50,
             child: RaisedButton(
               color: Colors.green,
-              onPressed: (){
-                Navigator.pushNamed(context, '/order_confirm_buffer');
+              onPressed: () {
+                Navigator.pushReplacementNamed(
+                    context, '/order_confirm_buffer');
               },
               child: Text('Confirm'),
             ),

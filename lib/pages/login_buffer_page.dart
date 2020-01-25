@@ -16,7 +16,7 @@ class _BufferPageState extends State<BufferPage> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(seconds: 2), () {
       instantiateSP();
       retrieveUserData();
     });
@@ -33,29 +33,33 @@ class _BufferPageState extends State<BufferPage> {
         document.data['phoneNumber'] != null &&
         document.data['primaryAddress'] != null) {
       User.displayName = document.data['displayName'];
+      User.uid = document.data['uid'];
       User.dob = DateTime.parse(document.data['dob']);
       User.phone = document.data['phoneNumber'];
       User.gender = document.data['gender'];
       User.primaryAddress = document.data['primaryAddress'];
-      User.primaryAddressLine1 = document.data['primaryAddressLine1'];
-      User.primaryAddressLine2 = document.data['primaryAddressLine2'];
-      User.primaryAddressCity = document.data['primaryAddressCity'];
-      User.primaryAddressState = document.data['primaryAddressState'];
-      User.pincode = document.data['primaryAddressPincode'];
+      User.pincode = document.data['pincode'];
+      User.landmark = document.data['landmark'];
+      User.locality = document.data['locality'];
+      User.placeName = document.data['placeName'];
+      User.administrativeArea = document.data['administrativeArea'];
+      GeoPoint p = document.data['geoLocation'];
+      User.lattitude = p.latitude;
+      User.longitude = p.longitude;
+
       prefs.setString('loggedInUserDisplayName', User.displayName);
       prefs.setString('loggedInUserPhoneNumber', User.phone);
       prefs.setString('loggedInUserDOB', User.dob.toString());
       prefs.setString('loggedInUserGender', User.gender);
+      prefs.setString('loggedInUserPlaceName', User.placeName);
+      prefs.setString('loggedInUserLocality', User.locality);
+      prefs.setString('loggedInUserPincode', User.pincode);
       prefs.setString(
-          'loggedInUserPrimaryAddressLine1', User.primaryAddressLine1);
-      prefs.setString(
-          'loggedInUserPrimaryAddressLine2', User.primaryAddressLine2);
-      prefs.setString(
-          'loggedInUserPrimaryAddressCity', User.primaryAddressCity);
-      prefs.setString(
-          'loggedInUserPrimaryAddressState', User.primaryAddressState);
-      prefs.setString('loggedInUserPrimaryAddressPincode', User.pincode);
+          'loggedInUserAdministrativeArea', User.administrativeArea);
       prefs.setString('loggedInUserPrimaryAddress', User.primaryAddress);
+      prefs.setString('loggedInUserLandmark', User.landmark);
+      prefs.setDouble('loggedInUserLattitude', User.lattitude);
+      prefs.setDouble('loggedInUserLongitude', User.longitude);
       navigateToHome();
     } else {
       navigateToDetails();
@@ -92,7 +96,7 @@ class _BufferPageState extends State<BufferPage> {
                     child: Image.asset(
                       'images/app_logo/LOGO1.png',
                       width: 300,
-                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 40,

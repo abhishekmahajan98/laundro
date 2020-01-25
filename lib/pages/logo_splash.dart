@@ -31,21 +31,20 @@ class _SplashScreenState extends State<SplashScreen> {
     if (prefs.containsKey('loggedInUserEmail')) {
       try {
         User.email = prefs.getString('loggedInUserEmail');
-        User.uid = prefs.getString('loggedInUserUid');
+        User.uid = prefs.getString('loggedInUserUserid');
         User.phone = prefs.getString('loggedInUserPhoneNumber');
         User.displayName = prefs.getString('loggedInUserDisplayName');
         User.gender = prefs.getString('loggedInUserGender');
         User.dob = DateTime.parse(prefs.getString('loggedInUserDOB'));
         User.primaryAddress = prefs.getString('loggedInUserPrimaryAddress');
-        User.primaryAddressLine1 =
-            prefs.getString('loggedInUserPrimaryAddressLine1');
-        User.primaryAddressLine2 =
-            prefs.getString('loggedInUserPrimaryAddressLine2');
-        User.primaryAddressCity =
-            prefs.getString('loggedInUserPrimaryAddressCity');
-        User.primaryAddressState =
-            prefs.getString('loggedInUserPrimaryAddressState');
-        User.pincode = prefs.getString('loggedInUserPrimaryAddressPincode');
+        User.placeName = prefs.getString('loggedInUserPlaceName');
+        User.locality = prefs.getString('loggedInUserLocality');
+        User.administrativeArea =
+            prefs.getString('loggedInUserAdministrativeArea');
+        User.landmark = prefs.getString('loggedInUserLandmark');
+        User.pincode = prefs.getString('loggedInUserPincode');
+        User.lattitude = prefs.getDouble('loggedInUserLattitude');
+        User.longitude = prefs.getDouble('loggedInUserLongitude');
         Navigator.pushReplacementNamed(context, '/home');
         //Navigator.pushReplacementNamed(context, '/test_page');
       } catch (e) {
@@ -54,7 +53,6 @@ class _SplashScreenState extends State<SplashScreen> {
         _auth.signOut();
         googleSignIn.signOut();
         Navigator.pushReplacementNamed(context, '/login');
-
       }
     } else {
       prefs.clear();
@@ -82,13 +80,11 @@ class _SplashScreenState extends State<SplashScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Hero(
-                    tag: 'logo',
-                    child: Image.asset(
-                      'images/app_logo/LOGO1.png',
-                      width: 300,
-                    )
-                  ),
-
+                      tag: 'logo',
+                      child: Image.asset(
+                        'images/app_logo/LOGO1.png',
+                        width: 300,
+                      )),
                 ],
               ),
             ),

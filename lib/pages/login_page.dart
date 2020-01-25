@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:laundro/model/user_model.dart';
+import 'package:location_permissions/location_permissions.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
@@ -27,11 +29,50 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     instantiateSP();
+    checkForPermissions();
   }
 
   void instantiateSP() async {
     prefs = await SharedPreferences.getInstance();
     checkLoggedInStatus();
+  }
+
+  void checkForPermissions() async {
+    PermissionStatus permission =
+        await LocationPermissions().checkPermissionStatus();
+    ServiceStatus serviceStatus =
+        await LocationPermissions().checkServiceStatus();
+    PermissionStatus p;
+    if (permission == PermissionStatus.unknown) {
+      p = await LocationPermissions().requestPermissions();
+    }
+    if (serviceStatus == ServiceStatus.disabled) {
+      Alert(
+          context: context,
+          title: 'Please enable your location services',
+          buttons: [
+            DialogButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Okay'),
+            ),
+          ]).show();
+    }
+    if (permission == PermissionStatus.denied) {
+      Alert(
+          context: context,
+          title:
+              'Please give us permission in application\'s settings to get your location to deliver your clothes right to you.',
+          buttons: [
+            DialogButton(
+              onPressed: () async {
+                bool isOpened = await LocationPermissions().openAppSettings();
+              },
+              child: Text('Open settings'),
+            ),
+          ]).show();
+    }
   }
 
   void checkLoggedInStatus() {
@@ -168,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (userCheckList.length == 1) {
                 Navigator.pushReplacementNamed(context, '/login_buffer');
               } else {
-                Navigator.pushReplacementNamed(context,"/initial_details");
+                Navigator.pushReplacementNamed(context, "/initial_details");
               }
             }
           } catch (e) {

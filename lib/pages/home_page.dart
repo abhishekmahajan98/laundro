@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:laundro/components/home_carousel.dart';
 import 'package:laundro/components/square_button.dart';
 import 'package:laundro/constants.dart';
+import 'package:laundro/model/user_model.dart';
 import '../components/side_drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,12 +20,11 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           elevation: 0.1,
           title: Hero(
-            tag: 'logo',
-            child: Image.asset(
-              'images/app_logo/LOGO1.png',
-              width: 200,
-              )
-          ),
+              tag: 'logo',
+              child: Image.asset(
+                'images/app_logo/LOGO1.png',
+                width: 200,
+              )),
           centerTitle: true,
           backgroundColor: Color(0XFF6bacde),
           actions: <Widget>[
@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> {
               ),
               onPressed: () {
                 Navigator.pushNamed(context, "/cart");
+                print(User.allocatedShopid);
               },
             ),
           ],
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
         body: Container(
           height: double.infinity,
           width: double.infinity,
-            color: Color(0xfff2f3f7),
+          color: Color(0xfff2f3f7),
           child: Column(
             children: <Widget>[
               //carousel expanded
@@ -56,70 +57,73 @@ class _HomePageState extends State<HomePage> {
               //rest of buttons
               Expanded(
                 flex: 3,
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 3,
-                        child: Row(
-                          children: <Widget>[
-                            SquareButton(
-                              marginL: 10,
-                              marginT: 10,
-                              marginR: 2,
-                              marginB: 2,
-                              imageRoute:'images/icons/ironing.png',
-                              buttonTag: 'Ironing',
-                              ontap: () => Navigator.pushNamed(context, '/iron'),
-                              //Navigator.pushNamed(context, '/iron'),
-                            ),
-                            SquareButton(
-                              marginL: 2,
-                              marginT: 10,
-                              marginR: 10,
-                              marginB: 2,
-                              imageRoute:'images/icons/washing.png',
-                              buttonTag: 'Washing',
-                              ontap: () => Navigator.pushNamed(context, '/wash'),
-                            ),
-                          ],
-                        ),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 3,
+                      child: Row(
+                        children: <Widget>[
+                          SquareButton(
+                            marginL: 10,
+                            marginT: 10,
+                            marginR: 2,
+                            marginB: 2,
+                            imageRoute: 'images/icons/ii.png',
+                            buttonTag: 'Ironing',
+                            ontap: () => Navigator.pushNamed(context, '/iron'),
+                            //Navigator.pushNamed(context, '/iron'),
+                          ),
+                          SquareButton(
+                            marginL: 2,
+                            marginT: 10,
+                            marginR: 10,
+                            marginB: 2,
+                            imageRoute: 'images/icons/washing.png',
+                            buttonTag: 'Washing',
+                            ontap: () => Navigator.pushNamed(context, '/wash'),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        flex: 3,
-                        child: Row(
-                          children: <Widget>[
-                            SquareButton(
-                              marginL: 10,
-                              marginT: 2,
-                              marginR: 2,
-                              marginB: 2,
-                              imageRoute:'images/icons/dryclean.png',
-                              buttonTag: 'Dry Cleaning',
-                              ontap: () => Navigator.pushNamed(context, '/dry-clean'),
-                            ),
-                            SquareButton(
-                              marginL: 2,
-                              marginT: 2,
-                              marginR: 10,
-                              marginB: 2,
-                              imageRoute:'images/cloth_donate.png',
-                              buttonTag: 'Donate Clothes',
-                              ontap: () => Navigator.pushNamed(context, '/donate_page'),
-                            ),
-                          ],
-                        ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Row(
+                        children: <Widget>[
+                          SquareButton(
+                            marginL: 10,
+                            marginT: 2,
+                            marginR: 2,
+                            marginB: 2,
+                            imageRoute: 'images/icons/dryclean.png',
+                            buttonTag: 'Dry Cleaning',
+                            ontap: () =>
+                                Navigator.pushNamed(context, '/dry-clean'),
+                          ),
+                          SquareButton(
+                            marginL: 2,
+                            marginT: 2,
+                            marginR: 10,
+                            marginB: 2,
+                            imageRoute: 'images/cloth_donate.png',
+                            buttonTag: 'Donate Clothes',
+                            ontap: () =>
+                                Navigator.pushNamed(context, '/donate_page'),
+                          ),
+                        ],
                       ),
-                      Expanded(
+                    ),
+                    Expanded(
                         flex: 1,
                         child: GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             Navigator.pushNamed(context, '/new_features');
                           },
                           child: Container(
                             color: Colors.white,
-                            margin: EdgeInsets.only(left: 10,right: 10),
+                            margin: EdgeInsets.only(left: 10, right: 10),
                             child: ListTile(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 20),
                               leading: Icon(
                                 FontAwesomeIcons.voteYea,
                                 color: Colors.black,
@@ -127,18 +131,17 @@ class _HomePageState extends State<HomePage> {
                               title: Text(
                                 'Vote for our next Feature!!',
                                 style: kCategoryTextStyle,
-                                ),
+                              ),
                               trailing: Icon(
                                 Icons.arrow_forward,
                                 color: Colors.black,
                               ),
                             ),
                           ),
-                        )
-                      ),
-                    ],
-                  ),
-                  ),
+                        )),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

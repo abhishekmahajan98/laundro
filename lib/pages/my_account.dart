@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:laundro/model/user_model.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
 
+//TODO UPDATE USER DATA IN MY ACCOUNT PAGE
 class MyAccount extends StatefulWidget {
   @override
   _MyAccountState createState() => _MyAccountState();
@@ -18,14 +18,14 @@ class _MyAccountState extends State<MyAccount> {
   bool editSecondaryAddress = false;
   String displayName = User.displayName, email = User.email;
   String updatedNumber = User.phone;
-  String updatedAddressLine1 = User.primaryAddressLine1;
-  String updatedAddressLine2 = User.primaryAddressLine2;
-  String updatedCity = User.primaryAddressCity;
-  String updatedState = User.primaryAddressState;
-  String updatedPincode = User.pincode;
-  String updatedPrimaryAddress = User.primaryAddress;
+  //String updatedAddressLine1 = User.primaryAddressLine1;
+  //String updatedAddressLine2 = User.primaryAddressLine2;
+  //String updatedCity = User.primaryAddressCity;
+  //String updatedState = User.primaryAddressState;
+  //String updatedPincode = User.pincode;
+  //String updatedPrimaryAddress = User.primaryAddress;
 
-  final _firestore = Firestore.instance;
+  //final _firestore = Firestore.instance;
 
   @override
   void initState() {
@@ -48,7 +48,8 @@ class _MyAccountState extends State<MyAccount> {
           height: 60,
           child: RaisedButton(
             color: Color(0XFF6bacde),
-            onPressed: (){
+            onPressed: () {
+              /*
               updatedPrimaryAddress = updatedAddressLine1 +
                   "+" +
                   updatedAddressLine2 +
@@ -127,10 +128,10 @@ class _MyAccountState extends State<MyAccount> {
               }
               else{
                 Navigator.pop(context);
-              }
+              }*/
             },
             child: Text(
-                'Save',
+              'Save',
               style: kCategoryTextStyle,
             ),
           ),
@@ -147,15 +148,15 @@ class _MyAccountState extends State<MyAccount> {
               child: Container(
                 width: double.infinity,
                 height: double.infinity,
-                decoration: BoxDecoration(color: Color(0XFF6bacde),),
+                decoration: BoxDecoration(
+                  color: Color(0XFF6bacde),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CircleAvatar(
                       radius: 60,
-                      backgroundColor: Color(
-                          0xfff2f3f7
-                      ),
+                      backgroundColor: Color(0xfff2f3f7),
                       child: Icon(
                         Icons.person,
                         color: Colors.black,
@@ -179,15 +180,15 @@ class _MyAccountState extends State<MyAccount> {
                 flex: 7,
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Color(
-                          0xfff2f3f7
-                      ),
+                    color: Color(0xfff2f3f7),
                   ),
                   child: ListView(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.fromLTRB(10, 20, 10,5),
-                        decoration: BoxDecoration(color: Colors.white,),
+                        margin: EdgeInsets.fromLTRB(10, 20, 10, 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
                         child: ListTile(
                           title: TextFormField(
                             enabled: false,
@@ -211,8 +212,10 @@ class _MyAccountState extends State<MyAccount> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(10, 5, 10,5),
-                        decoration: BoxDecoration(color: Colors.white,),
+                        margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
                         child: ListTile(
                           title: TextFormField(
                             enabled: editPhoneNumber,
@@ -255,7 +258,6 @@ class _MyAccountState extends State<MyAccount> {
                           ),
                         ),
                       ),
-                      
                       Container(
                         margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
                         decoration: BoxDecoration(
@@ -270,13 +272,12 @@ class _MyAccountState extends State<MyAccount> {
                               ),
                               title: Text(
                                 'Primary Address',
-                                style: TextStyle(
-                                    fontSize: 18),
+                                style: TextStyle(fontSize: 18),
                               ),
                               trailing: GestureDetector(
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
-                                    editPrimaryAddress=!editPrimaryAddress;
+                                    editPrimaryAddress = !editPrimaryAddress;
                                   });
                                 },
                                 child: Icon(
@@ -286,24 +287,23 @@ class _MyAccountState extends State<MyAccount> {
                                   color: Colors.black,
                                 ),
                               ),
-
                             ),
                             ListTile(
                               leading: Text("Line 1      "),
                               title: TextFormField(
                                 enabled: editPrimaryAddress,
                                 keyboardType: TextInputType.text,
-                                initialValue: updatedAddressLine1,
+                                //initialValue: updatedAddressLine1,
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,
                                 ),
+
                                 onChanged: (value) {
                                   setState(() {
-                                    updatedAddressLine1 = value;
+                                    //updatedAddressLine1 = value;
                                   });
                                 },
-
                               ),
                             ),
                             ListTile(
@@ -311,17 +311,16 @@ class _MyAccountState extends State<MyAccount> {
                               title: TextFormField(
                                 enabled: editPrimaryAddress,
                                 keyboardType: TextInputType.text,
-                                initialValue: updatedAddressLine2,
+                                //initialValue: updatedAddressLine2,
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,
                                 ),
                                 onChanged: (value) {
                                   setState(() {
-                                    updatedAddressLine2 = value;
+                                    //updatedAddressLine2 = value;
                                   });
                                 },
-
                               ),
                             ),
                             ListTile(
@@ -329,17 +328,16 @@ class _MyAccountState extends State<MyAccount> {
                               title: TextFormField(
                                 enabled: editPrimaryAddress,
                                 keyboardType: TextInputType.text,
-                                initialValue: updatedCity,
+                                //initialValue: updatedCity,
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,
                                 ),
                                 onChanged: (value) {
                                   setState(() {
-                                    updatedCity = value;
+                                    // updatedCity = value;
                                   });
                                 },
-
                               ),
                             ),
                             ListTile(
@@ -347,40 +345,38 @@ class _MyAccountState extends State<MyAccount> {
                               title: TextFormField(
                                 enabled: editPrimaryAddress,
                                 keyboardType: TextInputType.text,
-                                initialValue: updatedState,
+                                //initialValue: updatedState,
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,
                                 ),
                                 onChanged: (value) {
                                   setState(() {
-                                    updatedState = value;
+                                    //updatedState = value;
                                   });
                                 },
-
                               ),
                             ),
                             ListTile(
                               leading: Text("Pincode  "),
                               title: TextFormField(
-                                initialValue: updatedPincode,
+                                //initialValue: updatedPincode,
                                 style: TextStyle(
                                   fontSize: 20,
+                                  /*
                                   color: updatedPincode.length == 6
                                       ? Colors.black
-                                      : Colors.red,
+                                      : Colors.red,*/
                                 ),
                                 enabled: editPrimaryAddress,
                                 keyboardType: TextInputType.phone,
                                 onChanged: (value) {
                                   setState(() {
-                                    updatedPincode = value;
+                                    //updatedPincode = value;
                                   });
                                 },
-
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -389,8 +385,7 @@ class _MyAccountState extends State<MyAccount> {
                       ),
                     ],
                   ),
-                )
-            ),
+                )),
           ],
         ),
       ),
