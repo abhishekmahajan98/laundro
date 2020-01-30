@@ -27,7 +27,7 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     "/": (context) => SplashScreen(),
     '/login': (context) => LoginScreen(),
     "/register": (context) => RegistrationScreen(),
-    "/home": (context) => HomePage(),
+    "/home": (context) => HomePage1(),
     "/iron": (context) => IroningMenuPage(),
     "/wash": (context) => WashingMenuPage(),
     "/dry-clean": (context) => DryCleaningMenuPage(),

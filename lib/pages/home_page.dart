@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:laundro/components/home_carousel.dart';
+import 'package:laundro/components/home_screen.dart';
 import 'package:laundro/components/square_button.dart';
 import 'package:laundro/constants.dart';
 import 'package:laundro/model/user_model.dart';
+import 'package:laundro/pages/cart_page.dart';
+import 'package:laundro/pages/my_account.dart';
 import '../components/side_drawer.dart';
 
-class HomePage extends StatefulWidget {
+/*class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -154,4 +157,72 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}*/
+class HomePage1 extends StatefulWidget {
+  @override
+  _HomePage1State createState() => _HomePage1State();
 }
+
+class _HomePage1State extends State<HomePage1> {
+  int _selectedIndex = 0;
+
+  final List<String> _pageTitles = [
+    'Home',
+    'Cart',
+    'My Account',
+  ];
+
+  final List<Widget> _pages = [
+    HomeScreen(),
+    CartPage(),
+    MyAccount(),
+
+  ];
+
+  BottomNavigationBarItem _buildNavigationItem(
+      int index, IconData iconData, String text) {
+    return BottomNavigationBarItem(
+      icon: Icon(
+        iconData,
+        color: Colors.black,
+      ),
+      activeIcon: Icon(
+        iconData,
+        color: Colors.blue,
+      ),
+      title: Text(
+        text,
+        style: TextStyle(
+            color: _selectedIndex == index
+                ? Colors.blue
+                : Colors.black
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        currentIndex: _selectedIndex,
+
+        type: BottomNavigationBarType.fixed,
+        items: <BottomNavigationBarItem>[
+          _buildNavigationItem(0,Icons.home, _pageTitles[0]),
+          _buildNavigationItem(1, Icons.shopping_cart, _pageTitles[1]),
+          _buildNavigationItem(2, Icons.person, _pageTitles[2]),
+
+        ],
+      ),
+      body:_pages[_selectedIndex],
+    );
+  }
+}
+
+
