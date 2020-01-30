@@ -1,12 +1,12 @@
-import 'package:carousel_pro/carousel_pro.dart';
-
 import 'package:flutter/material.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:laundro/components/home_carousel.dart';
+import 'package:laundro/components/square_button.dart';
+import 'package:laundro/constants.dart';
+import 'package:laundro/model/user_model.dart';
 import '../components/side_drawer.dart';
 
-
 class HomePage extends StatefulWidget {
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -14,236 +14,144 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
+    print(User.uid);
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget image_carousel = new Container(
-      height: 200.0,
-      //image slideshow
-      child: new Carousel(
-        boxFit: BoxFit.cover,
-        images: [
-          AssetImage('images/c1.jpg'),
-          AssetImage('images/m1.jpeg'),
-          AssetImage('images/m2.jpg'),
-          AssetImage('images/w1.jpeg'),
-          AssetImage('images/w3.jpeg'),
-          AssetImage('images/w4.jpeg'),
-        ],
-        autoplay: true,
-        animationDuration: Duration(milliseconds: 1000),
-        dotSize: 4.0,
-        indicatorBgPadding: 4.0,
-        dotColor: Colors.pinkAccent,
-        dotBgColor: Colors.transparent,
-      ),
-    );
-
-    
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.1,
-        title: Text('Laundro'),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
-        actions: <Widget>[
-          new IconButton(
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Colors.black,
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          elevation: 0.1,
+          title: Hero(
+              tag: 'logo',
+              child: Image.asset(
+                'images/app_logo/LOGO1.png',
+                width: 200,
+              )),
+          centerTitle: true,
+          backgroundColor: Color(0XFF6bacde),
+          actions: <Widget>[
+            new IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, "/cart");
+              },
             ),
-            onPressed: () {
-              Navigator.pushNamed(context, "/cart");
-            },
-          ),
-        ],
-      ),
-      //app drawer
-      drawer: SideDrawer(),
-      body:
-      Container(
-        child:
-        Column(
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: image_carousel,
-
-            ),
-            Expanded(child:Column(
-              children: <Widget>[
-
-                Expanded(
-                  flex: 1,
-
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex:1,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pushNamed(context, '/iron'),
-                      child:Container(
-
-                          height: double.infinity,
-                        child: Image.asset('images/products/Design.png'),
-                          decoration: BoxDecoration(
-                              color: Colors.red
-                          ),
-                        ),),
-                      ),
-                      Expanded(
-                        flex:1,
-
-                        child: GestureDetector(
-                          onTap: () => Navigator.pushNamed(context, '/wash'),
-                          child: Container(
-                          height: double.infinity,
-                          child: Text("hii"),
-
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: ExactAssetImage(
-                                      'images/products/wash.png')),
-                              color: Colors.blue
-                          ),
-                        ),),
-                      ),
-                    ],
-
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex:1,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pushNamed(context, '/dry-clean'),
-                      child:  Container(
-
-                          height: double.infinity,
-
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: ExactAssetImage(
-                                      'images/products/Dry.png')),
-                              color: Colors.green
-                          ),
-                        ),),
-                      ),
-                      Expanded(
-                        flex:1,
-
-                        child: GestureDetector(
-                          onTap: () => Navigator.pushNamed(context, '/iron'),
-                          child:  Container(
-                          height: double.infinity,
-                          child: Center(child: Text("hii")),
-
-                          decoration: BoxDecoration(
-                              color: Colors.yellow
-                          ),
-                        ),),
-                      ),
-                    ],
-
-                  ),
-                )
-              ],
-            ),
-                flex:3),
           ],
         ),
+        //app drawer
+        drawer: SideDrawer(),
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: Color(0xfff2f3f7),
+          child: Column(
+            children: <Widget>[
+              //carousel expanded
+              Expanded(
+                flex: 2,
+                //from components/home_carousel
+                child: ImageCarousel(),
+              ),
+              //rest of buttons
+              Expanded(
+                flex: 3,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 3,
+                      child: Row(
+                        children: <Widget>[
+                          SquareButton(
+                            marginL: 10,
+                            marginT: 10,
+                            marginR: 2,
+                            marginB: 2,
+                            imageRoute: 'images/icons/ii.png',
+                            buttonTag: 'Ironing',
+                            ontap: () => Navigator.pushNamed(context, '/iron'),
+                            //Navigator.pushNamed(context, '/iron'),
+                          ),
+                          SquareButton(
+                            marginL: 2,
+                            marginT: 10,
+                            marginR: 10,
+                            marginB: 2,
+                            imageRoute: 'images/icons/washing.png',
+                            buttonTag: 'Washing',
+                            ontap: () => Navigator.pushNamed(context, '/wash'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Row(
+                        children: <Widget>[
+                          SquareButton(
+                            marginL: 10,
+                            marginT: 2,
+                            marginR: 2,
+                            marginB: 2,
+                            imageRoute: 'images/icons/dryclean.png',
+                            buttonTag: 'Dry Cleaning',
+                            ontap: () =>
+                                Navigator.pushNamed(context, '/dry-clean'),
+                          ),
+                          SquareButton(
+                            marginL: 2,
+                            marginT: 2,
+                            marginR: 10,
+                            marginB: 2,
+                            imageRoute: 'images/cloth_donate.png',
+                            buttonTag: 'Donate Clothes',
+                            ontap: () =>
+                                Navigator.pushNamed(context, '/donate_page'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/new_features');
+                          },
+                          child: Container(
+                            color: Colors.white,
+                            margin: EdgeInsets.only(left: 10, right: 10),
+                            child: ListTile(
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 20),
+                              leading: Icon(
+                                FontAwesomeIcons.voteYea,
+                                color: Colors.black,
+                              ),
+                              title: Text(
+                                'Vote for our next Feature!!',
+                                style: kCategoryTextStyle,
+                              ),
+                              trailing: Icon(
+                                Icons.arrow_forward,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-
-
     );
   }
 }
-
-
-/*new ListView(
-        children: <Widget>[
-          image_carousel,
-          Container(
-            color: Theme.of(context).backgroundColor,
-            height: 400.0,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                    child: Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: GestureDetector(
-                      onTap: () => Navigator.pushNamed(context, '/iron'),
-                      child: Container(
-                        margin: EdgeInsets.all(10.0),
-                        height: 170.0,
-                        child: Image.asset('images/products/Design.png'),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).buttonColor,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    )),
-                    Expanded(
-                        child: GestureDetector(
-                            onTap: () => Navigator.pushNamed(context, '/wash'),
-                            child: Container(
-                              margin: EdgeInsets.all(10.0),
-                              height: 170.0,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: ExactAssetImage(
-                                        'images/products/wash.png')),
-                                color: Theme.of(context).buttonColor,
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ))),
-                  ],
-                )),
-                Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: GestureDetector(
-                              onTap: () =>
-                                  Navigator.pushNamed(context, '/dry-clean'),
-                              child: Container(
-                                margin:
-                                    EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
-                                height: 170,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: ExactAssetImage(
-                                          'images/products/Dry.png')),
-                                  color: Theme.of(context).buttonColor,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ))),
-                      Expanded(
-                          child: Container(
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
-                        height: 170,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: ExactAssetImage(
-                                  'images/products/tailoring.png')),
-                          color: Theme.of(context).buttonColor,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      )),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}*/

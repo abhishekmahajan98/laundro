@@ -1,3 +1,4 @@
+/*
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _MenuState extends State<Menu> {
     try {
       _prefs = await SharedPreferences.getInstance();
       var data = await _prefs.get("menu_data");
-      var tag_data = await _prefs.get(widget.tag);
+      var tagData = await _prefs.get(widget.tag);
       List dataList;
 
       if (data == null) {
@@ -49,8 +50,8 @@ class _MenuState extends State<Menu> {
         }
       }
 
-      if (tag_data != null && json.decode(tag_data).length > 0) {
-        var data = await json.decode(tag_data) ?? [];
+      if (tagData != null && json.decode(tagData).length > 0) {
+        var data = await json.decode(tagData) ?? [];
 
         dataList = List<Map<dynamic, dynamic>>.from(dataList.map((item) {
           for (var i = 0; i < data.length; i++) {
@@ -122,22 +123,28 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.tag),
+        centerTitle: true,
+        backgroundColor: Color(0XFF6bacde),
+      ),
         body: SafeArea(
             child: _menuItems.length == 0
                 ? Center(child: CircularProgressIndicator())
                 : Column(children: <Widget>[
                     Expanded(
-                        child: ListView.builder(
-                            itemCount: _menuItems.length,
-                            itemBuilder: (BuildContext context, int i) {
-                              return MenuItem(
-                                title: _menuItems[i]["title"],
-                                qty: _menuItems[i]["qty"],
-                                price: _menuItems[i]["price"],
-                                addQty: () => addItem(i),
-                                removeQty: () => removeItem(i),
-                              );
-                            })),
+                      child: ListView.builder(
+                          itemCount: _menuItems.length,
+                          itemBuilder: (BuildContext context, int i) {
+                            return MenuItem(
+                              title: _menuItems[i]["title"],
+                              qty: _menuItems[i]["qty"],
+                              price: _menuItems[i]["price"],
+                              addQty: () => addItem(i),
+                              removeQty: () => removeItem(i),
+                            );
+                          }),
+                    ),
                     Container(
                         width: 500,
                         height: 50,
@@ -151,3 +158,4 @@ class _MenuState extends State<Menu> {
                   ])));
   }
 }
+*/
