@@ -33,3 +33,61 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32.0)),
   ),
 );
+final kHintTextStyle = TextStyle(
+  color: Colors.white54,
+  fontFamily: 'OpenSans',
+);
+
+final kLabelStyle = TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'OpenSans',
+);
+
+final kBoxDecorationStyle = BoxDecoration(
+  color: Color(0xFF80b8e3),
+  borderRadius: BorderRadius.circular(10.0),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black12,
+      blurRadius: 6.0,
+      offset: Offset(0, 2),
+    ),
+  ],
+);
+final kBlackLabelStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+);
+final kCategoryTextStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 18,
+  fontFamily: 'OpenSans',
+);
+const kTitleTextStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+);
+const kWhiteTitleTextStyle = TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+);
+const kBlackLabelTextStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.normal,
+  fontSize: 18.0,
+);
+const kparagraphTextStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.normal,
+  fontSize: 18.0,
+);
+
+const kteamMemberName = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+);
