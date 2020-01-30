@@ -8,6 +8,11 @@ import 'package:laundro/model/user_model.dart';
 import 'package:uuid/uuid.dart';
 
 class OrderConfirmBuffer extends StatefulWidget {
+  OrderConfirmBuffer(
+      {@required this.allocatedShopId,
+      @required this.allocatedShopPhoneNumber});
+  final String allocatedShopId;
+  final String allocatedShopPhoneNumber;
   @override
   _OrderConfirmBufferState createState() => _OrderConfirmBufferState();
 }
@@ -48,8 +53,8 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
         'customerName': User.displayName,
         'customerPhoneNumber': User.phone,
         'customerUid': User.uid,
-        'shopId': User.allocatedShopid,
-        'shopPhoneNumber': User.allocatedShopNumber,
+        'shopId': widget.allocatedShopId,
+        'shopPhoneNumber': widget.allocatedShopPhoneNumber,
         'subscription': "none",
         'subscriptionId': "none",
         'isPickedUp': false,
@@ -98,8 +103,8 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
         'customerName': User.displayName,
         'customerPhoneNumber': User.phone,
         'customerUid': User.uid,
-        'shopId': User.allocatedShopid,
-        'shopPhoneNumber': User.allocatedShopNumber,
+        'shopId': widget.allocatedShopId,
+        'shopPhoneNumber': widget.allocatedShopPhoneNumber,
         'subscription': "none",
         'subscriptionId': "none",
         'isPickedUp': false,
@@ -148,8 +153,8 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
         'customerName': User.displayName,
         'customerPhoneNumber': User.phone,
         'customerUid': User.uid,
-        'shopId': User.allocatedShopid,
-        'shopPhoneNumber': User.allocatedShopNumber,
+        'shopId': widget.allocatedShopId,
+        'shopPhoneNumber': widget.allocatedShopPhoneNumber,
         'subscription': "none",
         'subscriptionId': "none",
         'isPickedUp': false,

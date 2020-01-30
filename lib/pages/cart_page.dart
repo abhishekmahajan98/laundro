@@ -17,6 +17,10 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   final _firestore = Firestore.instance;
   bool showspinner = false;
+  String closestShopId = '';
+  String closestShopNumber = '';
+  double closestDistance = 10000000;
+  double closestShopServiceRadius = 0;
   @override
   void initState() {
     super.initState();
@@ -176,34 +180,29 @@ class _CartPageState extends State<CartPage> {
       showspinner = true;
     });
     try {
-      String closestShopId = '';
-      String closestShopNumber = '';
-      double closestDistance = 10000000;
       QuerySnapshot shops = await _firestore.collection('shop').getDocuments();
       for (var shop in shops.documents) {
         GeoPoint shopLoc = shop.data['geoLocation'];
+        //print(User.lattitude.toString() + " " + User.longitude.toString());
         //print(shopLoc.latitude.toString() + " " + shopLoc.longitude.toString());
         double dist = calculateDistance(User.lattitude, User.longitude,
             shopLoc.latitude, shopLoc.longitude);
         if (dist < closestDistance) {
-          closestShopId = shop.data['uid'];
-          closestShopNumber = shop.data['phoneNumber'];
-          closestDistance = dist;
+          setState(() {
+            closestShopId = shop.data['uid'];
+            closestShopNumber = shop.data['phoneNumber'];
+            closestDistance = dist;
+            closestShopServiceRadius = shop.data['serviceRadius'].toDouble();
+            print(shop.data['serviceRadius'].toString());
+          });
         }
       }
-      if (closestShopId != User.allocatedShopid) {
-        User.allocatedShopid = closestShopId;
-        User.allocatedShopNumber = closestShopNumber;
-        _firestore.collection('users').document(User.uid).updateData({
-          'allocatedShopId': User.allocatedShopid,
-          'allocatedShopPhoneNumber': User.allocatedShopNumber,
-        });
-        setState(() {
-          showspinner = false;
-        });
-      }
+      setState(() {
+        showspinner = false;
+      });
       return true;
     } catch (e) {
+      print(e);
       setState(() {
         showspinner = false;
       });
@@ -362,11 +361,32 @@ class _CartPageState extends State<CartPage> {
                 onPressed: () {
                   if (Order.subTotal >= 30) {
                     getClosestShop().then((val) {
-                      showModalBottomSheet(
+                      if (closestShopServiceRadius >= closestDistance) {
+                        print(closestDistance.toString() +
+                            " " +
+                            closestShopServiceRadius.toString());
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (builder) {
+                              return ShowPaymentBottom(
+                                allocatedShopId: closestShopId,
+                                allocatedShopPhoneNumber: closestShopNumber,
+                              );
+                            });
+                      } else {
+                        Alert(
                           context: context,
-                          builder: (builder) {
-                            return ShowPaymentBottom();
-                          });
+                          title: 'Sorry, We do not have service in your area.',
+                          buttons: [
+                            DialogButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("Okay"),
+                            )
+                          ],
+                        ).show();
+                      }
                     });
                   } else {
                     Alert(

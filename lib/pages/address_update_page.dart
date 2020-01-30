@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +10,16 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserLocationPage extends StatefulWidget {
+class AddressUpdatePage extends StatefulWidget {
   @override
-  _UserLocationPageState createState() => _UserLocationPageState();
+  _AddressUpdatePageState createState() => _AddressUpdatePageState();
 }
 
-class _UserLocationPageState extends State<UserLocationPage> {
+class _AddressUpdatePageState extends State<AddressUpdatePage> {
   bool showSpinner = false;
   GoogleMapController _controller;
-  Position currentPosition = Position(latitude: 12.9716, longitude: 77.5946);
+  Position currentPosition =
+      Position(latitude: User.lattitude, longitude: User.longitude);
   String locality = '', pincode = '', administrativeArea = '', placeName = '';
   String inputAddress = '', inputLandmark = '';
 
@@ -33,7 +31,7 @@ class _UserLocationPageState extends State<UserLocationPage> {
     super.initState();
     setState(() {
       showSpinner = true;
-      getCurrentLocation();
+      // getCurrentLocation();
       instantiateSP();
     });
     setState(() {
@@ -145,7 +143,7 @@ class _UserLocationPageState extends State<UserLocationPage> {
           mapCreated(controller);
         },
         initialCameraPosition: CameraPosition(
-          target: LatLng(12.9716, 77.5946),
+          target: LatLng(User.lattitude, User.longitude),
           zoom: 15,
         ),
         onCameraMove: ((_position) => _updatePosition(_position)),
@@ -228,13 +226,19 @@ class _UserLocationPageState extends State<UserLocationPage> {
                 User.placeName = placeName;
                 User.pincode = pincode;
               });
-              //get the closest shop
-              //getClosestShop().then((val) {
+              //remove prefs
+              prefs.remove('loggedInUserPlaceName');
+              prefs.remove('loggedInUserLocality');
+              prefs.remove('loggedInUserPincode');
+              prefs.remove('loggedInUserAdminstrativeArea');
+              prefs.remove('loggedInUserPrimaryAddress');
+              prefs.remove('loggedInUserLandmark');
+              prefs.remove('loggedInUserLattitude');
+              prefs.remove('loggedInUserLongitude');
+              prefs.remove('loggedInUserAllocatedShopId');
+              prefs.remove('loggedInUserAllocatedShopPhoneNumber');
+
               //set preferences
-              prefs.setString('loggedInUserDisplayName', User.displayName);
-              prefs.setString('loggedInUserPhoneNumber', User.phone);
-              prefs.setString('loggedInUserDOB', User.dob.toString());
-              prefs.setString('loggedInUserGender', User.gender);
               prefs.setString('loggedInUserPlaceName', User.placeName);
               prefs.setString('loggedInUserLocality', User.locality);
               prefs.setString('loggedInUserPincode', User.pincode);
@@ -245,13 +249,13 @@ class _UserLocationPageState extends State<UserLocationPage> {
               prefs.setString('loggedInUserLandmark', User.landmark);
               prefs.setDouble('loggedInUserLattitude', User.lattitude);
               prefs.setDouble('loggedInUserLongitude', User.longitude);
-              //prefs.setString(
-              // 'loggedInUserAllocatedShopId', User.allocatedShopid);
+              // prefs.setString(
+              //   'loggedInUserAllocatedShopId', User.allocatedShopid);
               //prefs.setString('loggedInUserAllocatedShopPhoneNumber',
-              // User.allocatedShopNumber);
+              //  User.allocatedShopNumber);
               //print('shop id:' + User.allocatedShopid);
               //update the DB
-              _firestore.document('users/' + User.uid).setData({
+              _firestore.document('users/' + User.uid).updateData({
                 'uid': User.uid,
                 'email': User.email,
                 'displayName': User.displayName,
@@ -268,7 +272,7 @@ class _UserLocationPageState extends State<UserLocationPage> {
                 //'allocatedShopId': User.allocatedShopid,
                 //'allocatedShopPhoneNumber': User.allocatedShopNumber,
               });
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pop(context);
             } else {
               Alert(
                   context: context,

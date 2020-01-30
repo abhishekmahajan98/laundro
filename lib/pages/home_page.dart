@@ -13,6 +13,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(User.uid);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -35,7 +42,6 @@ class _HomePageState extends State<HomePage> {
               ),
               onPressed: () {
                 Navigator.pushNamed(context, "/cart");
-                print(User.allocatedShopid);
               },
             ),
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:laundro/pages/about_page.dart';
+import 'package:laundro/pages/address_update_page.dart';
 import 'package:laundro/pages/donation_page.dart';
 
 import 'package:laundro/pages/login_buffer_page.dart';
@@ -41,7 +42,7 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     '/previous_orders_page': (context) => YourOrdersPage(),
     '/about_page': (context) => AboutPage(),
     '/new_features': (context) => NewFeaturesVote(),
-    '/order_confirm_buffer': (context) => OrderConfirmBuffer(),
     '/order_confirmation_page': (context) => OrderConfirmationPage(),
+    '/address_update_page': (context) => AddressUpdatePage(),
   };
 }

@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (prefs.containsKey('loggedInUserEmail')) {
       try {
         User.email = prefs.getString('loggedInUserEmail');
-        User.uid = prefs.getString('loggedInUserUserid');
+        User.uid = prefs.getString('loggedInUserUid');
         User.phone = prefs.getString('loggedInUserPhoneNumber');
         User.displayName = prefs.getString('loggedInUserDisplayName');
         User.gender = prefs.getString('loggedInUserGender');

@@ -276,105 +276,13 @@ class _MyAccountState extends State<MyAccount> {
                               ),
                               trailing: GestureDetector(
                                 onTap: () {
-                                  setState(() {
-                                    editPrimaryAddress = !editPrimaryAddress;
-                                  });
+                                  Navigator.pushReplacementNamed(
+                                      context, '/address_update_page');
                                 },
                                 child: Icon(
-                                  editPrimaryAddress == false
-                                      ? Icons.edit
-                                      : Icons.check,
+                                  Icons.edit,
                                   color: Colors.black,
                                 ),
-                              ),
-                            ),
-                            ListTile(
-                              leading: Text("Line 1      "),
-                              title: TextFormField(
-                                enabled: editPrimaryAddress,
-                                keyboardType: TextInputType.text,
-                                //initialValue: updatedAddressLine1,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-
-                                onChanged: (value) {
-                                  setState(() {
-                                    //updatedAddressLine1 = value;
-                                  });
-                                },
-                              ),
-                            ),
-                            ListTile(
-                              leading: Text("Line 2      "),
-                              title: TextFormField(
-                                enabled: editPrimaryAddress,
-                                keyboardType: TextInputType.text,
-                                //initialValue: updatedAddressLine2,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    //updatedAddressLine2 = value;
-                                  });
-                                },
-                              ),
-                            ),
-                            ListTile(
-                              leading: Text("City         "),
-                              title: TextFormField(
-                                enabled: editPrimaryAddress,
-                                keyboardType: TextInputType.text,
-                                //initialValue: updatedCity,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    // updatedCity = value;
-                                  });
-                                },
-                              ),
-                            ),
-                            ListTile(
-                              leading: Text("State       "),
-                              title: TextFormField(
-                                enabled: editPrimaryAddress,
-                                keyboardType: TextInputType.text,
-                                //initialValue: updatedState,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    //updatedState = value;
-                                  });
-                                },
-                              ),
-                            ),
-                            ListTile(
-                              leading: Text("Pincode  "),
-                              title: TextFormField(
-                                //initialValue: updatedPincode,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  /*
-                                  color: updatedPincode.length == 6
-                                      ? Colors.black
-                                      : Colors.red,*/
-                                ),
-                                enabled: editPrimaryAddress,
-                                keyboardType: TextInputType.phone,
-                                onChanged: (value) {
-                                  setState(() {
-                                    //updatedPincode = value;
-                                  });
-                                },
                               ),
                             ),
                           ],

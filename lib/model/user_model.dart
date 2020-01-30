@@ -15,6 +15,4 @@ class User {
   static String landmark = '';
   static String gender = 'male';
   static DateTime dob;
-  static String allocatedShopid = '';
-  static String allocatedShopNumber = '';
 }
