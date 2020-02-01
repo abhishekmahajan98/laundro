@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:laundro/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:laundro/model/user_model.dart';
 
@@ -72,19 +73,21 @@ class _SplashScreenState extends State<SplashScreen> {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Color(0XFF6bacde),
+                color: mainColor,
               ),
             ),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Hero(
-                      tag: 'logo',
-                      child: Image.asset(
-                        'images/app_logo/LOGO1.png',
-                        width: 300,
-                      )),
+                  Text(
+                    'GIMME',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.height / 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -24,9 +24,11 @@ class OrdersBox extends StatefulWidget {
     @required this.lattitude,
     @required this.longitude,
     @required this.landmark,
+    @required this.orderStatus,
   });
   final String customerName;
   final String orderId;
+  final String orderStatus;
   final String serviceType;
   final String customerPhoneNumber;
   final String primaryAddress;
@@ -68,85 +70,85 @@ class _OrdersBoxState extends State<OrdersBox> {
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: Text(widget.customerName,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          )),
-      subtitle: Text('Service Type:' + widget.serviceType),
-      trailing: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Icon(
-          Icons.keyboard_arrow_down,
-          color: Colors.black,
-          size: 50,
-        ),
-      ),
-      children: <Widget>[
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('Order Id:' + widget.orderId),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('Phone:' + widget.customerPhoneNumber),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('Primary Address' + widget.primaryAddress),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('Landmark' + widget.landmark),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('Place name' + widget.placeName),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('Locality' + widget.locality),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('Administrative Area:' + widget.administrativeArea),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('Pincode:' + widget.pincode),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('Pickup OTP:' + widget.pickupOtp),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('Delivery OTP:' + widget.deliveryOtp),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-              title: Text('total clothes:' + widget.totalClothes),
-              trailing: RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ClothDetails(
-                        clothList: clothes,
-                      ),
-                    ),
-                  );
-                },
-                child: Text('Clothes details'),
+    return Card(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          ListTile(
+            leading: Text('Service Type:'),
+            trailing: Text(
+              widget.serviceType,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: MediaQuery.of(context).size.height / 30,
               ),
             ),
-          ],
-        ),
-      ],
+          ),
+          ListTile(
+            leading: Text('Order Id:'),
+            trailing: Text(widget.orderId),
+          ),
+          ListTile(
+            leading: Text('Order Status:'),
+            trailing: Text(
+              widget.orderStatus == 'confirmed'
+                  ? 'Awaiting Shop Acceptance'
+                  : widget.orderStatus == 'accepted' ? "Accepted" : "Delivered",
+              style: TextStyle(
+                color: widget.orderStatus == 'confirmed'
+                    ? Colors.red
+                    : widget.orderStatus == 'accepted'
+                        ? Colors.yellow
+                        : Colors.green,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Text('Phone:'),
+            trailing: Text(widget.customerPhoneNumber),
+          ),
+          ListTile(
+            leading: Text('Primary Address'),
+            trailing: Text(widget.primaryAddress),
+          ),
+          ListTile(
+            leading: Text('Landmark'),
+            trailing: Text(widget.landmark),
+          ),
+          ListTile(
+            leading: Text('Place name'),
+            trailing: Text(widget.placeName),
+          ),
+          ListTile(
+            leading: Text('Locality'),
+            trailing: Text(widget.locality),
+          ),
+          ListTile(
+            leading: Text('Order Id:'),
+            trailing: Text('Administrative Area:' + widget.administrativeArea),
+          ),
+          ListTile(
+            leading: Text('Pincode:'),
+            trailing: Text(widget.pincode),
+          ),
+          ListTile(
+            leading: Text('total clothes:' + widget.totalClothes),
+            trailing: RaisedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ClothDetails(
+                      clothList: clothes,
+                    ),
+                  ),
+                );
+              },
+              child: Text('Clothes details'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
