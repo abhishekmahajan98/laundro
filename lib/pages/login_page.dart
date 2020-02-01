@@ -25,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String email, password;
   bool showSpinner = false;
   SharedPreferences prefs;
+  final _loginScaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -227,8 +228,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.pushReplacementNamed(context, "/initial_details");
                   }
                 }
-              } catch (e) {
-                print(e);
+              } on PlatformException catch (e) {
+                setState(() {
+                  showSpinner = false;
+                });
+                print(e.message.toString());
+                _loginScaffoldKey.currentState.showSnackBar(SnackBar(
+                  content: Text(e.message.toString()),
+                ));
               }
               setState(() {
                 showSpinner = false;
@@ -391,6 +398,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _loginScaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xfff2f3f7),
       body: ModalProgressHUD(

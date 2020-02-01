@@ -19,6 +19,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String email, password;
   bool showSpinner = false;
   SharedPreferences prefs;
+  final _registerScaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -118,8 +119,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   prefs.setString('loggedInUserUid', User.uid);
                   Navigator.pushReplacementNamed(context, "/initial_details");
                 }
-              } catch (e) {
-                print(e);
+              } on PlatformException catch (e) {
+                setState(() {
+                  showSpinner = false;
+                });
+                print(e.message.toString());
+                _registerScaffoldKey.currentState.showSnackBar(SnackBar(
+                  content: Text(e.message.toString()),
+                ));
               }
               setState(() {
                 showSpinner = false;
@@ -184,6 +191,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _registerScaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xfff2f3f7),
       body: ModalProgressHUD(

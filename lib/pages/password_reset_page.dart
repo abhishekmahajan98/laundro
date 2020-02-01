@@ -14,6 +14,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _auth = FirebaseAuth.instance;
   String email;
   bool showSpinner = false;
+  final _resetPasswordScaffoldKey = GlobalKey<ScaffoldState>();
 
   Widget _buildLogo() {
     return Row(
@@ -66,20 +67,36 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           child: RaisedButton(
             elevation: 5.0,
             onPressed: () async {
-              _auth.sendPasswordResetEmail(email: email);
-              Alert(
-                  context: context,
-                  title: 'Reset password E-mail sent.',
-                  desc:
-                      'Click on the link in the e-mail sent and it will redirect you to the page to reset the password.',
-                  buttons: [
-                    DialogButton(
-                      child: Text('Okay'),
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/login');
-                      },
-                    ),
-                  ]).show();
+              setState(() {
+                showSpinner = true;
+              });
+              try {
+                _auth.sendPasswordResetEmail(email: email);
+                Alert(
+                    context: context,
+                    title: 'Reset password E-mail sent.',
+                    desc:
+                        'Click on the link in the e-mail sent and it will redirect you to the page to reset the password.',
+                    buttons: [
+                      DialogButton(
+                        child: Text('Okay'),
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, '/login');
+                        },
+                      ),
+                    ]).show();
+              } on PlatformException catch (e) {
+                setState(() {
+                  showSpinner = false;
+                });
+                print(e.message.toString());
+                _resetPasswordScaffoldKey.currentState.showSnackBar(SnackBar(
+                  content: Text(e.message.toString()),
+                ));
+              }
+              setState(() {
+                showSpinner = false;
+              });
             },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30.0),
@@ -139,6 +156,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _resetPasswordScaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xfff2f3f7),
       body: Stack(
