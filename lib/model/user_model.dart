@@ -6,12 +6,13 @@ class User {
   static String uid = '';
   static String phone = '';
   static String primaryAddress = '';
-  static String primaryAddressLine1 = '';
-  static String primaryAddressLine2 = '';
-  static String primaryAddressState = '';
-  static String primaryAddressCity = '';
+  static double lattitude;
+  static double longitude;
+  static String locality = '';
+  static String administrativeArea = '';
   static String pincode = '';
+  static String placeName = '';
+  static String landmark = '';
   static String gender = 'male';
   static DateTime dob;
-  static List<Map<dynamic, dynamic>> orderHistory;
 }

@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'package:awesome_loader/awesome_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:laundro/constants.dart';
+import 'package:laundro/model/screen_model.dart';
 import 'package:laundro/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +18,7 @@ class _BufferPageState extends State<BufferPage> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(seconds: 2), () {
       instantiateSP();
       retrieveUserData();
     });
@@ -32,29 +35,34 @@ class _BufferPageState extends State<BufferPage> {
         document.data['phoneNumber'] != null &&
         document.data['primaryAddress'] != null) {
       User.displayName = document.data['displayName'];
+      User.uid = document.data['uid'];
       User.dob = DateTime.parse(document.data['dob']);
       User.phone = document.data['phoneNumber'];
       User.gender = document.data['gender'];
       User.primaryAddress = document.data['primaryAddress'];
-      User.primaryAddressLine1 = document.data['primaryAddressLine1'];
-      User.primaryAddressLine2 = document.data['primaryAddressLine2'];
-      User.primaryAddressCity = document.data['primaryAddressCity'];
-      User.primaryAddressState = document.data['primaryAddressState'];
-      User.pincode = document.data['primaryAddressPincode'];
+      User.pincode = document.data['pincode'];
+      User.landmark = document.data['landmark'];
+      User.locality = document.data['locality'];
+      User.placeName = document.data['placeName'];
+      User.administrativeArea = document.data['administrativeArea'];
+      GeoPoint p = document.data['geoLocation'];
+      User.lattitude = p.latitude;
+      User.longitude = p.longitude;
+
       prefs.setString('loggedInUserDisplayName', User.displayName);
       prefs.setString('loggedInUserPhoneNumber', User.phone);
       prefs.setString('loggedInUserDOB', User.dob.toString());
       prefs.setString('loggedInUserGender', User.gender);
+      prefs.setString('loggedInUserPlaceName', User.placeName);
+      prefs.setString('loggedInUserLocality', User.locality);
+      prefs.setString('loggedInUserPincode', User.pincode);
       prefs.setString(
-          'loggedInUserPrimaryAddressLine1', User.primaryAddressLine1);
-      prefs.setString(
-          'loggedInUserPrimaryAddressLine2', User.primaryAddressLine2);
-      prefs.setString(
-          'loggedInUserPrimaryAddressCity', User.primaryAddressCity);
-      prefs.setString(
-          'loggedInUserPrimaryAddressState', User.primaryAddressState);
-      prefs.setString('loggedInUserPrimaryAddressPincode', User.pincode);
+          'loggedInUserAdministrativeArea', User.administrativeArea);
       prefs.setString('loggedInUserPrimaryAddress', User.primaryAddress);
+      prefs.setString('loggedInUserLandmark', User.landmark);
+      prefs.setDouble('loggedInUserLattitude', User.lattitude);
+      prefs.setDouble('loggedInUserLongitude', User.longitude);
+      HomeIdx.selectedIndex = 0;
       navigateToHome();
     } else {
       navigateToDetails();
@@ -79,17 +87,28 @@ class _BufferPageState extends State<BufferPage> {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Color(0XFF6bacde),
+                color: mainColor,
               ),
             ),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Hero(
-                    tag: 'logo',
-                    child: Image.asset('images/app_logo/LOGO1.png'),
+                  Text(
+                    'GIMME',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.height / 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  AwesomeLoader(
+                    loaderType: AwesomeLoader.AwesomeLoader3,
+                    color: Colors.white,
+                  )
                 ],
               ),
             ),

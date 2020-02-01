@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:laundro/components/team_member_widget.dart';
 import 'package:laundro/constants.dart';
+
 class AboutPage extends StatefulWidget {
   @override
   _AboutPageState createState() => _AboutPageState();
 }
 
 class _AboutPageState extends State<AboutPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('About us'),
+        //elevation: 0.0,
         centerTitle: true,
-        backgroundColor: Color(0XFF6bacde),
+        backgroundColor: mainColor,
       ),
-      body:Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -25,15 +26,18 @@ class _AboutPageState extends State<AboutPage> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: Color(0XFF6bacde),
+                color: mainColor,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset(
-                    'images/app_logo/LOGO1.png',
-                    height: 100,
-                    width: 400,
+                  Text(
+                    'GIMME LAUNDRY',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.height / 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -49,34 +53,36 @@ class _AboutPageState extends State<AboutPage> {
                     height: 10,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 50,right: 50),
+                    padding: const EdgeInsets.only(left: 50, right: 50),
                     child: Divider(
                       color: Colors.black,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 30,right: 30,top: 10),
+                    padding:
+                        const EdgeInsets.only(left: 30, right: 30, top: 10),
                     child: Container(
-                      height: 150,
+                      height: MediaQuery.of(context).size.height * 0.25,
                       decoration: BoxDecoration(
-                        //color: Colors.white,
-                        //borderRadius: BorderRadius.all(Radius.circular(12)),
-                      ),
+                          //color: Colors.white,
+                          //borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
                       child: Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis hendrerit dolor magna eget. Sed felis eget velit aliquet. A cras semper auctor neque vitae. A lacus vestibulum sed arcu.",
+                        "We are a Laundry Tech Startup focusing on enabling the local businessmen in laundry business in upskilling them and getting them familiar with using technology for the means of business. We cherry pick the best laundry service in every area and induct them into our application as business partners and connect them with custoners for a smooth and efficient laundry service.",
                         style: kparagraphTextStyle,
                         textAlign: TextAlign.left,
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 50,right: 50),
+                    padding: const EdgeInsets.only(left: 50, right: 50),
                     child: Divider(
                       color: Colors.black,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 30,right: 30,top: 10,bottom: 10),
+                    padding: const EdgeInsets.only(
+                        left: 30, right: 30, top: 10, bottom: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -84,18 +90,24 @@ class _AboutPageState extends State<AboutPage> {
                           child: Text(
                             'Our Team',
                             style: kTitleTextStyle,
-                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 10,
                         ),
-                        teamMember(imagePath: 'images/team/abhishek.jpeg',name: 'Abhishek Mahajan',position: 'Director'),
-                        teamMember(imagePath: 'images/team/sourabh.jpeg',name: 'Sourabh Pisipati',position: 'Director'),
+                        teamMember(
+                            imagePath: 'images/team/abhishek.jpeg',
+                            name: 'Abhishek Mahajan',
+                            position: 'Director'),
+                        teamMember(
+                            imagePath: 'images/team/sourabh.jpeg',
+                            name: 'Sourabh Pisipati',
+                            position: 'Director'),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 50,right: 50),
+                    padding: const EdgeInsets.only(left: 50, right: 50),
                     child: Divider(
                       color: Colors.black,
                     ),
@@ -104,13 +116,14 @@ class _AboutPageState extends State<AboutPage> {
                     padding: const EdgeInsets.only(top: 10),
                     child: Center(
                       child: Text(
-                            'You can reach us at:',
+                        'You can reach us at:',
                         style: kTitleTextStyle,
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 30,right: 30,top: 10),
+                    padding:
+                        const EdgeInsets.only(left: 30, right: 30, top: 10),
                     child: Column(
                       children: <Widget>[
                         ListTile(
@@ -139,7 +152,7 @@ class _AboutPageState extends State<AboutPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 50,right: 50),
+                    padding: const EdgeInsets.only(left: 50, right: 50),
                     child: Divider(
                       color: Colors.black,
                     ),

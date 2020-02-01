@@ -1,17 +1,13 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:laundro/components/payment_bottom_sheet.dart';
 import 'package:laundro/model/order_model.dart';
-import 'package:laundro/model/payment_model.dart';
 import 'package:laundro/model/user_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:uuid/uuid.dart';
-
-import '../components/cart_list.dart';
-import '../components/payment_info_modal.dart';
-
-final _WALLETS = ["paytm", "citrus", "amazonpay", "payzapp", "freecharge"];
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'dart:math';
+import '../Data.dart';
+import '../constants.dart';
 
 class CartPage extends StatefulWidget {
   @override
@@ -19,227 +15,404 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  List items = [];
-  double ironTotal, washingTotal, dryCleaningTotal;
-  SharedPreferences _prefs;
-  Razorpay _razorpay;
-  var iron, wash, dryClean;
-  var dryCleanCost = 0;
-  var washCost = 0;
-  var ironCost = 0;
-
+  final _firestore = Firestore.instance;
+  bool showspinner = false;
+  String closestShopId = '';
+  String closestShopNumber = '';
+  double closestDistance = 10000000;
+  double closestShopServiceRadius = 0;
   @override
   void initState() {
     super.initState();
-    _getData();
-    _razorpay = Razorpay();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-  }
-
-  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    if (response.paymentId != null) {
-      var userRef = Firestore.instance.collection("user").document(User.uid);
-      var paymentRef = Firestore.instance.collection("payment").document();
-      var orderRef = Firestore.instance.collection("order").document();
-      final paymentId = Uuid().v4().split("-").sublist(0, 2).join();
-
-      final orderId = Uuid().v4().split("-")[0];
-      Order.userDetail["userId"] = User.uid;
-      Order.userDetail["phone"] = User.phone;
-      Order.userDetail["address"] = User.primaryAddress;
-      Order.userDetail["pincode"] = User.pincode;
-      Order.paymentDetail["paymentId"] = Payment.paymentId;
-      Order.deliveryCost = deliveryTotal;
-      Order.total = getTotal + deliveryTotal;
-      Order.otp = Uuid().v4().split("-")[3];
-
-      await Firestore.instance.runTransaction((Transaction t) async {});
-
-      Navigator.pop(context);
-      Navigator.pushReplacementNamed(context, "/order-confirm-page");
-    }
-  }
-
-  void _handlePaymentError(PaymentFailureResponse response) {
-    showDialogBox(response.code.toString() + ": " + response.message);
-  }
-
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    if (_WALLETS.contains(response.walletName)) {
-      Navigator.pop(context);
-      Navigator.pushReplacementNamed(context, "/order-confirm-page");
-    }
-  }
-
-  void startPayment() {
-    try {
-      var options = {
-        'key': 'rzp_test_UR3ON1Z6tddkOu',
-        'amount': (getTotal + deliveryTotal) * 100,
-        'name': 'lAUNDRO',
-        'description': 'laundry service',
-        'prefill': {
-          'contact': '9123456789',
-          'email': 'gaurav.kumar@example.com'
-        },
-        'external': {
-          "wallets": _WALLETS,
-        }
-      };
-      _razorpay.open(options);
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  Future<void> _getData() async {
-    _prefs = await SharedPreferences.getInstance();
-    iron = _prefs.getString("iron") == null
-        ? []
-        : json.decode(_prefs.getString("iron"));
-    wash = _prefs.getString("wash") == null
-        ? []
-        : json.decode(_prefs.getString("wash"));
-    dryClean = _prefs.getString("dry-clean") == null
-        ? []
-        : json.decode(_prefs.getString("dry-clean"));
-
-    List.from(iron).forEach((item) {
-      ironCost += item["qty"] * item["price"];
+    setState(() {
+      showspinner = true;
     });
-    List.from(dryClean).forEach((item) {
-      ironCost += item["qty"] * item["price"];
-    });
-    List.from(wash).forEach((item) {
-      washCost += item["qty"] * item["price"];
-    });
-    print(ironCost.toString() +
-        " " +
-        washCost.toString() +
-        " " +
-        dryCleanCost.toString());
-    this.setState(() {
-      items = [...wash, ...iron, ...dryClean];
+    valuesReset();
+    getSelectedIroningItems();
+    getSelectedWashingItems();
+    getSelectedDryCleaningItems();
+    getIronDetails();
+    getWashingDetails();
+    getDryCleaningDetails();
+    getSubTotal();
+    getTotalClothes();
+    getDeliveryPrice();
+    getTotalCost();
+    setState(() {
+      showspinner = false;
     });
   }
 
-  showBottom() {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return PaymentInfoModal(paymentHandler: startPayment);
+  void valuesReset() {
+    Order.ironingCost = 0;
+    Order.washingCost = 0;
+    Order.dryCleaningCost = 0;
+    Order.ironingNumber = 0;
+    Order.washingNumber = 0;
+    Order.dryCleaningNumber = 0;
+    Order.subTotal = 0;
+    Order.deliveryCost = 0;
+    Order.totalCost = 0;
+    Order.selectedIroningList.clear();
+    Order.selectedWashingList.clear();
+    Order.selectedDryCleaningList.clear();
+  }
+
+  void getSelectedIroningItems() {
+    for (var i = 0; i < Database.ironingDataItems.length; i++) {
+      if (Database.ironingDataItems[i]['qty'] > 0) {
+        Map selectedItem = {
+          'title': Database.ironingDataItems[i]['title'],
+          'qty': Database.ironingDataItems[i]['qty'],
+          'price': Database.ironingDataItems[i]['price'],
+          'total_item_cost': Database.ironingDataItems[i]['total_item_cost'],
+        };
+        setState(() {
+          Order.selectedIroningList.add(selectedItem);
         });
+      }
+    }
   }
 
-  showDialogBox(String message) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text(message),
-            actions: <Widget>[
-              FlatButton(
-                  child: Text("close"), onPressed: () => Navigator.pop(context))
-            ],
-          );
+  void getSelectedWashingItems() {
+    for (var i = 0; i < Database.washingDataItems.length; i++) {
+      if (Database.washingDataItems[i]['qty'] > 0) {
+        Map selectedItem = {
+          'title': Database.washingDataItems[i]['title'],
+          'qty': Database.washingDataItems[i]['qty'],
+          'price': Database.washingDataItems[i]['price'],
+          'total_item_cost': Database.washingDataItems[i]['total_item_cost'],
+        };
+        setState(() {
+          Order.selectedWashingList.add(selectedItem);
         });
+      }
+    }
   }
 
-  get getTotal {
-    int total = 0;
+  void getSelectedDryCleaningItems() {
+    for (var i = 0; i < Database.dryCleaningDataItems.length; i++) {
+      if (Database.dryCleaningDataItems[i]['qty'] > 0) {
+        Map selectedItem = {
+          'title': Database.dryCleaningDataItems[i]['title'],
+          'qty': Database.dryCleaningDataItems[i]['qty'],
+          'price': Database.dryCleaningDataItems[i]['price'],
+          'total_item_cost': Database.dryCleaningDataItems[i]
+              ['total_item_cost'],
+        };
+        setState(() {
+          Order.selectedDryCleaningList.add(selectedItem);
+        });
+      }
+    }
+  }
+
+  void getIronDetails() {
+    for (var i = 0; i < Order.selectedIroningList.length; i++) {
+      setState(() {
+        Order.ironingCost += Order.selectedIroningList[i]['total_item_cost'];
+        Order.ironingNumber += Order.selectedIroningList[i]['qty'];
+      });
+    }
+  }
+
+  void getWashingDetails() {
+    for (var i = 0; i < Order.selectedWashingList.length; i++) {
+      setState(() {
+        Order.washingCost += Order.selectedWashingList[i]['total_item_cost'];
+        Order.washingNumber += Order.selectedWashingList[i]['qty'];
+      });
+    }
+  }
+
+  void getDryCleaningDetails() {
+    for (var i = 0; i < Order.selectedDryCleaningList.length; i++) {
+      setState(() {
+        Order.dryCleaningCost +=
+            Order.selectedDryCleaningList[i]['total_item_cost'];
+        Order.dryCleaningNumber += Order.selectedDryCleaningList[i]['qty'];
+      });
+    }
+  }
+
+  void getSubTotal() {
+    setState(() {
+      Order.subTotal =
+          Order.ironingCost + Order.washingCost + Order.dryCleaningCost;
+    });
+  }
+
+  void getTotalClothes() {
+    setState(() {
+      Order.totalNumber =
+          Order.ironingNumber + Order.dryCleaningNumber + Order.washingNumber;
+    });
+  }
+
+  void getDeliveryPrice() {
+    setState(() {
+      if (Order.subTotal < 100) {
+        Order.deliveryCost += Order.totalNumber;
+      } else {
+        Order.deliveryCost = 0;
+      }
+    });
+  }
+
+  void getTotalCost() {
+    setState(() {
+      Order.totalCost = Order.subTotal + Order.deliveryCost;
+    });
+  }
+
+  double calculateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    //print(12742 * asin(sqrt(a)));
+    return 12742 * asin(sqrt(a));
+  }
+
+  Future<bool> getClosestShop() async {
+    setState(() {
+      showspinner = true;
+    });
     try {
-      if (items.length > 0) {
-        for (var i = 0; i < items.length; i++) {
-          total += items[i]["qty"] * items[i]["price"];
+      QuerySnapshot shops = await _firestore.collection('shop').getDocuments();
+      for (var shop in shops.documents) {
+        GeoPoint shopLoc = shop.data['geoLocation'];
+        //print(User.lattitude.toString() + " " + User.longitude.toString());
+        //print(shopLoc.latitude.toString() + " " + shopLoc.longitude.toString());
+        double dist = calculateDistance(User.lattitude, User.longitude,
+            shopLoc.latitude, shopLoc.longitude);
+        if (dist < closestDistance) {
+          setState(() {
+            closestShopId = shop.data['uid'];
+            closestShopNumber = shop.data['phoneNumber'];
+            closestDistance = dist;
+            closestShopServiceRadius = shop.data['serviceRadius'].toDouble();
+            print(shop.data['serviceRadius'].toString());
+          });
         }
       }
+      setState(() {
+        showspinner = false;
+      });
+      return true;
     } catch (e) {
       print(e);
+      setState(() {
+        showspinner = false;
+      });
+      return false;
     }
-    return total;
-  }
-
-  get deliveryTotal {
-    int total = 0;
-    int costTotal = getTotal;
-    if (costTotal >= 30 && costTotal < 50) {
-      for (var i = 0; i < items.length; i++) {
-        total += items[i]["qty"] * 2;
-      }
-    } else if (costTotal >= 50 && costTotal <= 80) {
-      for (var i = 0; i < items.length; i++) {
-        total += items[i]["qty"] * 1;
-      }
-    }
-    return total;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _razorpay.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Cart'),
-          centerTitle: true,
-          backgroundColor: Color(0XFF6bacde),
-        ),
-        body: SafeArea(
-            child: Container(
-                child: items.length == 0
-                    ? Container(child: Center(child: Text("No Items")))
-                    : Column(children: <Widget>[
-                        Expanded(child: CartList(list: items)),
-                        Divider(),
-                        CostPanel(title: "Sub-Total", cost: getTotal),
-                        CostPanel(
-                            title: "Delivery Cost",
-                            cost: deliveryTotal,
-                            isFree: getTotal > 80),
-                        CostPanel(
-                            title: "Grand Total",
-                            cost: getTotal + deliveryTotal),
-                        Divider(),
-                        MaterialButton(
-                          minWidth: MediaQuery.of(context).size.width,
-                          height: 50,
-                          child: Text("Proceed to payment",
-                              style: TextStyle(fontSize: 16)),
-                          color: getTotal < 30 ? Colors.red : Colors.green,
-                          textColor: Colors.white,
-                          onPressed: () => getTotal < 30
-                              ? showDialogBox("Minimum cart value Rs.30")
-                              : showBottom(),
-                        )
-                      ]))));
-  }
-}
-
-class CostPanel extends StatelessWidget {
-  final String title;
-  final int cost;
-  final bool isFree;
-
-  CostPanel({this.title, this.cost, this.isFree = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(5),
-        child: Row(
+      backgroundColor: Color(0xfff2f3f7),
+      appBar: AppBar(
+        title: Text('Cart'),
+        centerTitle: true,
+        backgroundColor: mainColor,
+      ),
+      body: ModalProgressHUD(
+        inAsyncCall: showspinner,
+        child: Column(
           children: <Widget>[
-            Expanded(child: Text(title, textAlign: TextAlign.left)),
-            Text(isFree ? "Free" : "Rs." + cost.toString(),
-                textAlign: TextAlign.left,
-                style: TextStyle(color: isFree ? Colors.green : Colors.black))
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  Order.selectedIroningList.length != 0
+                      ? GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacementNamed(context, '/iron');
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(color: Colors.white),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                child: Text('IR'),
+                              ),
+                              title: Text('Ironing'),
+                              subtitle: Text('Total clothes:' +
+                                  Order.ironingNumber.toString()),
+                              trailing: Text('Cost: ' +
+                                  '₹' +
+                                  Order.ironingCost.toString()),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  Order.selectedIroningList.length != 0
+                      ? Divider()
+                      : Container(),
+                  Order.selectedWashingList.length != 0
+                      ? GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacementNamed(context, '/wash');
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(color: Colors.white),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                child: Text('WA'),
+                              ),
+                              title: Text('Washing'),
+                              subtitle: Text('Total clothes:' +
+                                  Order.washingNumber.toString()),
+                              trailing: Text('Cost: ' +
+                                  '₹' +
+                                  Order.washingCost.toString()),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  Order.selectedWashingList.length != 0
+                      ? Divider()
+                      : Container(),
+                  Order.selectedDryCleaningList.length != 0
+                      ? GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, '/dry-clean');
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(color: Colors.white),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                child: Text('DR'),
+                              ),
+                              title: Text('Dry cleaning'),
+                              subtitle: Text('Total clothes:' +
+                                  Order.dryCleaningNumber.toString()),
+                              trailing: Text('Cost: ' +
+                                  '₹' +
+                                  Order.dryCleaningCost.toString()),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  Order.selectedDryCleaningList.length != 0
+                      ? Divider()
+                      : Container(),
+                ],
+              ),
+            ),
+            Container(
+              height: 75,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                children: <Widget>[
+                  Divider(
+                    thickness: 1,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Sub total:'),
+                        Text('₹' + Order.subTotal.toString()),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Delivery:'),
+                        Text(
+                          Order.deliveryCost == 0
+                              ? 'Free'
+                              : Order.deliveryCost.toString(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Total:'),
+                        Text('₹' + Order.totalCost.toString()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: RaisedButton(
+                color: Order.subTotal >= 30 ? Colors.green : Colors.red,
+                onPressed: () {
+                  if (Order.subTotal >= 30) {
+                    getClosestShop().then((val) {
+                      if (closestShopServiceRadius >= closestDistance) {
+                        print(closestDistance.toString() +
+                            " " +
+                            closestShopServiceRadius.toString());
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (builder) {
+                              return ShowPaymentBottom(
+                                allocatedShopId: closestShopId,
+                                allocatedShopPhoneNumber: closestShopNumber,
+                              );
+                            });
+                      } else {
+                        Alert(
+                          context: context,
+                          title: 'Sorry, We do not have service in your area.',
+                          buttons: [
+                            DialogButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("Okay"),
+                            )
+                          ],
+                        ).show();
+                      }
+                    });
+                  } else {
+                    Alert(
+                      context: context,
+                      title: 'Minimun subtotal is of ₹30.',
+                      desc: 'We do not accept orders below ₹30.',
+                      buttons: [
+                        DialogButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('Okay'),
+                        ),
+                      ],
+                    ).show();
+                  }
+                },
+                child: Text(
+                  'Proceed to Checkout',
+                  style: kLabelStyle,
+                ),
+              ),
+            )
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

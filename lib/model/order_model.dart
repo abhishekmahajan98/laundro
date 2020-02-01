@@ -1,34 +1,11 @@
-import 'package:uuid/uuid.dart';
-
 class Order {
-  static String orderId ;
-  static String instruction;
-  static double deliveryCost = 0;
-  static double total;
-  static String otp;
-  static DateTime orderPlacedDateTime;
-  static DateTime deliveryDateTime;
-  static List<Map<dynamic, dynamic>> orderItemList;
-  static Map<dynamic, dynamic> userDetail = {
-    "userId": null,
-    "phone": null,
-    "address": null,
-    "pincode": null
-  };
-  static Map<dynamic, dynamic> shopDetail = {
-    "shopId": null,
-    "name": null,
-  };
-  static Map<dynamic, bool> orderStatus = {
-    "hasAccepted ": false,
-    "hasPickedUp ": false,
-    // "hasProcessed": false,
-    "hasDelivered": false,
-  };
-  static Map<dynamic, dynamic> paymentDetail = {
-    "paymentId": null,
-    "paymentMode": null
-  };
+  static List selectedIroningList=[];
+  static List selectedWashingList=[];
+  static List selectedDryCleaningList=[];
+  static double ironingCost=0,washingCost=0,dryCleaningCost=0;
+  static double subTotal=0,deliveryCost=0,totalCost=0;
+  static int ironingNumber=0,washingNumber=0,dryCleaningNumber=0,totalNumber=0;
+  static String paymentType='COD';
 }
 
 // orderItem ={

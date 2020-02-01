@@ -55,7 +55,10 @@ final kBoxDecorationStyle = BoxDecoration(
     ),
   ],
 );
-
+final kBlackLabelStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+);
 final kCategoryTextStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,
@@ -64,6 +67,11 @@ final kCategoryTextStyle = TextStyle(
 );
 const kTitleTextStyle = TextStyle(
   color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+);
+const kWhiteTitleTextStyle = TextStyle(
+  color: Colors.white,
   fontWeight: FontWeight.bold,
   fontSize: 20,
 );
@@ -83,3 +91,6 @@ const kteamMemberName = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 20,
 );
+
+const blurredMainColor = Color(0xFFf2f6ff);
+const mainColor = Color(0xff2470c7);

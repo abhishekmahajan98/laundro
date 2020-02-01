@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:laundro/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:laundro/model/user_model.dart';
 
@@ -37,15 +38,14 @@ class _SplashScreenState extends State<SplashScreen> {
         User.gender = prefs.getString('loggedInUserGender');
         User.dob = DateTime.parse(prefs.getString('loggedInUserDOB'));
         User.primaryAddress = prefs.getString('loggedInUserPrimaryAddress');
-        User.primaryAddressLine1 =
-            prefs.getString('loggedInUserPrimaryAddressLine1');
-        User.primaryAddressLine2 =
-            prefs.getString('loggedInUserPrimaryAddressLine2');
-        User.primaryAddressCity =
-            prefs.getString('loggedInUserPrimaryAddressCity');
-        User.primaryAddressState =
-            prefs.getString('loggedInUserPrimaryAddressState');
-        User.pincode = prefs.getString('loggedInUserPrimaryAddressPincode');
+        User.placeName = prefs.getString('loggedInUserPlaceName');
+        User.locality = prefs.getString('loggedInUserLocality');
+        User.administrativeArea =
+            prefs.getString('loggedInUserAdministrativeArea');
+        User.landmark = prefs.getString('loggedInUserLandmark');
+        User.pincode = prefs.getString('loggedInUserPincode');
+        User.lattitude = prefs.getDouble('loggedInUserLattitude');
+        User.longitude = prefs.getDouble('loggedInUserLongitude');
         Navigator.pushReplacementNamed(context, '/home');
         //Navigator.pushReplacementNamed(context, '/test_page');
       } catch (e) {
@@ -54,7 +54,6 @@ class _SplashScreenState extends State<SplashScreen> {
         _auth.signOut();
         googleSignIn.signOut();
         Navigator.pushReplacementNamed(context, '/login');
-
       }
     } else {
       prefs.clear();
@@ -74,21 +73,21 @@ class _SplashScreenState extends State<SplashScreen> {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Color(0XFF6bacde),
+                color: mainColor,
               ),
             ),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Hero(
-                    tag: 'logo',
-                    child: Image.asset(
-                      'images/app_logo/LOGO1.png',
-                      width: 300,
-                    )
+                  Text(
+                    'GIMME',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.height / 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-
                 ],
               ),
             ),

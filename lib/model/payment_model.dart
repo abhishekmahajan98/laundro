@@ -1,4 +1,3 @@
-import 'package:uuid/uuid.dart';
 
 enum PaymentStatus { completed, inProgress, refunded, cancelled }
 enum PaymentMode { card, wallet, onlineBanking, upi }
