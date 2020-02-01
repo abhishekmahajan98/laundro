@@ -14,6 +14,7 @@ class OrdersStream extends StatelessWidget {
         stream: _firestore
             .collection('orders')
             .where("customerUid", isEqualTo: User.uid)
+            .orderBy('orderTimestamp', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -44,6 +45,7 @@ class OrdersStream extends StatelessWidget {
             final placeName = message.data['placeName'];
             final deliveryOtp = message.data['deliveryOtp'];
             final pickupOtp = message.data['pickupOtp'];
+            final orderStatus = message.data['orderStatus'];
             final GeoPoint geoLocation = message.data['geoLocation'];
             final lattitude = geoLocation.latitude.toDouble();
             final longitude = geoLocation.longitude.toDouble();
@@ -68,6 +70,7 @@ class OrdersStream extends StatelessWidget {
               clothList: clothList,
               pickupOtp: pickupOtp,
               deliveryOtp: deliveryOtp,
+              orderStatus: orderStatus,
             );
             orders.add(order);
           }

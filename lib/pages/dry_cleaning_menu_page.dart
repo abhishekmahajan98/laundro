@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:laundro/Data.dart';
 import 'package:laundro/components/drycleaning_page_tile.dart';
+import 'package:laundro/constants.dart';
+import 'package:laundro/model/screen_model.dart';
 
 class DryCleaningMenuPage extends StatelessWidget {
   @override
@@ -10,16 +12,16 @@ class DryCleaningMenuPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Dry Cleaning page'),
         centerTitle: true,
-        backgroundColor: Color(0XFF6bacde),
+        backgroundColor: mainColor,
       ),
       body: Column(
         children: <Widget>[
           Expanded(
             child: ListView.builder(
               itemCount: Database.dryCleaningDataItems.length,
-              itemBuilder: (BuildContext ctxt, int index){
+              itemBuilder: (BuildContext ctxt, int index) {
                 return DryCleaningTile(
-                  index:index,
+                  index: index,
                 );
               },
             ),
@@ -29,8 +31,9 @@ class DryCleaningMenuPage extends StatelessWidget {
             height: 50,
             child: RaisedButton(
               color: Colors.red,
-              onPressed: (){
-                Navigator.pushReplacementNamed(context, '/cart');
+              onPressed: () {
+                Navigator.pop(context);
+                HomeIdx.selectedIndex = 1;
               },
               child: Text('Checkout'),
             ),

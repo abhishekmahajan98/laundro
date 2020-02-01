@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:laundro/Data.dart';
 import 'package:laundro/components/washing_page_tile.dart';
+import 'package:laundro/constants.dart';
+import 'package:laundro/model/screen_model.dart';
 
 class WashingMenuPage extends StatelessWidget {
   @override
@@ -10,16 +12,16 @@ class WashingMenuPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Washing page'),
         centerTitle: true,
-        backgroundColor: Color(0XFF6bacde),
+        backgroundColor: mainColor,
       ),
       body: Column(
         children: <Widget>[
           Expanded(
             child: ListView.builder(
               itemCount: Database.washingDataItems.length,
-              itemBuilder: (BuildContext ctxt, int index){
+              itemBuilder: (BuildContext ctxt, int index) {
                 return WashingTile(
-                  index:index,
+                  index: index,
                 );
               },
             ),
@@ -29,8 +31,9 @@ class WashingMenuPage extends StatelessWidget {
             height: 50,
             child: RaisedButton(
               color: Colors.red,
-              onPressed: (){
-                Navigator.pushReplacementNamed(context, '/cart');
+              onPressed: () {
+                Navigator.pop(context);
+                HomeIdx.selectedIndex = 1;
               },
               child: Text('Checkout'),
             ),

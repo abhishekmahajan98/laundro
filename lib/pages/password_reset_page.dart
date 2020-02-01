@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
 import '../constants.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -13,40 +12,22 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _auth = FirebaseAuth.instance;
-
-  String email, password;
+  String email;
   bool showSpinner = false;
+  final _resetPasswordScaffoldKey = GlobalKey<ScaffoldState>();
 
-  Widget _buildEmailTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildLogo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        /*Text(
-          'Email',
-          style: kLabelStyle,
-        ),
-        SizedBox(height: 10.0),*/
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {
-              email = value;
-            },
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 70),
+          child: Text(
+            'GIMME',
             style: TextStyle(
               color: Colors.white,
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Email',
-              hintStyle: kHintTextStyle,
+              fontSize: MediaQuery.of(context).size.height / 25,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -54,91 +35,153 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
 
-  Widget _buildRegisterBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () async {
-          _auth.sendPasswordResetEmail(email: email);
-          Alert(
-              context: context,
-              title: 'Reset password E-mail sent.',
-              desc:
-                  'Click on the link in the e-mail sent and it will redirect you to the page to reset the password.',
-              buttons: [
-                DialogButton(
-                  child: Text('Okay'),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/login');
-                  },
-                ),
-              ]).show();
+  Widget _buildEmailTF() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        onChanged: (value) {
+          setState(() {
+            email = value;
+          });
         },
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Colors.white,
-        child: Text(
-          'Reset',
-          style: TextStyle(
-            color: Color(0xFF527DAA),
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.email,
+            color: mainColor,
           ),
+          labelText: 'E-mail',
         ),
       ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          height: 1.4 * (MediaQuery.of(context).size.height / 20),
+          width: 5 * (MediaQuery.of(context).size.width / 10),
+          margin: EdgeInsets.only(bottom: 20, top: 10),
+          child: RaisedButton(
+            elevation: 5.0,
+            onPressed: () async {
+              setState(() {
+                showSpinner = true;
+              });
+              try {
+                _auth.sendPasswordResetEmail(email: email);
+                Alert(
+                    context: context,
+                    title: 'Reset password E-mail sent.',
+                    desc:
+                        'Click on the link in the e-mail sent and it will redirect you to the page to reset the password.',
+                    buttons: [
+                      DialogButton(
+                        child: Text('Okay'),
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, '/login');
+                        },
+                      ),
+                    ]).show();
+              } on PlatformException catch (e) {
+                setState(() {
+                  showSpinner = false;
+                });
+                print(e.message.toString());
+                _resetPasswordScaffoldKey.currentState.showSnackBar(SnackBar(
+                  content: Text(e.message.toString()),
+                ));
+              }
+              setState(() {
+                showSpinner = false;
+              });
+            },
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            color: mainColor,
+            child: Text(
+              'Submit',
+              style: TextStyle(
+                color: Colors.white,
+                letterSpacing: 1.5,
+                fontSize: MediaQuery.of(context).size.height / 40,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContainer() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        ClipRRect(
+          borderRadius: new BorderRadius.all(Radius.circular(20)),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width * 0.8,
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Password Reset',
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height / 30,
+                      ),
+                    ),
+                  ],
+                ),
+                _buildEmailTF(),
+                _buildSubmitButton(),
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _resetPasswordScaffoldKey,
       resizeToAvoidBottomPadding: false,
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Color(0XFF6bacde),
+      backgroundColor: Color(0xfff2f3f7),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            height: MediaQuery.of(context).size.height * 0.7,
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+              decoration: BoxDecoration(
+                color: mainColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: const Radius.circular(70),
+                  bottomRight: const Radius.circular(70),
                 ),
               ),
-              Container(
-                height: double.infinity,
-                child: Container(
-                  margin: EdgeInsets.all(25),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Account Password Recovery',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 30.0),
-                      _buildEmailTF(),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildRegisterBtn(),
-                    ],
-                  ),
-                ),
-              )
-            ],
+            ),
           ),
-        ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _buildLogo(),
+              _buildContainer(),
+            ],
+          )
+        ],
       ),
     );
   }

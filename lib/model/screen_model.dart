@@ -1,6 +1,3 @@
-
-
-class ScreenSize{
-  static double height;
-  static double width;
+class HomeIdx {
+  static int selectedIndex = 0;
 }
