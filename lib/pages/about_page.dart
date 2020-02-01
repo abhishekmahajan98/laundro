@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:laundro/components/team_member_widget.dart';
 import 'package:laundro/constants.dart';
+
 class AboutPage extends StatefulWidget {
   @override
   _AboutPageState createState() => _AboutPageState();
 }
 
 class _AboutPageState extends State<AboutPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('About us'),
         centerTitle: true,
-        backgroundColor: Color(0XFF6bacde),
+        backgroundColor: mainColor,
       ),
-      body:Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -49,19 +49,20 @@ class _AboutPageState extends State<AboutPage> {
                     height: 10,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 50,right: 50),
+                    padding: const EdgeInsets.only(left: 50, right: 50),
                     child: Divider(
                       color: Colors.black,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 30,right: 30,top: 10),
+                    padding:
+                        const EdgeInsets.only(left: 30, right: 30, top: 10),
                     child: Container(
                       height: 150,
                       decoration: BoxDecoration(
-                        //color: Colors.white,
-                        //borderRadius: BorderRadius.all(Radius.circular(12)),
-                      ),
+                          //color: Colors.white,
+                          //borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
                       child: Text(
                         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis hendrerit dolor magna eget. Sed felis eget velit aliquet. A cras semper auctor neque vitae. A lacus vestibulum sed arcu.",
                         style: kparagraphTextStyle,
@@ -70,13 +71,14 @@ class _AboutPageState extends State<AboutPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 50,right: 50),
+                    padding: const EdgeInsets.only(left: 50, right: 50),
                     child: Divider(
                       color: Colors.black,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 30,right: 30,top: 10,bottom: 10),
+                    padding: const EdgeInsets.only(
+                        left: 30, right: 30, top: 10, bottom: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -84,18 +86,24 @@ class _AboutPageState extends State<AboutPage> {
                           child: Text(
                             'Our Team',
                             style: kTitleTextStyle,
-                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 10,
                         ),
-                        teamMember(imagePath: 'images/team/abhishek.jpeg',name: 'Abhishek Mahajan',position: 'Director'),
-                        teamMember(imagePath: 'images/team/sourabh.jpeg',name: 'Sourabh Pisipati',position: 'Director'),
+                        teamMember(
+                            imagePath: 'images/team/abhishek.jpeg',
+                            name: 'Abhishek Mahajan',
+                            position: 'Director'),
+                        teamMember(
+                            imagePath: 'images/team/sourabh.jpeg',
+                            name: 'Sourabh Pisipati',
+                            position: 'Director'),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 50,right: 50),
+                    padding: const EdgeInsets.only(left: 50, right: 50),
                     child: Divider(
                       color: Colors.black,
                     ),
@@ -104,13 +112,14 @@ class _AboutPageState extends State<AboutPage> {
                     padding: const EdgeInsets.only(top: 10),
                     child: Center(
                       child: Text(
-                            'You can reach us at:',
+                        'You can reach us at:',
                         style: kTitleTextStyle,
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 30,right: 30,top: 10),
+                    padding:
+                        const EdgeInsets.only(left: 30, right: 30, top: 10),
                     child: Column(
                       children: <Widget>[
                         ListTile(
@@ -139,7 +148,7 @@ class _AboutPageState extends State<AboutPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 50,right: 50),
+                    padding: const EdgeInsets.only(left: 50, right: 50),
                     child: Divider(
                       color: Colors.black,
                     ),

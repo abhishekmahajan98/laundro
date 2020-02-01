@@ -17,7 +17,7 @@ class _ContactUsState extends State<ContactUs> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text('Contact us'),
+        title: Text('Queries'),
         centerTitle: true,
         backgroundColor: Color(0XFF6bacde),
       ),
@@ -26,14 +26,8 @@ class _ContactUsState extends State<ContactUs> {
           color: Color(0xfff2f3f7),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Queries',
-              style: kTitleTextStyle,
-            ),
             SizedBox(
               height: 20,
             ),
@@ -44,8 +38,8 @@ class _ContactUsState extends State<ContactUs> {
                   hintText: "What's Bothering you?",
                   hintStyle: kBlackLabelTextStyle,
                   border: OutlineInputBorder(
-                    borderRadius:BorderRadius.all(new Radius.circular(10.0))
-                    ),
+                      borderRadius:
+                          BorderRadius.all(new Radius.circular(10.0))),
                   labelStyle: TextStyle(color: Colors.black),
                 ),
                 maxLines: 8,
@@ -72,77 +66,48 @@ class _ContactUsState extends State<ContactUs> {
                   style: kCategoryTextStyle,
                 ),
                 onPressed: () {
-                  if(message!=""){
+                  if (message != "") {
                     print(message);
-                    try{
+                    try {
                       _firestore.collection('queries').add({
-                        'uid':User.uid,
-                        'name':User.displayName,
-                        'email':User.email,
+                        'uid': User.uid,
+                        'name': User.displayName,
+                        'email': User.email,
                         'message': message,
                       });
-                    }
-                    catch(e){
+                    } catch (e) {
                       print(e);
                     }
-                  
-                  Alert(
-                    context: context,
-                    title: 'Query Registered!!',
-                    desc:
-                        'Thank you for using our application and giving us valuable feedback!\n We will work on the issue occured and get back to you as soon as possible.',
-                    buttons: [
-                      DialogButton(
-                        child: Text('Okay'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ]).show();
-                  }
-                  else{
+
                     Alert(
-                    context: context,
-                    title: 'Empty Query',
-                    desc:'Please enter a query then press send!',
-                    buttons: [
-                      DialogButton(
-                        child: Text('Okay'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ]).show();
+                        context: context,
+                        title: 'Query Registered!!',
+                        desc:
+                            'Thank you for using our application and giving us valuable feedback!\n We will work on the issue occured and get back to you as soon as possible.',
+                        buttons: [
+                          DialogButton(
+                            child: Text('Okay'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ]).show();
+                  } else {
+                    Alert(
+                        context: context,
+                        title: 'Empty Query',
+                        desc: 'Please enter a query then press send!',
+                        buttons: [
+                          DialogButton(
+                            child: Text('Okay'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ]).show();
                   }
                 },
-              ),
-            ),
-
-            Divider(
-              color: Colors.black,
-              height: 30,
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.phone,
-                color:Colors.black,
-                size: 50,
-              ),
-              title: Text(
-                "8800418884",
-                style: kBlackLabelTextStyle,
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.email,
-                color: Colors.black,
-                size: 50,
-              ),
-              title: Text(
-                "laundro@gmail.com",
-                style: kBlackLabelTextStyle,
               ),
             ),
           ],

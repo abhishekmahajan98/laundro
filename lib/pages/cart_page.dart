@@ -217,7 +217,7 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(
         title: Text('Cart'),
         centerTitle: true,
-        backgroundColor: Color(0XFF6bacde),
+        backgroundColor: mainColor,
       ),
       body: ModalProgressHUD(
         inAsyncCall: showspinner,

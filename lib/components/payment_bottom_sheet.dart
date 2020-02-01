@@ -37,7 +37,8 @@ class ShowPaymentBottom extends StatelessWidget {
                     FlatButton(
                       padding: EdgeInsets.all(0),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/my_account');
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/address_update_page');
                       },
                       child: Text('Edit details'),
                     ),

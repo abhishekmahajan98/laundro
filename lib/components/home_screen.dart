@@ -1,44 +1,131 @@
 import 'package:flutter/material.dart';
+import 'package:laundro/constants.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView(
+      child: Column(
         children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20) ),
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20)),
             child: Container(
-              height: MediaQuery.of(context).size.height*(2/5),
+              height: MediaQuery.of(context).size.height * (2 / 5),
               width: MediaQuery.of(context).size.width,
-              color: Colors.blue,
+              color: mainColor,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'GIMME',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 40),
+                          ),
+                          FloatingActionButton(
+                            backgroundColor: blurredMainColor,
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/otp_page');
+                            },
+                            child: Text(
+                              'OTP',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: mainColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            'Good Morning,',
+                            style: TextStyle(
+                              fontSize: MediaQuery.of(context).size.height / 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10, left: 20, right: 20, bottom: 40),
+                          child: RotateAnimatedTextKit(
+                              displayFullTextOnTap: true,
+                              totalRepeatCount: 40,
+                              transitionHeight: 50,
+                              isRepeatingAnimation: true,
+                              text: [
+                                "How may we service you today?",
+                                "Have some dirty clothes?",
+                                "How's your day going?",
+                                "Trust us to make your laundry easier.",
+                              ],
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize:
+                                    MediaQuery.of(context).size.height / 35,
+                                fontFamily: "Horizon",
+                              ),
+                              textAlign: TextAlign.start,
+                              alignment: AlignmentDirectional
+                                  .topStart // or Alignment.topLeft
+
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-
-          Container(
-            height: MediaQuery.of(context).size.height*(3/5),
-            width: MediaQuery.of(context).size.width,
+          Flexible(
+              child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Card(
-                    color: Color(0xFFf2f6ff),
-                    elevation: 0,
+                    color: blurredMainColor,
+                    elevation: 3,
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pushNamed(context, '/iron');
                       },
                       child: ListTile(
-                        isThreeLine: true,
+                        //isThreeLine: true,
                         leading: Container(
-                          margin: EdgeInsets.all(10),
-                            child: Icon(Icons.all_inclusive)
-                        ),
-                        subtitle: Text('hafhkalfkljsfjfkasfl'),
-                        title: Text('Ironing',
+                            margin: EdgeInsets.all(10),
+                            child: Icon(Icons.all_inclusive)),
+                        subtitle: Text('Starting at ₹7'),
+                        title: Text(
+                          'Ironing',
                           style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight:FontWeight.bold,
+                            color: mainColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: MediaQuery.of(context).size.height / 35,
                           ),
                         ),
                         trailing: Icon(Icons.navigate_next),
@@ -47,49 +134,64 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white70,
-                    ),
-                    child: Card(
-                      child: GestureDetector(
-                        onTap: (){
-                          Navigator.pushNamed(context, '/wash');
-                        },
-                        child: ListTile(
-                          leading: Icon(Icons.all_inclusive),
-                          title: Text('Washing'),
-                          trailing: Icon(Icons.navigate_next),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Card(
+                    color: blurredMainColor,
+                    elevation: 3,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/wash');
+                      },
+                      child: ListTile(
+                        //isThreeLine: true,
+                        leading: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Icon(Icons.all_inclusive)),
+                        subtitle: Text('Starting at ₹7'),
+                        title: Text(
+                          'Washing',
+                          style: TextStyle(
+                            color: mainColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: MediaQuery.of(context).size.height / 35,
+                          ),
                         ),
+                        trailing: Icon(Icons.navigate_next),
                       ),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white70,
-                    ),
-                    child: Card(
-                      child: GestureDetector(
-                        onTap: (){
-                          Navigator.pushNamed(context, '/dry-clean');
-                        },
-                        child: ListTile(
-                          leading: Icon(Icons.all_inclusive),
-                          title: Text('Dry Cleaning'),
-                          trailing: Icon(Icons.navigate_next),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Card(
+                    color: blurredMainColor,
+                    elevation: 3,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/dry-clean');
+                      },
+                      child: ListTile(
+                        //isThreeLine: true,
+                        leading: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Icon(Icons.all_inclusive)),
+                        subtitle: Text('Starting at ₹7'),
+                        title: Text(
+                          'Dry Cleaning',
+                          style: TextStyle(
+                            color: mainColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: MediaQuery.of(context).size.height / 35,
+                          ),
                         ),
+                        trailing: Icon(Icons.navigate_next),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-          )
-
+          )),
         ],
       ),
     );

@@ -5,6 +5,8 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:laundro/components/check_numeric.dart';
+import 'package:laundro/constants.dart';
 import 'package:laundro/model/user_model.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -22,6 +24,7 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
       Position(latitude: User.lattitude, longitude: User.longitude);
   String locality = '', pincode = '', administrativeArea = '', placeName = '';
   String inputAddress = '', inputLandmark = '';
+  String phoneNumber = '';
 
   SharedPreferences prefs;
   final _firestore = Firestore.instance;
@@ -144,7 +147,7 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
         },
         initialCameraPosition: CameraPosition(
           target: LatLng(User.lattitude, User.longitude),
-          zoom: 15,
+          zoom: 17,
         ),
         onCameraMove: ((_position) => _updatePosition(_position)),
         markers: Set.of(<Marker>[
@@ -206,16 +209,43 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
     );
   }
 
+  Widget _getPhoneNumber() {
+    return Row(
+      children: <Widget>[
+        Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          alignment: Alignment.center,
+          child: TextFormField(
+            scrollPadding: EdgeInsets.all(0),
+            initialValue: inputLandmark,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.all(0),
+              hintText: 'Phone Number',
+            ),
+            onChanged: (value) {
+              setState(() {
+                phoneNumber = value;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _getSubmitButton() {
     return Container(
       height: 50,
       child: RaisedButton(
-        color: Color(0XFF6bacde),
+        color: mainColor,
         onPressed: () {
           try {
             if (inputAddress != null &&
                 inputLandmark != null &&
-                currentPosition != null) {
+                currentPosition != null &&
+                phoneNumber != null &&
+                phoneNumber.length == 10 &&
+                isNumeric(phoneNumber) == true) {
               setState(() {
                 User.primaryAddress = inputAddress;
                 User.landmark = inputLandmark;
@@ -225,6 +255,7 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
                 User.administrativeArea = administrativeArea;
                 User.placeName = placeName;
                 User.pincode = pincode;
+                User.phone = phoneNumber;
               });
               //remove prefs
               prefs.remove('loggedInUserPlaceName');
@@ -237,8 +268,10 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
               prefs.remove('loggedInUserLongitude');
               prefs.remove('loggedInUserAllocatedShopId');
               prefs.remove('loggedInUserAllocatedShopPhoneNumber');
+              prefs.remove('loggedInUserPhoneNumber');
 
               //set preferences
+              prefs.setString('loggedInUserPhoneNumber', User.phone);
               prefs.setString('loggedInUserPlaceName', User.placeName);
               prefs.setString('loggedInUserLocality', User.locality);
               prefs.setString('loggedInUserPincode', User.pincode);
@@ -269,6 +302,7 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
                 'primaryAddress': User.primaryAddress,
                 'landmark': User.landmark,
                 'geoLocation': GeoPoint(User.lattitude, User.longitude),
+                'phoneNumber': User.phone,
                 //'allocatedShopId': User.allocatedShopid,
                 //'allocatedShopPhoneNumber': User.allocatedShopNumber,
               });
@@ -276,13 +310,11 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
             } else {
               Alert(
                   context: context,
-                  title: 'Cant update information.',
-                  desc:
-                      'Please close the application and try again in some time.',
+                  title: 'Please fill all the information correctly',
                   buttons: [
                     DialogButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/login');
+                        Navigator.pop(context);
                       },
                       child: Text(
                         'Okay',
@@ -292,6 +324,7 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
                   ]).show();
             }
           } catch (e) {
+            print(e);
             Alert(
                 context: context,
                 title: 'Cant update information.',
@@ -300,7 +333,7 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
                 buttons: [
                   DialogButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/login');
+                      Navigator.pop(context);
                     },
                     child: Text(
                       'Okay',
@@ -335,7 +368,7 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
               DraggableScrollableSheet(
                 initialChildSize: 0.40,
                 minChildSize: 0.35,
-                maxChildSize: 0.50,
+                maxChildSize: 0.6,
                 builder:
                     (BuildContext context, ScrollController scrollController) {
                   return SingleChildScrollView(
@@ -351,10 +384,10 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
                                 onPressed: () {
                                   getCurrentLocation();
                                 },
-                                backgroundColor: Color(0XFF6bacde),
+                                backgroundColor: mainColor,
                                 child: Icon(
                                   Icons.my_location,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   size: 35,
                                 ),
                               ),
@@ -403,11 +436,16 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
                                     ),
                                     Container(
                                       child: RaisedButton(
-                                        color: Color(0XFF6bacde),
+                                        color: mainColor,
                                         onPressed: () async {
                                           getCustomLocation();
                                         },
-                                        child: Text('CHANGE'),
+                                        child: Text(
+                                          'CHANGE',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -437,6 +475,10 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
                                   height: 10,
                                 ),
                                 _getLandmarkText(),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                _getPhoneNumber(),
                                 SizedBox(
                                   height: 20,
                                 ),

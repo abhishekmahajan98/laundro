@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:awesome_loader/awesome_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:laundro/Data.dart';
 import 'package:laundro/constants.dart';
 import 'package:laundro/model/order_model.dart';
 import 'package:laundro/model/user_model.dart';
@@ -185,9 +186,41 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
     }
   }
 
+  void clearSelectedIroningItems() {
+    for (var i = 0; i < Database.ironingDataItems.length; i++) {
+      if (Database.ironingDataItems[i]['qty'] > 0) {
+        Database.ironingDataItems[i]['qty'] = 0;
+      }
+    }
+  }
+
+  void clearSelectedWashingItems() {
+    for (var i = 0; i < Database.washingDataItems.length; i++) {
+      if (Database.washingDataItems[i]['qty'] > 0) {
+        Database.washingDataItems[i]['qty'] = 0;
+      }
+    }
+  }
+
+  void clearSelectedDryCleaningItems() {
+    for (var i = 0; i < Database.dryCleaningDataItems.length; i++) {
+      if (Database.dryCleaningDataItems[i]['qty'] > 0) {
+        Database.dryCleaningDataItems[i]['qty'] = 0;
+      }
+    }
+  }
+
+  void clearCart() {
+    clearSelectedIroningItems();
+    clearSelectedWashingItems();
+    clearSelectedDryCleaningItems();
+  }
+
   void batchCommit() {
     try {
       batch.commit().whenComplete(() {
+        // clear cart after order added
+        clearCart();
         Navigator.pushReplacementNamed(context, '/order_confirmation_page');
       }).catchError((err) {
         print('failed');
@@ -205,8 +238,6 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
     checkDryCleaningOrder();
     batchCommit();
     print('batch commited');
-
-    //TODO: CLEAR CART AFTER COMMIT
   }
 
   @override

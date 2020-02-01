@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:laundro/model/screen_model.dart';
 
 class OrderConfirmationPage extends StatefulWidget {
   @override
@@ -35,6 +36,7 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
           FlatButton(
             onPressed: () {
               Navigator.pop(context);
+              HomeIdx.selectedIndex = 0;
             },
             child: Text('Go to home page'),
           )

@@ -15,78 +15,123 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
+  FirebaseUser loggedInUser;
   String email, password;
   bool showSpinner = false;
   SharedPreferences prefs;
-  FirebaseUser loggedInUser;
+  @override
+  void initState() {
+    super.initState();
+    instantiateSP();
+  }
 
-  Widget _buildEmailTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  void instantiateSP() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  Widget _buildLogo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          'Email',
-          style: kLabelStyle,
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {
-              email = value;
-            },
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 70),
+          child: Text(
+            'GIMME',
             style: TextStyle(
               color: Colors.white,
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
-                color: Colors.white,
-              ),
-              labelText: 'Email',
-              labelStyle: kLabelStyle,
+              fontSize: MediaQuery.of(context).size.height / 25,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildEmailTF() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        onChanged: (value) {
+          email = value;
+        },
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.email,
+            color: mainColor,
+          ),
+          labelText: 'E-mail',
+        ),
+      ),
     );
   }
 
   Widget _buildPasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Password',
-          style: kLabelStyle,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
+        obscureText: true,
+        keyboardType: TextInputType.emailAddress,
+        onChanged: (value) {
+          email = value;
+        },
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.lock,
+            color: mainColor,
+          ),
+          labelText: 'Password',
         ),
-        SizedBox(height: 10.0),
+      ),
+    );
+  }
+
+  Widget _buildRegisterButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
         Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            obscureText: true,
-            onChanged: (value) {
-              password = value;
+          height: 1.4 * (MediaQuery.of(context).size.height / 20),
+          width: 5 * (MediaQuery.of(context).size.width / 10),
+          margin: EdgeInsets.only(bottom: 20, top: 10),
+          child: RaisedButton(
+            elevation: 5.0,
+            onPressed: () async {
+              setState(() {
+                showSpinner = true;
+              });
+              try {
+                final newUser = await _auth.createUserWithEmailAndPassword(
+                    email: email, password: password);
+                if (newUser != null) {
+                  final firebaseUser = await _auth.currentUser();
+                  loggedInUser = firebaseUser;
+                  User.uid = loggedInUser.uid;
+                  User.email = loggedInUser.email;
+                  prefs = await SharedPreferences.getInstance();
+                  prefs.setString('loggedInUserEmail', User.email);
+                  prefs.setString('loggedInUserUid', User.uid);
+                  Navigator.pushReplacementNamed(context, "/initial_details");
+                }
+              } catch (e) {
+                print(e);
+              }
+              setState(() {
+                showSpinner = false;
+              });
             },
-            style: TextStyle(
-              color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
             ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.lock,
+            color: mainColor,
+            child: Text(
+              'Register',
+              style: TextStyle(
                 color: Colors.white,
+                letterSpacing: 1.5,
+                fontSize: MediaQuery.of(context).size.height / 40,
               ),
-              labelText: 'Password',
-              labelStyle: kLabelStyle,
             ),
           ),
         ),
@@ -94,51 +139,41 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  Widget _buildRegisterBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () async {
-          setState(() {
-            showSpinner = true;
-          });
-          try {
-            final newUser = await _auth.createUserWithEmailAndPassword(
-                email: email, password: password);
-            if (newUser != null) {
-              final firebaseUser = await _auth.currentUser();
-              loggedInUser = firebaseUser;
-              User.uid = loggedInUser.uid;
-              User.email = loggedInUser.email;
-              prefs = await SharedPreferences.getInstance();
-              prefs.setString('loggedInUserEmail', User.email);
-              prefs.setString('loggedInUserUid', User.uid);
-              Navigator.pushReplacementNamed(context, "/initial_details");
-            }
-          } catch (e) {
-            print(e);
-          }
-          setState(() {
-            showSpinner = false;
-          });
-        },
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Colors.white,
-        child: Text(
-          'SIGN-UP',
-          style: TextStyle(
-            color: Color(0xFF527DAA),
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
+  Widget _buildContainer() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        ClipRRect(
+          borderRadius: new BorderRadius.all(Radius.circular(20)),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width * 0.8,
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Register',
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height / 30,
+                      ),
+                    ),
+                  ],
+                ),
+                _buildEmailTF(),
+                _buildPasswordTF(),
+                _buildRegisterButton(),
+              ],
+            ),
           ),
-        ),
-      ),
+        )
+      ],
     );
   }
 
@@ -146,50 +181,32 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
+      backgroundColor: Color(0xfff2f3f7),
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color:Color(0XFF6bacde),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height * 0.7,
+              width: MediaQuery.of(context).size.width,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: mainColor,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: const Radius.circular(70),
+                    bottomRight: const Radius.circular(70),
                   ),
                 ),
-                Container(
-                  height: double.infinity,
-                  child: Container(
-                    margin: EdgeInsets.all(25),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Register',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 30.0),
-                        _buildEmailTF(),
-                        SizedBox(
-                          height: 30.0,
-                        ),
-                        _buildPasswordTF(),
-                        _buildRegisterBtn(),
-                      ],
-                    ),
-                  ),
-                )
-              ],
+              ),
             ),
-          ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _buildLogo(),
+                _buildContainer(),
+              ],
+            )
+          ],
         ),
       ),
     );

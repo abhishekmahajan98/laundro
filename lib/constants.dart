@@ -91,3 +91,6 @@ const kteamMemberName = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 20,
 );
+
+const blurredMainColor = Color(0xFFf2f6ff);
+const mainColor = Color(0xff2470c7);
