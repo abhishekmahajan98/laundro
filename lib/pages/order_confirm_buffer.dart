@@ -62,8 +62,8 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
         'clothList': clothList,
         'totalClothes': Order.ironingNumber.toString(),
         'totalOrderPrice': (Order.ironingCost + ironingDeliveryCost).toString(),
-        'orderCommission': (ironingDeliveryCost / 2).toString(),
-        'orderDeliveryPricePayable': (ironingDeliveryCost / 2).toString(),
+        'orderCommission':
+            (0.15 * (Order.ironingCost + ironingDeliveryCost)).toString(),
         'orderDeliveryPrice': ironingDeliveryCost.toString(),
         'orderStatus': 'confirmed',
         'orderSubtotal': Order.ironingCost.toString(),
@@ -112,8 +112,8 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
         'clothList': clothList,
         'totalClothes': Order.washingNumber.toString(),
         'totalOrderPrice': (Order.washingCost + washingDeliveryCost).toString(),
-        'orderCommission': (washingDeliveryCost / 2).toString(),
-        'orderDeliveryPricePayable': (washingDeliveryCost / 2).toString(),
+        'orderCommission':
+            (0.15 * (Order.washingCost + washingDeliveryCost)).toString(),
         'orderDeliveryPrice': washingDeliveryCost.toString(),
         'orderStatus': 'confirmed',
         'orderSubtotal': Order.washingCost.toString(),
@@ -163,8 +163,9 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
         'totalClothes': Order.dryCleaningNumber.toString(),
         'totalOrderPrice':
             (Order.dryCleaningCost + dryCleaningDeliveryCost).toString(),
-        'orderCommission': (dryCleaningDeliveryCost / 2).toString(),
-        'orderDeliveryPricePayable': (dryCleaningDeliveryCost / 2).toString(),
+        'orderCommission':
+            (0.15 * (Order.dryCleaningCost + dryCleaningDeliveryCost))
+                .toString(),
         'orderDeliveryPrice': dryCleaningDeliveryCost.toString(),
         'orderStatus': 'confirmed',
         'orderSubtotal': Order.dryCleaningCost.toString(),

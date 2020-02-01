@@ -3,6 +3,7 @@ import 'package:laundro/constants.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class HomeScreen extends StatelessWidget {
+  final timeNow = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -59,7 +60,11 @@ class HomeScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Text(
-                            'Good Morning,',
+                            timeNow.hour < 12
+                                ? 'Good Morning,'
+                                : timeNow.hour < 16
+                                    ? 'Good Afternoon'
+                                    : 'Good Evening',
                             style: TextStyle(
                               fontSize: MediaQuery.of(context).size.height / 30,
                               fontWeight: FontWeight.bold,

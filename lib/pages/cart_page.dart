@@ -405,7 +405,7 @@ class _CartPageState extends State<CartPage> {
                   }
                 },
                 child: Text(
-                  'Proceed to Payment',
+                  'Proceed to Checkout',
                   style: kLabelStyle,
                 ),
               ),

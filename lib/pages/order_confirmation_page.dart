@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:laundro/constants.dart';
 import 'package:laundro/model/screen_model.dart';
 
 class OrderConfirmationPage extends StatefulWidget {
@@ -22,23 +23,49 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          Text(
+            'Order Placed Successfully',
+            style: TextStyle(
+              color: mainColor,
+              fontSize: MediaQuery.of(context).size.height / 35,
+            ),
+          ),
           Flexible(
-            child: FlareActor(
-              "images/flare/SuccessCheck.flr",
-              alignment: Alignment.center,
-              fit: BoxFit.contain,
-              animation: "Untitled",
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: FlareActor(
+                "images/flare/SuccessCheck.flr",
+                alignment: Alignment.center,
+                fit: BoxFit.contain,
+                animation: "Untitled",
+              ),
             ),
           ),
           SizedBox(
             height: 40,
           ),
-          FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-              HomeIdx.selectedIndex = 0;
-            },
-            child: Text('Go to home page'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              RaisedButton(
+                color: mainColor,
+                onPressed: () {
+                  Navigator.pop(context);
+                  HomeIdx.selectedIndex = 0;
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                child: Text(
+                  'Okay',
+                  style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                    fontSize: MediaQuery.of(context).size.height / 40,
+                  ),
+                ),
+              ),
+            ],
           )
         ],
       ),
