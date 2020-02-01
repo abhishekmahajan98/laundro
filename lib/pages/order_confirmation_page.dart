@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:laundro/constants.dart';
 import 'package:laundro/model/screen_model.dart';
-
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class OrderConfirmationPage extends StatefulWidget {
   @override
   _OrderConfirmationPageState createState() => _OrderConfirmationPageState();
@@ -41,8 +41,33 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
               ),
             ),
           ),
+          Text("Please Rate You Experience",
+          style: TextStyle(
+              color: mainColor,
+              fontSize: MediaQuery.of(context).size.height / 35,
+            ),
+            ),
+            SizedBox(
+            height: MediaQuery.of(context).size.height/30,
+          ),
+           RatingBar(
+              initialRating: 0,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                //TODO uppload rating to firebase
+                print(rating);
+              },
+            ),
           SizedBox(
-            height: 40,
+            height: MediaQuery.of(context).size.height/30,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +91,8 @@ class _OrderConfirmationPageState extends State<OrderConfirmationPage> {
                 ),
               ),
             ],
-          )
+          ),
+         
         ],
       ),
     );
