@@ -13,6 +13,7 @@ class _AboutPageState extends State<AboutPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('About us'),
+        //elevation: 0.0,
         centerTitle: true,
         backgroundColor: mainColor,
       ),
@@ -25,15 +26,18 @@ class _AboutPageState extends State<AboutPage> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: Color(0XFF6bacde),
+                color: mainColor,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset(
-                    'images/app_logo/LOGO1.png',
-                    height: 100,
-                    width: 400,
+                  Text(
+                    'GIMME LAUNDRY',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.height / 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -58,13 +62,13 @@ class _AboutPageState extends State<AboutPage> {
                     padding:
                         const EdgeInsets.only(left: 30, right: 30, top: 10),
                     child: Container(
-                      height: 150,
+                      height: MediaQuery.of(context).size.height * 0.25,
                       decoration: BoxDecoration(
                           //color: Colors.white,
                           //borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
                       child: Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis hendrerit dolor magna eget. Sed felis eget velit aliquet. A cras semper auctor neque vitae. A lacus vestibulum sed arcu.",
+                        "We are a Laundry Tech Startup focusing on enabling the local businessmen in laundry business in upskilling them and getting them familiar with using technology for the means of business. We cherry pick the best laundry service in every area and induct them into our application as business partners and connect them with custoners for a smooth and efficient laundry service.",
                         style: kparagraphTextStyle,
                         textAlign: TextAlign.left,
                       ),

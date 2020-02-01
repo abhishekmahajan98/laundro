@@ -19,7 +19,7 @@ class _ContactUsState extends State<ContactUs> {
       appBar: AppBar(
         title: Text('Queries'),
         centerTitle: true,
-        backgroundColor: Color(0XFF6bacde),
+        backgroundColor: mainColor,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -60,11 +60,12 @@ class _ContactUsState extends State<ContactUs> {
               width: 300,
               height: 50,
               child: RaisedButton(
-                color: Color(0XFF6bacde),
-                child: Text(
-                  "Send",
-                  style: kCategoryTextStyle,
-                ),
+                color: mainColor,
+                child: Text("Send",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.height / 35,
+                    )),
                 onPressed: () {
                   if (message != "") {
                     print(message);

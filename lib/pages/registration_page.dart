@@ -54,7 +54,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         onChanged: (value) {
-          email = value;
+          setState(() {
+            email = value;
+          });
         },
         decoration: InputDecoration(
           prefixIcon: Icon(
@@ -74,7 +76,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         obscureText: true,
         keyboardType: TextInputType.emailAddress,
         onChanged: (value) {
-          email = value;
+          setState(() {
+            password = value;
+          });
         },
         decoration: InputDecoration(
           prefixIcon: Icon(

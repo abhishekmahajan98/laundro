@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laundro/constants.dart';
 
 class ClothDetails extends StatelessWidget {
   ClothDetails({
@@ -12,6 +13,7 @@ class ClothDetails extends StatelessWidget {
       appBar: AppBar(
         title: Text('Laundro'),
         centerTitle: true,
+        backgroundColor: mainColor,
       ),
       body: ListView(
         children: clothList,

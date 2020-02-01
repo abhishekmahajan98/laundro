@@ -137,7 +137,9 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         onChanged: (value) {
-          email = value;
+          setState(() {
+            email = value;
+          });
         },
         decoration: InputDecoration(
           prefixIcon: Icon(
@@ -157,7 +159,9 @@ class _LoginScreenState extends State<LoginScreen> {
         obscureText: true,
         keyboardType: TextInputType.emailAddress,
         onChanged: (value) {
-          password = value;
+          setState(() {
+            password = value;
+          });
         },
         decoration: InputDecoration(
           prefixIcon: Icon(

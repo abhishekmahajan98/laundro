@@ -40,7 +40,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         onChanged: (value) {
-          email = value;
+          setState(() {
+            email = value;
+          });
         },
         decoration: InputDecoration(
           prefixIcon: Icon(

@@ -5,6 +5,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:laundro/constants.dart';
 import 'package:laundro/model/user_model.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -209,7 +210,7 @@ class _UserLocationPageState extends State<UserLocationPage> {
     return Container(
       height: 50,
       child: RaisedButton(
-        color: Color(0XFF6bacde),
+        color: mainColor,
         onPressed: () {
           try {
             if (inputAddress != null &&
@@ -344,10 +345,10 @@ class _UserLocationPageState extends State<UserLocationPage> {
                                 onPressed: () {
                                   getCurrentLocation();
                                 },
-                                backgroundColor: Color(0XFF6bacde),
+                                backgroundColor: mainColor,
                                 child: Icon(
                                   Icons.my_location,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   size: 35,
                                 ),
                               ),
@@ -396,11 +397,16 @@ class _UserLocationPageState extends State<UserLocationPage> {
                                     ),
                                     Container(
                                       child: RaisedButton(
-                                        color: Color(0XFF6bacde),
+                                        color: mainColor,
                                         onPressed: () async {
                                           getCustomLocation();
                                         },
-                                        child: Text('CHANGE'),
+                                        child: Text(
+                                          'CHANGE',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],

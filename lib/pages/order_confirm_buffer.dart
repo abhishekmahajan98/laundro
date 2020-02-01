@@ -243,7 +243,7 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0XFF6bacde),
+      backgroundColor: mainColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

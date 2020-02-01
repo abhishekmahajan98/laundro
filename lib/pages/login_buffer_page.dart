@@ -3,6 +3,7 @@ import 'package:awesome_loader/awesome_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:laundro/constants.dart';
+import 'package:laundro/model/screen_model.dart';
 import 'package:laundro/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -61,6 +62,7 @@ class _BufferPageState extends State<BufferPage> {
       prefs.setString('loggedInUserLandmark', User.landmark);
       prefs.setDouble('loggedInUserLattitude', User.lattitude);
       prefs.setDouble('loggedInUserLongitude', User.longitude);
+      HomeIdx.selectedIndex = 0;
       navigateToHome();
     } else {
       navigateToDetails();
