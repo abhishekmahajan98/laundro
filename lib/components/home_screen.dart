@@ -54,11 +54,12 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
                           child: Text(
                             timeNow.hour < 12
                                 ? 'Good Morning,'
@@ -74,11 +75,12 @@ class HomeScreen extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 10, left: 20, right: 20, bottom: 40),
+                              top: 10, left: 20, right: 20, bottom: 20),
                           child: RotateAnimatedTextKit(
                               displayFullTextOnTap: true,
                               totalRepeatCount: 40,
-                              transitionHeight: 50,
+                              transitionHeight:
+                                  MediaQuery.of(context).size.height / 15,
                               isRepeatingAnimation: true,
                               text: [
                                 "How may we service you today?",
