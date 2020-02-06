@@ -48,7 +48,9 @@ class _BufferPageState extends State<BufferPage> {
       GeoPoint p = document.data['geoLocation'];
       User.lattitude = p.latitude;
       User.longitude = p.longitude;
-
+      User.selectedShopId = document.data['selectedShopId'];
+      User.selectedShopName = document.data['selectedShopName'];
+      User.selectedShopNumber = document.data['selectedShopPhoneNumber'];
       prefs.setString('loggedInUserDisplayName', User.displayName);
       prefs.setString('loggedInUserPhoneNumber', User.phone);
       prefs.setString('loggedInUserDOB', User.dob.toString());
@@ -62,6 +64,10 @@ class _BufferPageState extends State<BufferPage> {
       prefs.setString('loggedInUserLandmark', User.landmark);
       prefs.setDouble('loggedInUserLattitude', User.lattitude);
       prefs.setDouble('loggedInUserLongitude', User.longitude);
+      prefs.setString('loggedInUserSelectedShopId', User.selectedShopId);
+      prefs.setString(
+          'loggedInUserSelectedShopPhoneNumber', User.selectedShopNumber);
+      prefs.setString('loggedInUserSelectedShopName', User.selectedShopName);
       HomeIdx.selectedIndex = 0;
       navigateToHome();
     } else {

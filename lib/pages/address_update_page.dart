@@ -256,6 +256,9 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
                 User.placeName = placeName;
                 User.pincode = pincode;
                 User.phone = phoneNumber;
+                User.selectedShopId = '';
+                User.selectedShopName = '';
+                User.selectedShopNumber = '';
               });
               //remove prefs
               prefs.remove('loggedInUserPlaceName');
@@ -282,12 +285,6 @@ class _AddressUpdatePageState extends State<AddressUpdatePage> {
               prefs.setString('loggedInUserLandmark', User.landmark);
               prefs.setDouble('loggedInUserLattitude', User.lattitude);
               prefs.setDouble('loggedInUserLongitude', User.longitude);
-              // prefs.setString(
-              //   'loggedInUserAllocatedShopId', User.allocatedShopid);
-              //prefs.setString('loggedInUserAllocatedShopPhoneNumber',
-              //  User.allocatedShopNumber);
-              //print('shop id:' + User.allocatedShopid);
-              //update the DB
               _firestore.document('users/' + User.uid).updateData({
                 'uid': User.uid,
                 'email': User.email,

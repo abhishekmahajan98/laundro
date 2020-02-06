@@ -9,11 +9,6 @@ import 'package:laundro/model/user_model.dart';
 import 'package:uuid/uuid.dart';
 
 class OrderConfirmBuffer extends StatefulWidget {
-  OrderConfirmBuffer(
-      {@required this.allocatedShopId,
-      @required this.allocatedShopPhoneNumber});
-  final String allocatedShopId;
-  final String allocatedShopPhoneNumber;
   @override
   _OrderConfirmBufferState createState() => _OrderConfirmBufferState();
 }
@@ -54,8 +49,9 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
         'customerName': User.displayName,
         'customerPhoneNumber': User.phone,
         'customerUid': User.uid,
-        'shopId': widget.allocatedShopId,
-        'shopPhoneNumber': widget.allocatedShopPhoneNumber,
+        'shopId': User.selectedShopId,
+        'shopPhoneNumber': User.selectedShopNumber,
+        'shopPhoneName': User.selectedShopName,
         'subscription': "none",
         'subscriptionId': "none",
         'isPickedUp': false,
@@ -81,6 +77,7 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
         'geoLocation': GeoPoint(User.lattitude, User.longitude),
         'paymentMethod': Order.paymentType,
         'serviceName': 'Ironing',
+        'commissionSettled': false,
       });
     }
   }
@@ -104,8 +101,9 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
         'customerName': User.displayName,
         'customerPhoneNumber': User.phone,
         'customerUid': User.uid,
-        'shopId': widget.allocatedShopId,
-        'shopPhoneNumber': widget.allocatedShopPhoneNumber,
+        'shopId': User.selectedShopId,
+        'shopPhoneNumber': User.selectedShopNumber,
+        'shopPhoneName': User.selectedShopName,
         'subscription': "none",
         'subscriptionId': "none",
         'isPickedUp': false,
@@ -131,6 +129,7 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
         'primaryAddress': User.primaryAddress,
         'paymentMethod': Order.paymentType,
         'serviceName': 'Washing',
+        'commissionSettled': false,
       });
     }
   }
@@ -150,40 +149,45 @@ class _OrderConfirmBufferState extends State<OrderConfirmBuffer> {
       String orderid = 'DC' + timeId + '-' + randomId + '-' + customerIdPart;
       String pickupOtp = getOtp(1000, 10000).toString();
       String deliveryOtp = getOtp(1000, 10000).toString();
-      batch.setData(_firestore.collection('orders').document(orderid), {
-        'customerName': User.displayName,
-        'customerPhoneNumber': User.phone,
-        'customerUid': User.uid,
-        'shopId': widget.allocatedShopId,
-        'shopPhoneNumber': widget.allocatedShopPhoneNumber,
-        'subscription': "none",
-        'subscriptionId': "none",
-        'isPickedUp': false,
-        'clothList': clothList,
-        'totalClothes': Order.dryCleaningNumber.toString(),
-        'totalOrderPrice':
-            (Order.dryCleaningCost + dryCleaningDeliveryCost).toString(),
-        'orderCommission':
-            (0.15 * (Order.dryCleaningCost + dryCleaningDeliveryCost))
-                .toString(),
-        'orderDeliveryPrice': dryCleaningDeliveryCost.toString(),
-        'orderStatus': 'confirmed',
-        'orderSubtotal': Order.dryCleaningCost.toString(),
-        'orderTimestamp': timeNow,
-        'orderid': orderid,
-        'pickupOtp': pickupOtp.toString(),
-        'deliveryOtp': deliveryOtp.toString(),
-        'paymentId': 'not applicable',
-        'locality': User.locality,
-        'administrativeArea': User.administrativeArea,
-        'placeName': User.placeName,
-        'pincode': User.pincode,
-        'primaryAddress': User.primaryAddress,
-        'landmark': User.landmark,
-        'geoLocation': GeoPoint(User.lattitude, User.longitude),
-        'paymentMethod': Order.paymentType,
-        'serviceName': 'Dry Cleaning',
-      });
+      batch.setData(
+        _firestore.collection('orders').document(orderid),
+        {
+          'customerName': User.displayName,
+          'customerPhoneNumber': User.phone,
+          'customerUid': User.uid,
+          'shopId': User.selectedShopId,
+          'shopPhoneNumber': User.selectedShopNumber,
+          'shopPhoneName': User.selectedShopName,
+          'subscription': "none",
+          'subscriptionId': "none",
+          'isPickedUp': false,
+          'clothList': clothList,
+          'totalClothes': Order.dryCleaningNumber.toString(),
+          'totalOrderPrice':
+              (Order.dryCleaningCost + dryCleaningDeliveryCost).toString(),
+          'orderCommission':
+              (0.15 * (Order.dryCleaningCost + dryCleaningDeliveryCost))
+                  .toString(),
+          'orderDeliveryPrice': dryCleaningDeliveryCost.toString(),
+          'orderStatus': 'confirmed',
+          'orderSubtotal': Order.dryCleaningCost.toString(),
+          'orderTimestamp': timeNow,
+          'orderid': orderid,
+          'pickupOtp': pickupOtp.toString(),
+          'deliveryOtp': deliveryOtp.toString(),
+          'paymentId': 'not applicable',
+          'locality': User.locality,
+          'administrativeArea': User.administrativeArea,
+          'placeName': User.placeName,
+          'pincode': User.pincode,
+          'primaryAddress': User.primaryAddress,
+          'landmark': User.landmark,
+          'geoLocation': GeoPoint(User.lattitude, User.longitude),
+          'paymentMethod': Order.paymentType,
+          'serviceName': 'Dry Cleaning',
+          'commissionSettled': false,
+        },
+      );
     }
   }
 

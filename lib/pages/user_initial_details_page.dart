@@ -63,7 +63,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           });
         },
         decoration: InputDecoration(
-          labelText: 'E-mail',
+          labelText: 'Name',
         ),
       ),
     );

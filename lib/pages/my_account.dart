@@ -35,7 +35,7 @@ class _MyAccountState extends State<MyAccount> {
         backgroundColor: mainColor,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(20, 50, 20, 0),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,53 +94,44 @@ class _MyAccountState extends State<MyAccount> {
               child: ListView(
                 shrinkWrap: true,
                 children: <Widget>[
-                  Card(
-                    elevation: 2,
-                    child: MaterialButton(
-                      height: MediaQuery.of(context).size.height / 9.0,
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/address_update_page');
-                      },
-                      child: AccountPageListTile(
-                          text: 'Information Update', icondata: Icons.person),
-                    ),
+                  AccountPageListItem(
+                    title: 'Your Orders',
+                    iconData: Icons.shopping_basket,
+                    onPressedFunc: () {
+                      Navigator.pushNamed(context, '/previous_orders_page');
+                    },
                   ),
-                  Card(
-                    elevation: 2,
-                    child: MaterialButton(
-                      height: MediaQuery.of(context).size.height / 9.0,
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/previous_orders_page');
-                      },
-                      child: AccountPageListTile(
-                          text: 'Your Orders', icondata: Icons.shopping_basket),
-                    ),
+                  AccountPageListItem(
+                    title: 'Information Update',
+                    iconData: Icons.person,
+                    onPressedFunc: () {
+                      Navigator.pushNamed(context, '/address_update_page');
+                    },
                   ),
-                  Card(
-                    elevation: 2,
-                    child: MaterialButton(
-                      height: MediaQuery.of(context).size.height / 9.0,
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/about_page');
-                      },
-                      child: AccountPageListTile(
-                          text: 'About Us', icondata: Icons.info),
-                    ),
+                  AccountPageListItem(
+                    title: 'Change Shop',
+                    iconData: Icons.local_laundry_service,
+                    onPressedFunc: () {
+                      Navigator.pushNamed(context, '/shop_change_page');
+                    },
                   ),
-                  Card(
-                    elevation: 2,
-                    child: MaterialButton(
-                      height: MediaQuery.of(context).size.height / 9.0,
-                      onPressed: () {
-                        prefs.clear();
-                        _auth.signOut();
-                        googleSignIn.signOut();
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            "/login", (Route<dynamic> route) => false);
-                      },
-                      child: AccountPageListTile(
-                          text: 'Logout', icondata: Icons.exit_to_app),
-                    ),
+                  AccountPageListItem(
+                    title: 'About Us',
+                    iconData: Icons.info,
+                    onPressedFunc: () {
+                      Navigator.pushNamed(context, '/about_page');
+                    },
+                  ),
+                  AccountPageListItem(
+                    title: 'Logout',
+                    iconData: Icons.exit_to_app,
+                    onPressedFunc: () {
+                      prefs.clear();
+                      _auth.signOut();
+                      googleSignIn.signOut();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          "/login", (Route<dynamic> route) => false);
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 70),
@@ -188,7 +179,7 @@ class _MyAccountState extends State<MyAccount> {
 class AccountPageListTile extends StatelessWidget {
   final String text;
   final IconData icondata;
-  AccountPageListTile({Key key, this.text, this.icondata}) : super(key: key);
+  AccountPageListTile({Key key, this.text, this.icondata});
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -203,6 +194,40 @@ class AccountPageListTile extends StatelessWidget {
       trailing: Icon(
         icondata,
         size: 35,
+      ),
+    );
+  }
+}
+
+class AccountPageListItem extends StatelessWidget {
+  AccountPageListItem(
+      {@required this.onPressedFunc,
+      @required this.iconData,
+      @required this.title});
+  final Function onPressedFunc;
+  final IconData iconData;
+  final String title;
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      child: MaterialButton(
+        height: MediaQuery.of(context).size.height / 9.0,
+        onPressed: onPressedFunc,
+        child: ListTile(
+          contentPadding: EdgeInsets.all(0),
+          leading: Text(
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          trailing: Icon(
+            iconData,
+            size: 35,
+          ),
+        ),
       ),
     );
   }

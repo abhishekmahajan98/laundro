@@ -6,11 +6,6 @@ import 'package:laundro/model/user_model.dart';
 import 'package:laundro/pages/order_confirm_buffer.dart';
 
 class ShowPaymentBottom extends StatelessWidget {
-  ShowPaymentBottom(
-      {@required this.allocatedShopId,
-      @required this.allocatedShopPhoneNumber});
-  final String allocatedShopId;
-  final String allocatedShopPhoneNumber;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -126,10 +121,7 @@ class ShowPaymentBottom extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => OrderConfirmBuffer(
-                      allocatedShopId: allocatedShopId,
-                      allocatedShopPhoneNumber: allocatedShopPhoneNumber,
-                    ),
+                    builder: (context) => OrderConfirmBuffer(),
                   ),
                 );
               },
