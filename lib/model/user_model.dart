@@ -14,5 +14,8 @@ class User {
   static String placeName = '';
   static String landmark = '';
   static String gender = 'male';
+  static String selectedShopName = '';
+  static String selectedShopNumber = '';
+  static String selectedShopId = '';
   static DateTime dob;
 }

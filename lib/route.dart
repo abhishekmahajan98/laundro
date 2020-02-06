@@ -8,6 +8,8 @@ import 'package:laundro/pages/my_account.dart';
 import 'package:laundro/pages/order_confirmation_page.dart';
 import 'package:laundro/pages/otp_page.dart';
 import 'package:laundro/pages/password_reset_page.dart';
+import 'package:laundro/pages/shop_change_page.dart';
+import 'package:laundro/pages/shop_select_page.dart';
 import 'package:laundro/pages/user_initial_details_page.dart';
 import 'package:laundro/pages/user_initial_location_page.dart';
 import 'package:laundro/pages/your_orders_page.dart';
@@ -40,5 +42,7 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     '/order_confirmation_page': (context) => OrderConfirmationPage(),
     '/address_update_page': (context) => AddressUpdatePage(),
     '/otp_page': (context) => OtpPage(),
+    '/shop_select_page': (context) => ShopSelectPage(),
+    '/shop_change_page': (context) => ShopChangePage(),
   };
 }

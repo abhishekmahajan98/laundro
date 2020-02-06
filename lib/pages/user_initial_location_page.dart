@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,7 +8,6 @@ import 'package:laundro/constants.dart';
 import 'package:laundro/model/user_model.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserLocationPage extends StatefulWidget {
   @override
@@ -23,24 +21,16 @@ class _UserLocationPageState extends State<UserLocationPage> {
   String locality = '', pincode = '', administrativeArea = '', placeName = '';
   String inputAddress = '', inputLandmark = '';
 
-  SharedPreferences prefs;
-  final _firestore = Firestore.instance;
-
   @override
   void initState() {
     super.initState();
     setState(() {
       showSpinner = true;
       getCurrentLocation();
-      instantiateSP();
     });
     setState(() {
       showSpinner = false;
     });
-  }
-
-  void instantiateSP() async {
-    prefs = await SharedPreferences.getInstance();
   }
 
   void mapCreated(controller) {
@@ -226,47 +216,9 @@ class _UserLocationPageState extends State<UserLocationPage> {
                 User.placeName = placeName;
                 User.pincode = pincode;
               });
-              //get the closest shop
-              //getClosestShop().then((val) {
-              //set preferences
-              prefs.setString('loggedInUserDisplayName', User.displayName);
-              prefs.setString('loggedInUserPhoneNumber', User.phone);
-              prefs.setString('loggedInUserDOB', User.dob.toString());
-              prefs.setString('loggedInUserGender', User.gender);
-              prefs.setString('loggedInUserPlaceName', User.placeName);
-              prefs.setString('loggedInUserLocality', User.locality);
-              prefs.setString('loggedInUserPincode', User.pincode);
-              prefs.setString(
-                  'loggedInUserAdminstrativeArea', User.administrativeArea);
-              prefs.setString(
-                  'loggedInUserPrimaryAddress', User.primaryAddress);
-              prefs.setString('loggedInUserLandmark', User.landmark);
-              prefs.setDouble('loggedInUserLattitude', User.lattitude);
-              prefs.setDouble('loggedInUserLongitude', User.longitude);
-              //prefs.setString(
-              // 'loggedInUserAllocatedShopId', User.allocatedShopid);
-              //prefs.setString('loggedInUserAllocatedShopPhoneNumber',
-              // User.allocatedShopNumber);
-              //print('shop id:' + User.allocatedShopid);
-              //update the DB
-              _firestore.document('users/' + User.uid).setData({
-                'uid': User.uid,
-                'email': User.email,
-                'displayName': User.displayName,
-                'phoneNumber': User.phone,
-                'gender': User.gender,
-                'dob': User.dob.toString(),
-                'placeName': User.placeName,
-                'locality': User.locality,
-                'administrativeArea': User.administrativeArea,
-                'pincode': User.pincode,
-                'primaryAddress': User.primaryAddress,
-                'landmark': User.landmark,
-                'geoLocation': GeoPoint(User.lattitude, User.longitude),
-                //'allocatedShopId': User.allocatedShopid,
-                //'allocatedShopPhoneNumber': User.allocatedShopNumber,
-              });
-              Navigator.pushReplacementNamed(context, '/home');
+
+              //Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pushReplacementNamed(context, '/shop_select_page');
             } else {
               Alert(
                   context: context,

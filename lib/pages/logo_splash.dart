@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:laundro/Data.dart';
 import 'package:laundro/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:laundro/model/user_model.dart';
@@ -14,6 +16,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  final _firestore = Firestore.instance;
   SharedPreferences prefs;
   @override
   void initState() {
@@ -32,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (prefs.containsKey('loggedInUserEmail')) {
       try {
         User.email = prefs.getString('loggedInUserEmail');
-        User.uid = prefs.getString('loggedInUserUid');
+        User.uid = prefs.getString('loggedInUserUserid');
         User.phone = prefs.getString('loggedInUserPhoneNumber');
         User.displayName = prefs.getString('loggedInUserDisplayName');
         User.gender = prefs.getString('loggedInUserGender');
@@ -46,6 +49,17 @@ class _SplashScreenState extends State<SplashScreen> {
         User.pincode = prefs.getString('loggedInUserPincode');
         User.lattitude = prefs.getDouble('loggedInUserLattitude');
         User.longitude = prefs.getDouble('loggedInUserLongitude');
+        User.selectedShopId = prefs.getString('loggedInUserSelectedShopId');
+        User.selectedShopName = prefs.getString('loggedInUserSelectedShopName');
+        User.selectedShopNumber =
+            prefs.getString('loggedInUserSelectedShopPhoneNumber');
+        DocumentSnapshot ds = await _firestore
+            .collection('priceList')
+            .document(User.selectedShopId)
+            .get();
+        Database.ironingDataItems = ds.data['ironingPrices'];
+        Database.washingDataItems = ds.data['washingPrices'];
+        Database.dryCleaningDataItems = ds.data['dryCleaningPrices'];
         Navigator.pushReplacementNamed(context, '/home');
         //Navigator.pushReplacementNamed(context, '/test_page');
       } catch (e) {
@@ -80,14 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'GIMME',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: MediaQuery.of(context).size.height / 25,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Image.asset('images/app_logo/GimmeLogo.png'),
                 ],
               ),
             ),

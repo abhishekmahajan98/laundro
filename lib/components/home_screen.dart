@@ -32,15 +32,17 @@ class HomeScreen extends StatelessWidget {
                           Text(
                             'GIMME',
                             style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize:
-                                    MediaQuery.of(context).size.height / 40),
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: MediaQuery.of(context).size.height / 40,
+                              fontFamily: "Open Sans",
+                            ),
                           ),
                           FloatingActionButton(
                             backgroundColor: blurredMainColor,
                             onPressed: () {
                               Navigator.pushNamed(context, '/otp_page');
+                              print(timeNow.toString());
                             },
                             child: Text(
                               'OTP',
@@ -62,14 +64,17 @@ class HomeScreen extends StatelessWidget {
                               horizontal: 20, vertical: 20),
                           child: Text(
                             timeNow.hour < 12
-                                ? 'Good Morning,'
+                                ? timeNow.hour < 6
+                                    ? 'Insomnia over dirty clothes?'
+                                    : 'Good Morning,'
                                 : timeNow.hour < 16
-                                    ? 'Good Afternoon'
-                                    : 'Good Evening',
+                                    ? 'Good Afternoon,'
+                                    : 'Good Evening,',
                             style: TextStyle(
                               fontSize: MediaQuery.of(context).size.height / 30,
-                              fontWeight: FontWeight.bold,
+                              //fontWeight: FontWeight.bold,
                               color: Colors.white,
+                              fontFamily: "Open Sans",
                             ),
                           ),
                         ),
@@ -80,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                               displayFullTextOnTap: true,
                               totalRepeatCount: 40,
                               transitionHeight:
-                                  MediaQuery.of(context).size.height / 15,
+                                  MediaQuery.of(context).size.height / 13,
                               isRepeatingAnimation: true,
                               text: [
                                 "How may we service you today?",
@@ -90,10 +95,10 @@ class HomeScreen extends StatelessWidget {
                               ],
                               textStyle: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                //fontWeight: FontWeight.bold,
+                                fontFamily: "Open Sans",
                                 fontSize:
                                     MediaQuery.of(context).size.height / 35,
-                                fontFamily: "Horizon",
                               ),
                               textAlign: TextAlign.start,
                               alignment: AlignmentDirectional
@@ -132,6 +137,7 @@ class HomeScreen extends StatelessWidget {
                           style: TextStyle(
                             color: mainColor,
                             fontWeight: FontWeight.bold,
+                            fontFamily: "Open Sans",
                             fontSize: MediaQuery.of(context).size.height / 35,
                           ),
                         ),
@@ -160,6 +166,7 @@ class HomeScreen extends StatelessWidget {
                           style: TextStyle(
                             color: mainColor,
                             fontWeight: FontWeight.bold,
+                            fontFamily: "Open Sans",
                             fontSize: MediaQuery.of(context).size.height / 35,
                           ),
                         ),
@@ -188,6 +195,7 @@ class HomeScreen extends StatelessWidget {
                           style: TextStyle(
                             color: mainColor,
                             fontWeight: FontWeight.bold,
+                            fontFamily: "Open Sans",
                             fontSize: MediaQuery.of(context).size.height / 35,
                           ),
                         ),

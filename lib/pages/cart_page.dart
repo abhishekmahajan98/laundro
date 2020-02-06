@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:laundro/components/payment_bottom_sheet.dart';
 import 'package:laundro/model/order_model.dart';
+import 'package:laundro/model/screen_model.dart';
 import 'package:laundro/model/user_model.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'dart:math';
 import '../Data.dart';
 import '../constants.dart';
 
@@ -15,12 +14,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  final _firestore = Firestore.instance;
   bool showspinner = false;
-  String closestShopId = '';
-  String closestShopNumber = '';
-  double closestDistance = 10000000;
-  double closestShopServiceRadius = 0;
   @override
   void initState() {
     super.initState();
@@ -163,51 +157,6 @@ class _CartPageState extends State<CartPage> {
     setState(() {
       Order.totalCost = Order.subTotal + Order.deliveryCost;
     });
-  }
-
-  double calculateDistance(lat1, lon1, lat2, lon2) {
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
-    //print(12742 * asin(sqrt(a)));
-    return 12742 * asin(sqrt(a));
-  }
-
-  Future<bool> getClosestShop() async {
-    setState(() {
-      showspinner = true;
-    });
-    try {
-      QuerySnapshot shops = await _firestore.collection('shop').getDocuments();
-      for (var shop in shops.documents) {
-        GeoPoint shopLoc = shop.data['geoLocation'];
-        //print(User.lattitude.toString() + " " + User.longitude.toString());
-        //print(shopLoc.latitude.toString() + " " + shopLoc.longitude.toString());
-        double dist = calculateDistance(User.lattitude, User.longitude,
-            shopLoc.latitude, shopLoc.longitude);
-        if (dist < closestDistance) {
-          setState(() {
-            closestShopId = shop.data['uid'];
-            closestShopNumber = shop.data['phoneNumber'];
-            closestDistance = dist;
-            closestShopServiceRadius = shop.data['serviceRadius'].toDouble();
-            print(shop.data['serviceRadius'].toString());
-          });
-        }
-      }
-      setState(() {
-        showspinner = false;
-      });
-      return true;
-    } catch (e) {
-      print(e);
-      setState(() {
-        showspinner = false;
-      });
-      return false;
-    }
   }
 
   @override
@@ -359,44 +308,41 @@ class _CartPageState extends State<CartPage> {
               child: RaisedButton(
                 color: Order.subTotal >= 30 ? Colors.green : Colors.red,
                 onPressed: () {
-                  if (Order.subTotal >= 30) {
-                    getClosestShop().then((val) {
-                      if (closestShopServiceRadius >= closestDistance) {
-                        print(closestDistance.toString() +
-                            " " +
-                            closestShopServiceRadius.toString());
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (builder) {
-                              return ShowPaymentBottom(
-                                allocatedShopId: closestShopId,
-                                allocatedShopPhoneNumber: closestShopNumber,
-                              );
-                            });
-                      } else {
-                        Alert(
-                          context: context,
-                          title: 'Sorry, We do not have service in your area.',
-                          buttons: [
-                            DialogButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Okay"),
-                            )
-                          ],
-                        ).show();
-                      }
-                    });
+                  if (User.selectedShopId != '' ||
+                      User.selectedShopId != null) {
+                    if (Order.subTotal >= 30) {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (builder) {
+                          return ShowPaymentBottom();
+                        },
+                      );
+                    } else {
+                      Alert(
+                        context: context,
+                        title: 'Minimun subtotal is of ₹30.',
+                        desc: 'We do not accept orders below ₹30.',
+                        buttons: [
+                          DialogButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Okay'),
+                          ),
+                        ],
+                      ).show();
+                    }
                   } else {
                     Alert(
                       context: context,
-                      title: 'Minimun subtotal is of ₹30.',
-                      desc: 'We do not accept orders below ₹30.',
+                      title: 'Shop is not selected',
+                      desc:
+                          'Please select the shop for your location from My Account',
                       buttons: [
                         DialogButton(
                           onPressed: () {
                             Navigator.pop(context);
+                            HomeIdx.selectedIndex = 2;
                           },
                           child: Text('Okay'),
                         ),
