@@ -17,6 +17,7 @@ class _YourOrdersPageState extends State<YourOrdersPage> {
           backgroundColor: mainColor,
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             OrdersStream(),
           ],

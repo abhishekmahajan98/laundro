@@ -57,9 +57,12 @@ class _SplashScreenState extends State<SplashScreen> {
             .collection('priceList')
             .document(User.selectedShopId)
             .get();
-        Database.ironingDataItems = ds.data['ironingPrices'];
-        Database.washingDataItems = ds.data['washingPrices'];
-        Database.dryCleaningDataItems = ds.data['dryCleaningPrices'];
+        if (ds.exists) {
+          Database.ironingDataItems = ds.data['ironingPrices'];
+          Database.washingDataItems = ds.data['washingPrices'];
+          Database.dryCleaningDataItems = ds.data['dryCleaningPrices'];
+        }
+
         Navigator.pushReplacementNamed(context, '/home');
         //Navigator.pushReplacementNamed(context, '/test_page');
       } catch (e) {

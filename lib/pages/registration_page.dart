@@ -127,6 +127,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 _registerScaffoldKey.currentState.showSnackBar(SnackBar(
                   content: Text(e.message.toString()),
                 ));
+              } catch (e) {
+                print(e.message.toString());
+                _registerScaffoldKey.currentState.showSnackBar(SnackBar(
+                  content: Text(e.message.toString()),
+                ));
               }
               setState(() {
                 showSpinner = false;
