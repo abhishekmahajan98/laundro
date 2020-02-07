@@ -212,6 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (firebaseUser != null) {
                   final currentFirebaseUser = await _auth.currentUser();
                   loggedInUser = currentFirebaseUser;
+                  print(User.email + " " + User.uid);
                   User.email = loggedInUser.email;
                   User.uid = loggedInUser.uid;
                   prefs.setString('loggedInUserEmail', User.email);
@@ -235,6 +236,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 print(e.message.toString());
                 _loginScaffoldKey.currentState.showSnackBar(SnackBar(
                   content: Text(e.message.toString()),
+                ));
+              } catch (e) {
+                setState(() {
+                  showSpinner = false;
+                });
+                print(e.message.toString());
+                _loginScaffoldKey.currentState.showSnackBar(SnackBar(
+                  content: Text(e.toString()),
                 ));
               }
               setState(() {
@@ -324,7 +333,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 User.email = loggedInUser.email;
                 User.uid = loggedInUser.uid;
                 prefs.setString('loggedInUserEmail', User.email);
-                prefs.setString('loggedInUserUid', User.uid);
+                prefs.setString('loggedInUserUserid', User.uid);
                 final userCheck = await _firestore
                     .collection('users')
                     .where('email', isEqualTo: User.email)

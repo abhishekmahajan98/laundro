@@ -26,7 +26,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(1950, 1),
-        lastDate: DateTime(2101));
+        lastDate: DateTime.now());
     if (picked != null && picked != User.dob)
       setState(() {
         User.dob = picked;
@@ -136,13 +136,22 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: <Widget>[
-          Text('Gender: '),
+          Text(
+            'Gender: ',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height / 45,
+            ),
+          ),
           Icon(
             FontAwesomeIcons.mars,
             color: Colors.black,
+            size: MediaQuery.of(context).size.height / 45,
           ),
           Text(
             'Male:',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height / 48,
+            ),
           ),
           Radio(
               value: 'male',
@@ -157,9 +166,13 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           Icon(
             FontAwesomeIcons.venus,
             color: Colors.black,
+            size: MediaQuery.of(context).size.height / 45,
           ),
           Text(
             'Female:',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height / 48,
+            ),
           ),
           Radio(
               value: 'female',

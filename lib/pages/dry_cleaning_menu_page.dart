@@ -17,14 +17,18 @@ class DryCleaningMenuPage extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-              itemCount: Database.dryCleaningDataItems.length,
-              itemBuilder: (BuildContext ctxt, int index) {
-                return DryCleaningTile(
-                  index: index,
-                );
-              },
-            ),
+            child: Database.dryCleaningDataItems.length > 0
+                ? ListView.builder(
+                    itemCount: Database.dryCleaningDataItems.length,
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      return DryCleaningTile(
+                        index: index,
+                      );
+                    },
+                  )
+                : Center(
+                    child: Text("No items"),
+                  ),
           ),
           Container(
             width: MediaQuery.of(context).size.width,

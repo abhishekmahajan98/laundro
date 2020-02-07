@@ -17,14 +17,18 @@ class WashingMenuPage extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-              itemCount: Database.washingDataItems.length,
-              itemBuilder: (BuildContext ctxt, int index) {
-                return WashingTile(
-                  index: index,
-                );
-              },
-            ),
+            child: Database.washingDataItems.length > 0
+                ? ListView.builder(
+                    itemCount: Database.washingDataItems.length,
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      return WashingTile(
+                        index: index,
+                      );
+                    },
+                  )
+                : Center(
+                    child: Text("No items"),
+                  ),
           ),
           Container(
             width: MediaQuery.of(context).size.width,

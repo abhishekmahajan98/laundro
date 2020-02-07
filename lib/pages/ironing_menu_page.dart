@@ -17,14 +17,18 @@ class IroningMenuPage extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-              itemCount: Database.ironingDataItems.length,
-              itemBuilder: (BuildContext ctxt, int index) {
-                return IroningTile(
-                  index: index,
-                );
-              },
-            ),
+            child: Database.ironingDataItems.length > 0
+                ? ListView.builder(
+                    itemCount: Database.ironingDataItems.length,
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      return IroningTile(
+                        index: index,
+                      );
+                    },
+                  )
+                : Center(
+                    child: Text("No items"),
+                  ),
           ),
           Container(
             width: MediaQuery.of(context).size.width,
